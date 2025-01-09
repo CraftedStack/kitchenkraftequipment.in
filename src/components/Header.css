@@ -1,0 +1,142 @@
+/* Basic Header Styling */
+header.navbar {
+  opacity: 90%;
+  background-color: #FFFFFF !important; /* White background */
+  color: #0d47a1 !important; /* Rich blue text color */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important; /* Subtle shadow */
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1rem;
+  color: #0d47a1 !important; /* Rich blue for the text */
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+header img {
+  max-height: 50px;
+  margin-right: 5px;
+}
+
+/* Add a decorative element below the navbar */
+.header::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 4px; /* Thickness of the design */
+  background: linear-gradient(90deg, #FFD700, #0d47a1); /* Gradient for visual appeal */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+nav ul li {
+  margin: 0 15px;
+}
+
+nav ul li a {
+  color: #0d47a1 !important; /* Rich blue text color */
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: color 0.3s ease-in-out;
+}
+
+nav ul li a:hover {
+  color: #E63946 !important; /* Warm Red on hover */
+}
+
+/* Menu Icon for Mobile */
+.navbar-toggler {
+  border: none;
+  background-color: transparent;
+  color: #0d47a1 !important;
+}
+
+/* Change hamburger menu (navbar toggler) icon color */
+.navbar-toggler .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%230d47a1' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Optional: Ensure the navbar-toggler icon gets the correct color on hover */
+.navbar-toggler:hover .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%230d47a1' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Mobile Navigation */
+.collapse {
+  opacity: 90%;
+  background-color:#f0f0f0
+ }
+
+.collapse.show ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+a.nav-link{
+  color: #0d47a1;
+}
+a.nav-link:hover{
+  color: #42a5f5;
+}
+.nav ul li {
+  margin: 10px 0;
+}
+
+/* Floating Call Button */
+.call-button {
+  position: fixed;
+  bottom: 20px; /* 20px from the bottom of the screen */
+  right: 15px;  /* 20px from the right of the screen */
+  background-color: #FFD700; /* Golden background */
+  color: #0d47a1; /* Rich blue color for text */
+  padding: 15px 20px;
+  border-radius: 50px; /* Rounded button */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+  font-size: 1.1rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s, transform 0.3s ease-in-out;
+}
+
+.call-button i {
+  margin-right: 10px; /* Space between icon and text */
+  font-size: 1.5rem; /* Phone icon size */
+}
+
+/* Hover Effect */
+.call-button:hover {
+  background-color: #E76F51; /* Change background color to a warm tone on hover */
+  transform: scale(1.1); /* Slight scale effect on hover */
+}
+
+.call-button:active {
+  transform: scale(1); /* Reset scale when button is clicked */
+}
+
+/* Add Smooth Transition on Hover */
+header:hover {
+  background-color:#f0f9f8 !important; /* Modern Teal */
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .call-button {
+    font-size: 1rem; /* Slightly smaller text for mobile */
+    padding: 20px 20px; /* Adjust padding for smaller screens */
+  }
+}

@@ -1,0 +1,118 @@
+/* Container Styling */
+.product-slider-container {
+  padding: 2rem;
+  color: #0d47a1;
+  background-color: #f8f9fa; /* Light background */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Product Card */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  height: 350px;
+}
+
+.product-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Image Styling */
+.product-image {
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+  padding: 10px;
+}
+
+/* Product Title */
+.product-title {
+  margin: 15px 0 0;
+  font-size: 1.1rem;
+  color: #343a40;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+/* Buttons */
+
+
+.prev-btn, .next-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #6E6E6E; /* Steel Gray */
+  color: white;
+  border: none;
+  font-size: 1.5rem;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.prev-btn:hover, .next-btn:hover {
+  background-color: #0d47a1; /* Modern Teal */
+  transform: scale(1.1);
+}
+
+
+/* Dots Styling */
+.slick-dots li button:before {
+  color: #6E6E6E; /* Steel Gray */
+  font-size: 12px;
+  z-index: -1;
+}
+
+.slick-dots li.slick-active button:before {
+  color: #0d47a1; /* Warm Red */
+  z-index: -1;
+  
+}
+/*Marquee information*/
+.info-marquee {
+  background-color: #f8f9fa; /* Light background to match modern themes */
+  padding: 10px 20px;
+  border-top: 2px solid #0d47a1; /* Accent border matching your theme */
+  border-bottom: 2px solid #0d47a1;
+}
+
+.info-marquee marquee:hover {
+  animation-play-state: paused; /* Pauses the animation on hover */
+  cursor: pointer;
+}
+
+marquee {
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.info-text {
+  margin-right: 150px; /* Spacing between languages */
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.info-text-hindi {
+  margin-right: 50px;
+  font-family: 'Noto Sans Devanagari', sans-serif;
+}
+
+.info-text-marathi {
+  font-family: 'Noto Sans Devanagari', sans-serif;
+}
+
+
+

@@ -1,0 +1,85 @@
+/* About Us Section */
+.about-us {
+  background-color: #e3f2fd; /* Light blue background for a calming effect */
+  padding: 60px 20px;
+}
+
+.about-us h2 {
+  font-size: 2.5em;
+  color: #0d47a1; /* Deep blue for a bold heading */
+  margin-bottom: 20px;
+}
+
+.about-us p {
+  color: #546e7a; /* Subtle gray-blue for supporting text */
+}
+
+/* Custom Button Container */
+.custom-button-container {
+  display: flex;
+  justify-content: space-around;
+  background-color: rgba(13, 71, 161, 0.1); /* Light blue-gray background */
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 6px; /* Slight shadow for depth */
+}
+
+/* Custom Button Styling */
+.custom-button {
+  font-size: 1.2em;
+  padding: 12px 20px;
+  border: 2px solid #1e88e5; /* Blue border */
+  background-color: #bbdefb; /* Light blue for buttons */
+  color: #0d47a1; /* Deep blue for text */
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.5), 
+              inset -2px -2px 5px rgba(0, 0, 0, 0.1); /* Subtle 3D effect */
+}
+
+.custom-button:hover {
+  background-color: #1e88e5; /* Bright blue on hover */
+  color: #fff; /* White text on hover */
+  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.4), 
+              -4px -4px 6px rgba(255, 255, 255, 0.4); /* Prominent hover effect */
+}
+
+.custom-button-active {
+  background-color: #1e88e5; /* Bright blue when active */
+  color: #fff; /* White text */
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2), 
+              inset -2px -2px 5px rgba(255, 255, 255, 0.4); /* 3D active effect */
+}
+
+.custom-button-container .custom-button:not(:last-child) {
+  margin-right: 10px; /* Add space between buttons */
+}
+
+/* Tab Content Styling */
+.tab-content {
+  max-width: 700px;
+  font-size: 1.2em;
+  line-height: 1.75;
+  margin: 20px auto;
+  background: #ffffff; /* Bright white background for contrast */
+  color: #37474f; /* Dark gray-blue for readability */
+  border-left: 5px solid #1e88e5; /* Highlighted blue border */
+  padding: 20px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px; /* Slight shadow */
+  border-radius: 10px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .custom-button-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .custom-button {
+    width: 100%; /* Full width on smaller screens */
+    margin: 0; /* Remove margin for stacking */
+  }
+}

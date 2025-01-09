@@ -1,0 +1,99 @@
+/* Clients Section */
+.clients-section {
+  background-color: #e3f2fd; /* Light blue background to match About Us */
+  padding: 60px 20px;
+}
+
+.clients-section h2 {
+  font-size: 2.5em;
+  color: #0d47a1; /* Deep blue for bold heading */
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+/* Marquee Styling */
+.clients-marquee {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 20px 0;
+  background: rgba(13, 71, 161, 0.1); /* Subtle blue overlay */
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-image {
+  display: inline-block;
+  padding: 0 20px;
+  transition: transform 0.3s ease;
+}
+
+.carousel-image img {
+  max-width: 120px; /* Default size */
+  height: auto;
+  filter: grayscale(0%); /* Subtle grayscale effect */
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.carousel-image:hover img {
+  filter: grayscale(0); /* Remove grayscale on hover */
+  transform: scale(1.1); /* Slight zoom effect */
+}
+
+/* Reviews Section */
+.reviews {
+  background-color: #bbdefb; /* Light blue to complement the Clients section */
+  padding: 20px;
+  margin-top: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.reviews h3 {
+  font-size: 1.8em;
+  color: #0d47a1; /* Deep blue for the heading */
+  margin-bottom: 15px;
+}
+
+.reviews p {
+  font-size: 1.2em;
+  color: #546e7a; /* Subtle gray-blue for text */
+  font-style: italic;
+}
+.elfsight-widget {
+  width: 100%;
+  max-width: 600px; /* or any fixed size */
+  height: auto;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .carousel-image img {
+    max-width: 100px; /* Reduce size for medium devices */
+  }
+
+  .clients-marquee {
+    padding: 15px 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .carousel-image img {
+    max-width: 80px; /* Reduce size for smaller devices */
+  }
+
+  .clients-section h2 {
+    font-size: 2em;
+  }
+
+  .reviews h3 {
+    font-size: 1.5em;
+  }
+
+  .reviews p {
+    font-size: 1em;
+  }
+}
