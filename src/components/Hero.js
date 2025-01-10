@@ -16,7 +16,7 @@ const Hero = () => {
           playsInline
         >
           <source
-            src={isAndroid ? 'cinematic-mobile.mp4' : 'cinematic.mp4'}
+            src={isAndroid ? 'https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/cinematic-mobile.mp4' : 'https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/cinematic.mp4'}
             type="video/mp4"
           />
           Your browser does not support the video tag.
