@@ -1,20 +1,36 @@
-import React, { useRef } from "react";
+import React, { useRef,useState, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "bootstrap/dist/css/bootstrap.min.css"; 
 import "./ProductContainer.css"; 
 
+import { convertImagesToFormat } from "./imageUtils";
+
 function ProductContainer() {
   const sliderRef = useRef(null);
 
-  const products = [
-    { title: "Canteen Kitchen Equipment", image: "tandoori-oven.jpg" },
-    { title: "Commercial Refrigerators", image: "th.jpeg" },
-    { title: "Bain Marie", image: "bain-marie.jpg" },
-    { title: "Display Counters", image: "display-counter.jpg" },
-    { title: "Kitchen Trolley", image: "kitchen-trolley.png" },
-  ];
+  const [products, setProducts] = useState([
+    { title: "Waffle Maker Machine", image: "tandoori-oven.jpg" },
+    {
+      title: "Sandwich Grillers",
+      image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/th.jpeg",
+    },
+    { title: "Pizza Oven", image: "bain-marie.jpg" },
+    { title: "Deep Fryer's", image: "display-counter.jpg" },
+    { title: "Griddle Plate", image: "kitchen-trolley.png" },
+    { title: "Stainless Steel Table", image: "kitchen-trolley.png" },
+    { title: "Burner Cooking Range", image: "kitchen-trolley.png" },
+  ]);
+
+  useEffect(() => {
+    const formatImages = async () => {
+      const updatedProducts = await convertImagesToFormat(products, "image/png");
+      console.log("Updated Products:", updatedProducts); // Log updated products
+      setProducts(updatedProducts);
+    };
+    formatImages();
+  }, []);
 
   const settings = {
     dots: true,
