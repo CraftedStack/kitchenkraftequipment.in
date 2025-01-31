@@ -1,20 +1,32 @@
-import React, { useRef } from "react";
+import React, { useRef,useState, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "bootstrap/dist/css/bootstrap.min.css"; 
 import "./ProductContainer.css"; 
 
+import { convertImagesToFormat } from "./imageUtils";
+
 function ProductContainer() {
   const sliderRef = useRef(null);
 
-  const products = [
-    { title: "Canteen Kitchen Equipment", image: "tandoori-oven.jpg" },
-    { title: "Commercial Refrigerators", image: "commercial-refregirator.jpg" },
-    { title: "Bain Marie", image: "bain-marie.png" },
-    { title: "Display Counters", image: "display-counter.png" },
-    { title: "Kitchen Trolley", image: "kitchen-trolley.png" },
-  ];
+  const [products, setProducts] =  useState([
+    { title: "Canteen Kitchen Equipment", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/canteen-kitchen-equipment.webp" },
+    { title: "Tandoori-Oven", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/tandoori-oven.jpg" },
+    { title: "Commercial Refrigerators", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg" },
+    { title: "Bain Marie", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/bain-marie.png" },
+    { title: "Display Counters", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/display-counter.png" },
+    { title: "Kitchen Trolley", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/kitchen-trolley.png" },
+  ]);
+
+    useEffect(() => {
+      const formatImages = async () => {
+        const updatedProducts = await convertImagesToFormat(products, "image/png");
+        console.log("Updated Products:", updatedProducts); // Log updated products
+        setProducts(updatedProducts);
+      };
+      formatImages();
+    }, []);
 
   const settings = {
     dots: true,

@@ -11,16 +11,16 @@ function ProductContainer() {
   const sliderRef = useRef(null);
 
   const [products, setProducts] = useState([
-    { title: "Waffle Maker Machine", image: "tandoori-oven.jpg" },
+    { title: "Waffle Maker Machine", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/waffle-machine.png" },
     {
       title: "Sandwich Grillers",
-      image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/th.jpeg",
+      image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/sandwich-maker.jpg",
     },
-    { title: "Pizza Oven", image: "bain-marie.jpg" },
-    { title: "Deep Fryer's", image: "display-counter.jpg" },
-    { title: "Griddle Plate", image: "kitchen-trolley.png" },
-    { title: "Stainless Steel Table", image: "kitchen-trolley.png" },
-    { title: "Burner Cooking Range", image: "kitchen-trolley.png" },
+    { title: "Pizza Oven", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/pizza-oven.jpg" },
+    { title: "Deep Fryer's", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/EDeep-fryer.jpg" },
+    { title: "Griddle Plate", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/griddle-plate.jpg" },
+    { title: "Stainless Steel Table", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/stainless-steel-table.jpg" },
+    { title: "Burner Cooking Range", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/burning-cooking-range.webp" },
   ]);
 
   useEffect(() => {
