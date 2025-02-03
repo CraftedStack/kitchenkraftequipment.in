@@ -21,11 +21,11 @@ header img {
 
 /* Add a decorative element below the navbar */
 .header::after {
-  content: '';
+  /*content: '';*/
   display: block;
   width: 100%;
   height: 4px; /* Thickness of the design */
-  background: linear-gradient(90deg, #FFD700, #0d47a1); /* Gradient for visual appeal */
+  /*background: linear-gradient(90deg, #FFD700, #0d47a1); /* Gradient for visual appeal */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
 }
 
@@ -72,7 +72,7 @@ nav ul li a:hover {
 /* Mobile Navigation */
 .collapse {
   opacity: 90%;
-  background-color:#f0f0f0
+  /*background-color:#f0f0f0*/
  }
 
 .collapse.show ul {

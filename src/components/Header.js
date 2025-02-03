@@ -12,7 +12,7 @@ const Header = () => {
   return (
     <header className="header navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
       <div className="container">
-        <img src='logo1-removebg-preview (1).png' alt=''></img>
+        <img src='https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/logo1-removebg-preview+(1).png' alt=''></img>
         <h1><u>Kitchen Kraft Equipments </u></h1>
         <button
           className="navbar-toggler"
