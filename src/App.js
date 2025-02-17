@@ -9,6 +9,7 @@ import ProductInfoBox from './components/ProductInfoBox';
 import HowWeWork from './components/HowWeWork';
 import Footer from './components/Footer';
 import ProductContainerResell from './components/ProductContainerResell';
+import ProductList from "./components/ProductList"; // New page
 import './App.css';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<ProductContainer />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/product-info" element={<ProductInfoBox />} />
+          <Route path="/products" element={<ProductList />} />
           {/* Add more routes as needed */}
         </Routes>
         <ProductContainerResell/>

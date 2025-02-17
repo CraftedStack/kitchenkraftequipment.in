@@ -6,14 +6,15 @@ const Clients = () => {
   const [widgetLoaded, setWidgetLoaded] = useState(false);
 
   useEffect(() => {
-    const checkWidget = setTimeout(() => {
+    const interval = setInterval(() => {
       const elfsightWidget = document.querySelector('.elfsight-app-1ab142a6-cfb9-49b4-9971-f31fb108c7dc');
       if (elfsightWidget && elfsightWidget.innerHTML.trim() !== '') {
         setWidgetLoaded(true);
+        clearInterval(interval); // Stop checking once loaded
       }
-    }, 5000); // Check after 5 seconds
+    }, 1000); // Check every second
 
-    return () => clearTimeout(checkWidget);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -30,34 +31,38 @@ const Clients = () => {
             <img src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Nyati.png" alt="Nyati" />
           </div>
           <div className="carousel-image">
-            <img src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/client2.png" alt="swiggy" />
+            <img src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/client2.png" alt="Swiggy" />
           </div>
           <div className="carousel-image">
             <img src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/wns.png" alt="WNS" />
           </div>
           <div className="carousel-image">
-            <img src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/o_hotel.png" alt="oxford hotel" />
+            <img src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/o_hotel.png" alt="Oxford Hotel" />
           </div>
           <div className="carousel-image">
-            <img src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Smokin'Joe'sLogo.png" alt="" />
+            <img src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Smokin'Joe'sLogo.png" alt="Smokin' Joe's" />
           </div>
           <div className="carousel-image">
-            <img src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/OGR1.png" alt="Client 6" />
+            <img src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/OGR1.png" alt="OGR" />
           </div>
           <div className="carousel-image">
-            <img src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/siemens.png" alt="Client 7" />
+            <img src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/siemens.png" alt="Siemens" />
           </div>
           <div className="carousel-image">
-            <img src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Honeywell.png" alt="Client 8" />
+            <img src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Honeywell.png" alt="Honeywell" />
           </div>
         </Marquee>
       </div>
-      <div className="reviews mt-4" style={{ textAlign: 'center' }}>
+
+      <div className="reviews mt-4 text-center">
         <h3>Client Reviews</h3>
+        
+        {/* Widget is ALWAYS rendered */}
         <div className="elfsight-widget">
-          {widgetLoaded ? (
-            <div className="elfsight-app-1ab142a6-cfb9-49b4-9971-f31fb108c7dc"></div>
-          ) : (
+          <div className="elfsight-app-1ab142a6-cfb9-49b4-9971-f31fb108c7dc"></div>
+
+          {/* Show "Reviews Coming Soon..." only until widget loads */}
+          {!widgetLoaded && (
             <div className="coming-soon">
               <p>🔄 Reviews Coming Soon...</p>
             </div>
