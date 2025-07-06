@@ -9,7 +9,7 @@ const ProductInfoBox = () => {
   const sectionRef = useRef(null);
 
   useEffect(() => {
-    const targets = [25, 15, 50, 10]; // Target numbers for each counter
+    const targets = [25, 1000, 1000, 100]; // Target numbers for each counter
     const duration = 2000; // Animation duration in milliseconds
     const increments = targets.map((target) => duration / target);
 
@@ -50,13 +50,6 @@ const ProductInfoBox = () => {
   return (
     <div className="product-info-box container mt-4" ref={sectionRef}>
       <div className="row justify-content-center gap-3">
-        <div className="col-12 col-sm-6 col-md-5 mb-3 info-item">
-          <div className="info-icon">
-            <FaUserTie />
-          </div>
-          <h4>{counts[0]}+</h4>
-          <p>Interior Designers</p>
-        </div>
         <div className="col-12 col-sm-6 col-md-5 mb-3 info-item">
           <div className="info-icon">
             <FaProjectDiagram />

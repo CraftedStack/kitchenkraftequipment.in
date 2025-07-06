@@ -23,14 +23,13 @@ function ProductContainer() {
     { title: "Burner Cooking Range", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/burning-cooking-range.webp" },
   ]);
 
-  useEffect(() => {
-    const formatImages = async () => {
-      const updatedProducts = await convertImagesToFormat(products, "image/png");
-      console.log("Updated Products:", updatedProducts); // Log updated products
-      setProducts(updatedProducts);
-    };
-    formatImages();
-  }, []);
+useEffect(() => {
+  const formatImages = async () => {
+    const updatedProducts = await convertImagesToFormat(products, "image/png");
+    setProducts(updatedProducts);
+  };
+  formatImages();
+}, [products]); // Add products as dependency
 
   const settings = {
     dots: true,

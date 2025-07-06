@@ -19,14 +19,13 @@ function ProductContainer() {
     { title: "Kitchen Trolley", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/kitchen-trolley.png" },
   ]);
 
-    useEffect(() => {
-      const formatImages = async () => {
-        const updatedProducts = await convertImagesToFormat(products, "image/png");
-        console.log("Updated Products:", updatedProducts); // Log updated products
-        setProducts(updatedProducts);
-      };
-      formatImages();
-    }, []);
+useEffect(() => {
+  const formatImages = async () => {
+    const updatedProducts = await convertImagesToFormat(products, "image/png");
+    setProducts(updatedProducts);
+  };
+  formatImages();
+}, [products]); // Add products as dependency
 
   const settings = {
     dots: true,

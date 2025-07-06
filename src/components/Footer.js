@@ -45,20 +45,20 @@ const Footer = () => {
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
               <path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/>
               </svg>
-               <a href="https://maps.app.goo.gl/XPVmLH3EKiVXP1nH8" target='_blank'> Katraj - Kondhwa Rd, near Khadi machine, Dandekar industrial estate, Kondhwa Budruk, Pune, Maharashtra 411048
+               <a href="https://maps.app.goo.gl/XPVmLH3EKiVXP1nH8" target='_blank' rel="noopener noreferrer"> Katraj - Kondhwa Rd, near Khadi machine, Dandekar industrial estate, Kondhwa Budruk, Pune, Maharashtra 411048
                </a>
             </p>
             <p>
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M12 13L2 6.76V18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6.76L12 13zm0-2L21.82 4H2.18L12 11z"/>
                 </svg>
-              Email:<a href="mailto:info@kitchenkraftequipments.in"> info@kitchenkraftequipments.in</a>
+              Email:<a href="mailto:indiakitchenkraft@gmail.in"> indiakitchenkraft@gmail.in</a>
             </p>
             <p>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
               <path fill="currentColor" d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24a11.36 11.36 0 003.58.57c.55 0 1 .45 1 1v3.5c0 .55-.45 1-1 1C10.4 21 3 13.6 3 4.5 3 4.22 3.22 4 3.5 4H7c.55 0 1 .45 1 1 0 1.23.2 2.43.57 3.58.12.35.03.75-.24 1.02l-2.2 2.19z"/>
               </svg>
-              Phone: <a href="tel:+918830696290">+91 8830696290</a>
+              Phone: <a href="tel:+918830696290">+91 8830696290</a>, <a href="tel:+919890405188">+91 9890405188</a>
             </p>
             <p>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">

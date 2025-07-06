@@ -51,6 +51,9 @@ const Clients = () => {
           <div className="carousel-image">
             <img src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Honeywell.png" alt="Honeywell" />
           </div>
+          <div className="carousel-image">
+            <img src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/mastercard-removebg-preview.png" alt="MasterCard" />
+          </div>          
         </Marquee>
       </div>
 

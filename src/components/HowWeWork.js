@@ -22,13 +22,16 @@ const HowWeWork = () => {
     },
   ]);
 
-  useEffect(() => {
-    const formatImages = async () => {
+useEffect(() => {
+  const formatImages = async () => {
+    // Only run if cards exist and haven't been formatted yet
+    if (cards.length > 0 && !cards[0].image.includes('data:image/png')) {
       const updatedCards = await convertImagesToFormat(cards, "image/png");
       setCards(updatedCards);
-    };
-    formatImages();
-  }, []);
+    }
+  };
+  formatImages();
+}, [cards]); // Proper dependency
 
   return (
     <section className="how-we-work container my-4" id='services'>
