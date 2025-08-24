@@ -81,9 +81,9 @@ export default function Clients() {
     }
   ];
 
-  const renderStars = (rating) => {
+  const renderStars = (rating: number): string => {
     return "⭐".repeat(rating);
-  };
+  }
 
   const nextReview = () => {
     setCurrentReview((prev) => (prev + 1) % sampleReviews.length);
