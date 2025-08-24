@@ -4,10 +4,24 @@ import { useEffect, useState } from "react";
 import Marquee from "react-fast-marquee";
 import styles from "./Clients.module.css";
 
+// Define types
+interface Review {
+  id: number;
+  author: string;
+  rating: number;
+  text: string;
+  company: string;
+}
+
+interface Logo {
+  src: string;
+  alt: string;
+}
+
 export default function Clients() {
   const [widgetLoaded, setWidgetLoaded] = useState(false);
-  const [currentReview, setCurrentReview] = useState(0);
-  const [expandedReviews, setExpandedReviews] = useState({});
+  const [currentReview, setCurrentReview] = useState<number>(0);
+  const [expandedReviews, setExpandedReviews] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -31,7 +45,7 @@ export default function Clients() {
     };
   }, []);
 
-  const logos = [
+  const logos: Logo[] = [
     { src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Nyati.png", alt: "Nyati" },
     { src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/client2.png", alt: "Swiggy" },
     { src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/wns.png", alt: "WNS" },
@@ -43,47 +57,47 @@ export default function Clients() {
     { src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/mastercard-removebg-preview.png", alt: "MasterCard" },
   ];
 
-  const sampleReviews = [
+  const sampleReviews: Review[] = [
     {
       id: 1,
       author: "Vivek Kumar",
       rating: 5,
-      text: "When we were searching for the right kitchen equipment supplier for our café, Kitchen Kraft stood out—and we're so glad we chose them. Their expertise in commercial kitchen solutions is unmatched. Not only did they provide us with top-quality equipment at incredibly competitive prices, but they also offered invaluable guidance on aspects we hadn't even considered.They conducted multiple site visits at no additional cost, ensuring everything was perfectly planned and executed. Their team was professional, punctual, and truly committed to helping us succeed.Thanks to Kitchen Kraft, setting up our café was smooth and stress-free. I wholeheartedly recommend them to anyone looking to build or upgrade a commercial kitchen. Their industry experience and positive energy make all the difference.Thank you, Kitchen Kraft, for being a key part of our success!",
+      text: "When we were searching for the right kitchen equipment supplier for our café, Kitchen Kraft stood out...",
       company: "Local Guide"
     },
     {
       id: 2,
       author: "Priya Sharma",
       rating: 5,
-      text: "Great service and high-quality kitchen solutions. Highly recommended for hospitality businesses in Mumbai. The installation team was very professional.",
+      text: "Great service and high-quality kitchen solutions. Highly recommended for hospitality businesses in Mumbai.",
       company: "Hotel Manager"
     },
     {
       id: 3,
       author: "Amit Patel",
       rating: 4,
-      text: "Good quality equipment and professional installation service. Timely delivery and good customer support. Would recommend for commercial kitchen setups.",
+      text: "Good quality equipment and professional installation service. Timely delivery and good customer support.",
       company: "Catering Service"
     },
     {
       id: 4,
       author: "Sneha Desai",
       rating: 5,
-      text: "The customized kitchen layout has improved our workflow significantly. Thank you Kitchen Kraft team for the excellent design and installation!",
+      text: "The customized kitchen layout has improved our workflow significantly.",
       company: "Food Business Owner"
     },
     {
       id: 5,
       author: "Vikram Singh",
       rating: 5,
-      text: "Best commercial kitchen equipment supplier in India. Reliable products and excellent after-sales service. Great partnership for our hotel chain.",
+      text: "Best commercial kitchen equipment supplier in India. Reliable products and excellent after-sales service.",
       company: "Hospitality Group"
     }
   ];
 
   const renderStars = (rating: number): string => {
     return "⭐".repeat(rating);
-  }
+  };
 
   const nextReview = () => {
     setCurrentReview((prev) => (prev + 1) % sampleReviews.length);
@@ -93,23 +107,22 @@ export default function Clients() {
     setCurrentReview((prev) => (prev - 1 + sampleReviews.length) % sampleReviews.length);
   };
 
-  const goToReview = (index) => {
+  const goToReview = (index: number): void => {
     setCurrentReview(index);
   };
 
-  const toggleExpand = (reviewId) => {
-    setExpandedReviews(prev => ({
+  const toggleExpand = (reviewId: number) => {
+    setExpandedReviews((prev) => ({
       ...prev,
-      [reviewId]: !prev[reviewId]
+      [reviewId]: !prev[reviewId],
     }));
   };
 
-  const truncateText = (text, maxLength = 150) => {
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + '...';
+  const truncateText = (text: string, maxLength: number = 150): string => {
+    return text.length <= maxLength ? text : text.substring(0, maxLength) + "...";
   };
 
-  const ReviewText = ({ review }) => {
+  const ReviewText: React.FC<{ review: Review }> = ({ review }) => {
     const isExpanded = expandedReviews[review.id];
     const needsTruncation = review.text.length > 150;
     const displayText = isExpanded ? review.text : truncateText(review.text);
@@ -125,7 +138,7 @@ export default function Clients() {
               toggleExpand(review.id);
             }}
           >
-            {isExpanded ? ' show less' : ' more'}
+            {isExpanded ? " show less" : " more"}
           </button>
         )}
       </p>
@@ -138,22 +151,10 @@ export default function Clients() {
         <h2 className={styles.heading}>Our Clients</h2>
 
         {/* Marquee */}
-        <Marquee
-          gradient={false}
-          speed={80}
-          direction="left"
-          className={styles.clientsMarquee}
-        >
+        <Marquee gradient={false} speed={80} direction="left" className={styles.clientsMarquee}>
           {logos.map((logo, idx) => (
-            <div
-              key={idx}
-              className={styles.carouselImage}
-            >
-              <img
-                src={logo.src}
-                alt={logo.alt}
-                className={styles.logoImage}
-              />
+            <div key={idx} className={styles.carouselImage}>
+              <img src={logo.src} alt={logo.alt} className={styles.logoImage} />
             </div>
           ))}
         </Marquee>
@@ -161,37 +162,27 @@ export default function Clients() {
 
       {/* Reviews */}
       <div className={styles.reviews}>
-        <h3 className={styles.reviewsHeading}>
-          Client Reviews
-        </h3>
+        <h3 className={styles.reviewsHeading}>Client Reviews</h3>
 
         <div className={styles.reviewsContainer}>
           <div className="elfsight-app-1ab142a6-cfb9-49b4-9971-f31fb108c7dc"></div>
 
           {!widgetLoaded && (
             <div className={styles.reviewsCarousel}>
-              <div className={styles.loadingText}>
-                🔄 Loading Reviews...
-              </div>
-              
+              <div className={styles.loadingText}>🔄 Loading Reviews...</div>
+
               {/* Reviews Carousel */}
               <div className={styles.carouselContainer}>
-                <button 
-                  className={styles.carouselButton} 
-                  onClick={prevReview}
-                  aria-label="Previous review"
-                >
+                <button className={styles.carouselButton} onClick={prevReview} aria-label="Previous review">
                   ‹
                 </button>
-                
+
                 <div className={styles.carouselSlide}>
                   <div className={styles.reviewCard}>
                     <div className={styles.reviewHeader}>
                       <div className={styles.reviewAuthor}>
                         <strong>{sampleReviews[currentReview].author}</strong>
-                        <span className={styles.reviewCompany}>
-                          {sampleReviews[currentReview].company}
-                        </span>
+                        <span className={styles.reviewCompany}>{sampleReviews[currentReview].company}</span>
                       </div>
                       <div className={styles.reviewRating}>
                         {renderStars(sampleReviews[currentReview].rating)}
@@ -200,12 +191,8 @@ export default function Clients() {
                     <ReviewText review={sampleReviews[currentReview]} />
                   </div>
                 </div>
-                
-                <button 
-                  className={styles.carouselButton} 
-                  onClick={nextReview}
-                  aria-label="Next review"
-                >
+
+                <button className={styles.carouselButton} onClick={nextReview} aria-label="Next review">
                   ›
                 </button>
               </div>
@@ -215,7 +202,7 @@ export default function Clients() {
                 {sampleReviews.map((_, index) => (
                   <button
                     key={index}
-                    className={`${styles.dot} ${index === currentReview ? styles.activeDot : ''}`}
+                    className={`${styles.dot} ${index === currentReview ? styles.activeDot : ""}`}
                     onClick={() => goToReview(index)}
                     aria-label={`Go to review ${index + 1}`}
                   />
