@@ -1,0 +1,138 @@
+/* About Us Section */
+.aboutUs {
+  background-color: #e3f2fd;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.heading {
+  font-size: 2.5em;
+  color: #0d47a1;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  font-weight: bold;
+  position: relative;
+}
+
+.heading::after {
+  content: "";
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #ffb300, #0d47a1);
+  display: block;
+  margin: 10px auto 0;
+  border-radius: 2px;
+}
+
+.subheading {
+  color: #546e7a;
+  max-width: 800px;
+  margin: 0 auto 40px;
+  line-height: 1.75;
+  font-size: 1.2em;
+}
+
+/* Custom Button Container */
+.customButtonContainer {
+  display: flex;
+  justify-content: center;
+  background-color: rgba(13, 71, 161, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 6px;
+  margin-bottom: 30px;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+/* Custom Button Styling */
+.customButton {
+  font-size: 1.1em;
+  padding: 12px 20px;
+  border: 2px solid #1e88e5;
+  background-color: #bbdefb;
+  color: #0d47a1;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.5), 
+              inset -2px -2px 5px rgba(0, 0, 0, 0.1);
+  min-width: 180px;
+}
+
+.customButton:hover {
+  background-color: #1e88e5;
+  color: #fff;
+  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.4), 
+              -4px -4px 6px rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.customButtonActive {
+  background-color: #1e88e5;
+  color: #fff;
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2), 
+              inset -2px -2px 5px rgba(255, 255, 255, 0.4);
+}
+
+/* Tab Content Styling */
+.tabContent {
+  max-width: 700px;
+  font-size: 1.2em;
+  line-height: 1.75;
+  margin: 20px auto;
+  background: #ffffff;
+  color: #37474f;
+  border-left: 5px solid #1e88e5;
+  padding: 25px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+  border-radius: 10px;
+  text-align: left;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .aboutUs {
+    padding: 40px 15px;
+  }
+  
+  .heading {
+    font-size: 2em;
+  }
+  
+  .subheading {
+    font-size: 1em;
+    margin-bottom: 30px;
+  }
+  
+  .customButtonContainer {
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px 10px;
+  }
+
+  .customButton {
+    width: 100%;
+    margin: 0;
+    font-size: 1em;
+    min-width: auto;
+  }
+  
+  .tabContent {
+    padding: 15px;
+    font-size: 1em;
+  }
+}
