@@ -1,13 +1,29 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import "./ProductContainer.css"; // 👈 Import your CSS file here
+import "./ProductContainer.css";
 
 const ProductContainer = ({ isResell = false }) => {
   const sliderRef = useRef<Slider | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    // Initial check
+    checkMobile();
+    
+    // Add event listener
+    window.addEventListener("resize", checkMobile);
+    
+    // Clean up
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const manufacturingProducts = [
     { title: "Canteen Kitchen Equipment", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/canteen-kitchen-equipment.webp" },
@@ -23,9 +39,9 @@ const ProductContainer = ({ isResell = false }) => {
     { title: "Sandwich Grillers", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/sandwich-maker.jpg" },
     { title: "Pizza Oven", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/pizza-oven.jpg" },
     { title: "Deep Fryer's", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/EDeep-fryer.jpg" },
-    { title: "Griddle Plate", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/griddle-plate.jpg" },
-    { title: "Stainless Steel Table", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/stainless-steel-table.jpg" },
-    { title: "Burner Cooking Range", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/burning-cooking-range.webp" },
+    { title: "Griddle Plate", image: "https://s3.ap-south-1.amazonaws.com/kitchenkrafteequipement.in/imgs/griddle-plate.jpg" },
+    { title: "Stainless Steel Table", image: "https://s3.ap-south-1.amazonaws.com/kitchenkrafteequipement.in/imgs/stainless-steel-table.jpg" },
+    { title: "Burner Cooking Range", image: "https://s3.ap-south-1.amazonaws.com/kitchenkrafteequipement.in/imgs/burning-cooking-range.webp" },
   ];
 
   const products = isResell ? resellProducts : manufacturingProducts;
@@ -34,17 +50,30 @@ const ProductContainer = ({ isResell = false }) => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: isMobile ? 1 : 3,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
     pauseOnHover: true,
+    centerMode: isMobile,
+    centerPadding: isMobile ? "20px" : "0px",
     responsive: [
-      { breakpoint: 1280, settings: { slidesToShow: 3 } },
-      { breakpoint: 1024, settings: { slidesToShow: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
-      { breakpoint: 640, settings: { slidesToShow: 1, centerMode: true, centerPadding: "40px" } },
-    ],
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          centerMode: false,
+        }
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1,
+          centerMode: true,
+          centerPadding: "40px"
+        }
+      }
+    ]
   };
 
   const handlePrevClick = () => sliderRef.current?.slickPrev();
@@ -92,9 +121,13 @@ const ProductContainer = ({ isResell = false }) => {
           ))}
         </Slider>
 
-        {/* Navigation */}
-        <button onClick={handlePrevClick} className="nav-btn prev-btn">❮</button>
-        <button onClick={handleNextClick} className="nav-btn next-btn">❯</button>
+        {/* Navigation - Only show on desktop */}
+        {!isMobile && (
+          <>
+            <button onClick={handlePrevClick} className="nav-btn prev-btn">❮</button>
+            <button onClick={handleNextClick} className="nav-btn next-btn">❯</button>
+          </>
+        )}
       </div>
     </div>
   );
