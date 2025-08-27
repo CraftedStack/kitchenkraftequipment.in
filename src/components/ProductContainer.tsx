@@ -6,9 +6,103 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./ProductContainer.css";
 
-const ProductContainer = ({ isResell = false }) => {
+// Define TypeScript interfaces
+interface Product {
+  id: number;
+  name: string;
+  image: string;
+  description: string;
+}
+
+interface ProductDatabase {
+  [key: string]: Product[];
+}
+
+interface ProductDetailsModalProps {
+  productTitle: string | null;
+  isOpen: boolean;
+  onClose: () => void;
+  isResell?: boolean;
+}
+
+// Product Details Modal Component
+const ProductDetailsModal = ({ productTitle, isOpen, onClose, isResell }: ProductDetailsModalProps) => {
+  // Sample data for demonstration - in a real app, this would come from an API
+  const productDatabase: ProductDatabase = {
+    "Canteen Kitchen Equipment": [
+      { id: 1, name: "Commercial Canteen Equipment Set", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/canteen-kitchen-equipment.webp", description: "Complete canteen kitchen setup" },
+      { id: 2, name: "Industrial Cooking Range", image: "https://example.com/cooking-range.jpg", description: "Heavy-duty cooking range for large facilities" },
+    ],
+    "Tandoori Oven": [
+      { id: 1, name: "Traditional Tandoor Oven", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/tandoori-oven.jpg", description: "Authentic clay tandoor for restaurants" },
+      { id: 2, name: "Commercial Tandoor", image: "https://example.com/commercial-tandoor.jpg", description: "High-capacity stainless steel tandoor" },
+    ],
+    "Commercial Refrigerators": [
+      { id: 1, name: "Industrial Refrigerator", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "Large capacity commercial refrigerator" },
+      { id: 2, name: "Display Refrigerator", image: "https://example.com/display-fridge.jpg", description: "Glass door display refrigerator" },
+    ],
+    "Bain Marie": [
+      { id: 1, name: "Stainless Steel Bain Marie", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/bain-marie.png", description: "Food warming station with temperature control" },
+      { id: 2, name: "Countertop Bain Marie", image: "https://example.com/countertop-bain.jpg", description: "Compact bain marie for small spaces" },
+    ],
+    "Pizza Oven": [
+      { id: 1, name: "Commercial Pizza Oven Pro", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/pizza-oven.jpg", description: "High-capacity pizza oven for restaurants" },
+      { id: 2, name: "Wood-Fired Pizza Oven", image: "https://example.com/wood-fired-oven.jpg", description: "Authentic wood-fired flavor" },
+      { id: 3, name: "Countertop Pizza Oven", image: "https://example.com/countertop-oven.jpg", description: "Compact design for small spaces" },
+    ],
+    "Waffle Maker Machine": [
+      { id: 1, name: "Commercial Waffle Maker", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/waffle-machine.png", description: "Professional waffle maker for high volume" },
+      { id: 2, name: "Double Waffle Iron", image: "https://example.com/double-waffle.jpg", description: "Double-sided waffle maker for faster production" },
+    ],
+    // Add more products as needed
+  };
+
+  // Default products if the title isn't found
+  const defaultProducts: Product[] = [
+    { id: 1, name: "Sample Product 1", image: "https://via.placeholder.com/300", description: "Description of sample product 1" },
+    { id: 2, name: "Sample Product 2", image: "https://via.placeholder.com/300", description: "Description of sample product 2" },
+    { id: 3, name: "Sample Product 3", image: "https://via.placeholder.com/300", description: "Description of sample product 3" },
+  ];
+
+  const products = productTitle ? (productDatabase[productTitle] || defaultProducts) : defaultProducts;
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-close-btn" onClick={onClose}>
+          &times;
+        </button>
+        
+        <h2 className="modal-title">{productTitle} Products</h2>
+        
+        <div className="products-grid">
+          {products.map((product) => (
+            <div key={product.id} className="product-detail-card">
+              <img src={product.image} alt={product.name} className="product-detail-image" />
+              <h3>{product.name}</h3>
+              <p>{product.description}</p>
+              <button className="inquire-btn">Inquire Now</button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Define props for main component
+interface ProductContainerProps {
+  isResell?: boolean;
+}
+
+// Main Product Container Component
+const ProductContainer = ({ isResell = false }: ProductContainerProps) => {
   const sliderRef = useRef<Slider | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -39,9 +133,9 @@ const ProductContainer = ({ isResell = false }) => {
     { title: "Sandwich Grillers", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/sandwich-maker.jpg" },
     { title: "Pizza Oven", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/pizza-oven.jpg" },
     { title: "Deep Fryer's", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/EDeep-fryer.jpg" },
-    { title: "Griddle Plate", image: "https://s3.ap-south-1.amazonaws.com/kitchenkrafteequipement.in/imgs/griddle-plate.jpg" },
-    { title: "Stainless Steel Table", image: "https://s3.ap-south-1.amazonaws.com/kitchenkrafteequipement.in/imgs/stainless-steel-table.jpg" },
-    { title: "Burner Cooking Range", image: "https://s3.ap-south-1.amazonaws.com/kitchenkrafteequipement.in/imgs/burning-cooking-range.webp" },
+    { title: "Griddle Plate", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/griddle-plate.jpg" },
+    { title: "Stainless Steel Table", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/stainless-steel-table.jpg" },
+    { title: "Burner Cooking Range", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/burning-cooking-range.webp" },
   ];
 
   const products = isResell ? resellProducts : manufacturingProducts;
@@ -78,6 +172,16 @@ const ProductContainer = ({ isResell = false }) => {
 
   const handlePrevClick = () => sliderRef.current?.slickPrev();
   const handleNextClick = () => sliderRef.current?.slickNext();
+  
+  const handleViewDetails = (productTitle: string) => {
+    setSelectedProduct(productTitle);
+    setIsModalOpen(true);
+  };
+  
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
 
   const marqueeText = isResell 
     ? [
@@ -115,7 +219,12 @@ const ProductContainer = ({ isResell = false }) => {
               <div className="product-card">
                 <img src={product.image} alt={product.title} className="product-image" />
                 <h3 className="product-title">{product.title}</h3>
-                <button className="inquire-btn">View Details</button>
+                <button 
+                  className="inquire-btn" 
+                  onClick={() => handleViewDetails(product.title)}
+                >
+                  View Details
+                </button>
               </div>
             </div>
           ))}
@@ -129,6 +238,14 @@ const ProductContainer = ({ isResell = false }) => {
           </>
         )}
       </div>
+      
+      {/* Product Details Modal */}
+      <ProductDetailsModal 
+        productTitle={selectedProduct}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        isResell={isResell}
+      />
     </div>
   );
 };
