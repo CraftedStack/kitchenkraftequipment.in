@@ -30,16 +30,49 @@ const ProductDetailsModal = ({ productTitle, isOpen, onClose, isResell }: Produc
   // Sample data for demonstration - in a real app, this would come from an API
   const productDatabase: ProductDatabase = {
     "Canteen Kitchen Equipment": [
-      { id: 1, name: "Commercial Canteen Equipment Set", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/canteen-kitchen-equipment.webp", description: "Complete canteen kitchen setup" },
-      { id: 2, name: "Industrial Cooking Range", image: "https://example.com/cooking-range.jpg", description: "Heavy-duty cooking range for large facilities" },
+      { id: 1, name: "G.I Ducting Line and Stainless Steel Hood", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Kitchen_equipment_G.I_Ducting_Line_and_Stainless_Steel_Hood.png", description: "Complete canteen kitchen setup" },
+      { id: 2, name: "Canteen Foldable Table", image: "https://example.com/cooking-range.jpg", description: "Steel Canteen Foldable table for 4 to 12" },
+      { id: 3, name: "Dough Kneaders", image: "https://example.com/cooking-range.jpg", description: "Stainless steel Dough mixing machine 7Kg to 50KG" },
+      { id: 4, name: "Canteen Foldable Table", image: "https://example.com/cooking-range.jpg", description: "Canteen Foldable table for 4 to 12" },
     ],
-    "Tandoori Oven": [
-      { id: 1, name: "Traditional Tandoor Oven", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/tandoori-oven.jpg", description: "Authentic clay tandoor for restaurants" },
-      { id: 2, name: "Commercial Tandoor", image: "https://example.com/commercial-tandoor.jpg", description: "High-capacity stainless steel tandoor" },
+    "SS Tandoori Bhatti": [
+      { id: 1, name: "Clay Tandoor Bhatti", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/tandoori-oven.jpg", description: "Authentic clay tandoor for restaurants,Hotel, Commercial & Industrial" },
+      { id: 2, name: "Electric Tandoor Bhatti", image: "https://example.com/commercial-tandoor.jpg", description: "Authentic Stainless Steel Tandoor Bhatti electricity for restaurants,Hotel, Commercial & Industrial" },
+      { id: 3, name: "Charcoal Tandoor Bhatti", image: "https://example.com/commercial-tandoor.jpg", description: "Authentic Stainless Steel Tandoor Bhatti Charcoal for restaurants,Hotel, Commercial & Industrial" },
     ],
     "Commercial Refrigerators": [
-      { id: 1, name: "Industrial Refrigerator", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "Large capacity commercial refrigerator" },
-      { id: 2, name: "Display Refrigerator", image: "https://example.com/display-fridge.jpg", description: "Glass door display refrigerator" },
+      { id: 1, name: "2 Door Commercial Refrigerator", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "2 Door large capacity commercial refrigerator" },
+      { id: 2, name: "2 Door Commercial Freezer", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "2 Door large capacity commercial freezer" },
+      { id: 3, name: "2 Door Commercial Chiller", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "2 Door large capacity commercial chiller" },
+
+      // 3 Door variants
+      { id: 4, name: "3 Door Commercial Refrigerator", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "3 Door large capacity commercial refrigerator" },
+      { id: 5, name: "3 Door Commercial Freezer", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "3 Door large capacity commercial freezer" },
+      { id: 6, name: "3 Door Commercial Chiller", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "3 Door large capacity commercial chiller" },
+
+      // 4 Door variants
+      { id: 7, name: "4 Door Commercial Refrigerator", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "4 Door large capacity commercial refrigerator" },
+      { id: 8, name: "4 Door Commercial Freezer", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "4 Door large capacity commercial freezer" },
+      { id: 9, name: "4 Door Commercial Chiller", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "4 Door large capacity commercial chiller" },
+
+      // 6 Door variants
+      { id: 10, name: "6 Door Commercial Refrigerator", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "6 Door large capacity commercial refrigerator" },
+      { id: 11, name: "6 Door Commercial Freezer", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "6 Door large capacity commercial freezer" },
+      { id: 12, name: "6 Door Commercial Chiller", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "6 Door large capacity commercial chiller" },
+
+      { id: 13, name: "UnderCounter Deep Freezer", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "Compact UnderCounter deep freezer for commercial kitchens" },
+      { id: 14, name: "UnderCounter Chiller", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "Compact UnderCounter chiller for commercial use" },
+
+      { id: 15, name: "UnderCounter Deep Freezer (3 Door)", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "3 Door UnderCounter deep freezer for restaurants and hotels" },
+      { id: 16, name: "UnderCounter Chiller (3 Door)", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "3 Door UnderCounter chiller for restaurants and hotels" },
+
+      { id: 17, name: "UnderCounter Deep Freezer (4 Door)", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "4 Door UnderCounter deep freezer for commercial kitchens" },
+      { id: 18, name: "UnderCounter Chiller (4 Door)", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "4 Door UnderCounter chiller for commercial kitchens" },
+
+      { id: 19, name: "UnderCounter Deep Freezer (6 Door)", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "6 Door UnderCounter deep freezer for hotels, restaurants, and food businesses" },
+      { id: 20, name: "UnderCounter Chiller (6 Door)", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "6 Door UnderCounter chiller for hotels, restaurants, and food businesses" },
+      
+      { id: 21, name: "Pizza Make Line Refrigerator", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg", description: "Pizza Make Line Refrigerator & Freezer for hotels, restaurants, and food businesses" } 
     ],
     "Bain Marie": [
       { id: 1, name: "Stainless Steel Bain Marie", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/bain-marie.png", description: "Food warming station with temperature control" },
@@ -121,7 +154,7 @@ const ProductContainer = ({ isResell = false }: ProductContainerProps) => {
 
   const manufacturingProducts = [
     { title: "Canteen Kitchen Equipment", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/canteen-kitchen-equipment.webp" },
-    { title: "Tandoori Oven", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/tandoori-oven.jpg" },
+    { title: "SS Tandoori Bhatti", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/tandoori-oven.jpg" },
     { title: "Commercial Refrigerators", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/commercial-refregirator.jpg" },
     { title: "Bain Marie", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/bain-marie.png" },
     { title: "Display Counters", image: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/display-counter.png" },
