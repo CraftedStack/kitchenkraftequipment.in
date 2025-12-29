@@ -175,3 +175,86 @@ export const SUCCESS_MESSAGES = {
     action: "Welcome to our community"
   }
 };
+
+export const SERVICES = {
+  'commercial-kitchen-design': {
+    title: 'Commercial Kitchen Design',
+    description: 'Custom kitchen layouts optimized for efficiency and workflow',
+    features: [
+      'Space Planning',
+      'Workflow Optimization',
+      'Equipment Layout',
+      'Ventilation Design',
+      'Safety Compliance',
+      '3D Visualization'
+    ],
+    benefits: [
+      'Improved Efficiency',
+      'Cost Optimization',
+      'Safety Compliance',
+      'Future Scalability',
+      'Professional Design',
+      'Expert Consultation'
+    ]
+  },
+  'equipment-manufacturing': {
+    title: 'Equipment Manufacturing',
+    description: 'Custom stainless steel kitchen equipment built to your specifications',
+    features: [
+      'Custom Design',
+      'Stainless Steel Construction',
+      'Quality Materials',
+      'Precision Manufacturing',
+      'Food Grade Standards',
+      'Durability Testing'
+    ],
+    benefits: [
+      'Custom Solutions',
+      'High Quality',
+      'Long Lasting',
+      'Food Safety',
+      'Cost Effective',
+      'Professional Grade'
+    ]
+  },
+  'installation-maintenance': {
+    title: 'Installation & Maintenance',
+    description: 'Professional installation and commissioning of kitchen equipment',
+    features: [
+      'Professional Installation',
+      'Equipment Commissioning',
+      'Safety Testing',
+      'Staff Training',
+      'Maintenance Plans',
+      'Emergency Support'
+    ],
+    benefits: [
+      'Proper Setup',
+      'Safety Assurance',
+      'Extended Lifespan',
+      'Reduced Downtime',
+      'Expert Support',
+      'Peace of Mind'
+    ]
+  },
+  'consultation': {
+    title: 'Expert Consultation',
+    description: 'Professional advice on kitchen planning, equipment selection, and optimization',
+    features: [
+      'Needs Assessment',
+      'Equipment Selection',
+      'Budget Planning',
+      'Timeline Development',
+      'Vendor Coordination',
+      'Project Management'
+    ],
+    benefits: [
+      'Expert Guidance',
+      'Cost Savings',
+      'Time Efficiency',
+      'Risk Mitigation',
+      'Quality Assurance',
+      'Professional Results'
+    ]
+  }
+};
