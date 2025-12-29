@@ -1,9 +1,13 @@
-@import "tailwindcss/preflight";
-@import "tailwindcss/utilities";
-
+@import "tailwindcss";
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+body {
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  padding-top: 60px; /* Account for fixed header - reduced from 80px */
 }
 
 @keyframes marquee {
@@ -19,4 +23,332 @@ html {
   display: inline-block;
   min-width: 100%;
   animation: marquee 20s linear infinite;
+}
+
+/* Modern dropdown animations */
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Header improvements */
+.header-blur {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Smooth transitions for all interactive elements */
+.smooth-transition {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced focus states for accessibility */
+.focus-ring:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Dropdown hover effects */
+.dropdown-item {
+  transition: all 0.15s ease-out;
+}
+
+.dropdown-item:hover {
+  transform: translateX(4px);
+}
+
+/* Additional utility classes */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Prevent horizontal overflow globally */
+* {
+  box-sizing: border-box;
+}
+
+.container,
+.max-w-7xl,
+.max-w-6xl,
+.max-w-5xl,
+.max-w-4xl,
+.max-w-3xl,
+.max-w-2xl,
+.max-w-xl {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  body {
+    padding-top: 56px; /* Smaller header on mobile - reduced from 70px */
+  }
+
+  /* Improve touch targets */
+  button, 
+  a[role="button"],
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Optimize form inputs for mobile */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"],
+  textarea,
+  select {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 12px 16px;
+  }
+
+  /* Improve readability */
+  body {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  /* Optimize spacing for mobile */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Improve mobile scrolling */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Hide scrollbars on mobile for cleaner look */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Optimize image loading */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Improve mobile navigation */
+  .mobile-nav-overlay {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  /* Optimize mobile forms */
+  .mobile-form-step {
+    min-height: calc(100vh - 200px);
+  }
+
+  /* Improve mobile card layouts */
+  .mobile-card {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Mobile-friendly hover states */
+  .mobile-touch-feedback:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+
+  /* Prevent text from breaking out of containers */
+  h1, h2, h3, h4, h5, h6, p, div {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+
+  /* Ensure grid layouts don't overflow */
+  .grid {
+    overflow-x: hidden;
+  }
+
+  /* Fix flex layouts on mobile */
+  .flex {
+    flex-wrap: wrap;
+  }
+
+  /* Ensure sections don't overflow */
+  section {
+    overflow-x: hidden;
+  }
+
+  /* Fix max-width containers */
+  .max-w-7xl,
+  .max-w-6xl,
+  .max-w-5xl,
+  .max-w-4xl,
+  .max-w-3xl,
+  .max-w-2xl,
+  .max-w-xl {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* High DPI display optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Optimize images for retina displays */
+  .retina-optimized {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Landscape mobile optimizations */
+@media (max-width: 768px) and (orientation: landscape) {
+  /* Optimize header height in landscape */
+  .mobile-header {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Optimize form layouts in landscape */
+  .mobile-form-landscape {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+}
+
+/* Dark mode support for mobile */
+@media (prefers-color-scheme: dark) {
+  .mobile-dark-mode {
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+
+  .mobile-dark-mode input,
+  .mobile-dark-mode textarea,
+  .mobile-dark-mode select {
+    background-color: #2a2a2a;
+    border-color: #404040;
+    color: #ffffff;
+  }
+}
+
+/* Accessibility improvements for mobile */
+@media (max-width: 768px) {
+  /* Improve focus indicators */
+  button:focus,
+  a:focus,
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+
+  /* Improve text contrast */
+  .mobile-high-contrast {
+    color: #000000;
+    background-color: #ffffff;
+  }
+
+  /* Optimize for reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Mobile performance optimizations */
+@media (max-width: 768px) {
+  /* Optimize animations for mobile */
+  .mobile-animation {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  /* Optimize scrolling performance */
+  .mobile-scroll-container {
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+  }
+
+  /* Optimize touch interactions */
+  .mobile-touch-area {
+    touch-action: manipulation;
+  }
+}
+
+/* Fix for specific mobile viewport issues */
+@media (max-width: 480px) {
+  /* Extra small mobile devices */
+  .px-4 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .px-6 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Ensure text doesn't overflow */
+  .text-3xl {
+    font-size: 1.75rem;
+    line-height: 1.2;
+  }
+
+  .text-2xl {
+    font-size: 1.5rem;
+    line-height: 1.3;
+  }
+
+  .text-xl {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+
+  /* Fix button layouts */
+  .flex-col.sm\:flex-row {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  /* Ensure cards don't overflow */
+  .rounded-lg {
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+  }
 }

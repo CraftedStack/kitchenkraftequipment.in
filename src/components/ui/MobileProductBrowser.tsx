@@ -1,0 +1,495 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { SEOProduct, SEOGenre } from '@/lib/types';
+import { FaFilter, FaSort, FaTh, FaList, FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
+
+interface MobileProductBrowserProps {
+  products: SEOProduct[];
+  categories?: SEOGenre[];
+  currentCategory?: string;
+  className?: string;
+}
+
+type ViewMode = 'grid' | 'list';
+type SortOption = 'name' | 'price' | 'newest';
+
+// Image URL utilities (same as ProductGrid)
+const getSecureImageUrl = (imageUrl: string | undefined): string | null => {
+  if (!imageUrl) return null;
+  
+  try {
+    const url = imageUrl.trim();
+    if (!url) return null;
+    
+    // Data URLs - return as-is
+    if (url.startsWith("data:")) {
+      return url;
+    }
+    
+    // Handle relative paths from backend server
+    if (url.startsWith("/")) {
+      // Use the backend server URL
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      return `${backendUrl}${url}`;
+    }
+    
+    // Handle protocol-relative URLs
+    if (url.startsWith("//")) {
+      return `https:${url}`;
+    }
+    
+    // Handle S3 URLs - fix potential certificate issues
+    if (url.includes('amazonaws.com') || url.includes('s3.')) {
+      // For S3 URLs that might have certificate issues, try to fix them
+      if (url.includes('.s3.') && url.includes('.amazonaws.com')) {
+        // Convert bucket.s3.region.amazonaws.com to s3.region.amazonaws.com/bucket format
+        const s3Match = url.match(/https?:\/\/([^.]+)\.s3\.([^.]+)\.amazonaws\.com\/(.+)/);
+        if (s3Match) {
+          const [, bucketName, region, path] = s3Match;
+          return `https://s3.${region}.amazonaws.com/${bucketName}/${path}`;
+        }
+      }
+      // Return S3 URL as-is if no conversion needed
+      return url.startsWith('http') ? url : `https://${url}`;
+    }
+    
+    // Handle URLs without protocol
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      if (url.includes(".") && url.includes("/")) {
+        return `https://${url}`;
+      }
+      // Treat as relative path
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      return `${backendUrl}/${url}`;
+    }
+    
+    // Convert HTTP to HTTPS for security (except localhost)
+    if (url.startsWith("http://")) {
+      if (url.includes("localhost") || url.includes("127.0.0.1")) {
+        return url;
+      }
+      return url.replace("http://", "https://");
+    }
+    
+    // HTTPS URLs - return as-is
+    return url;
+  } catch (error) {
+    console.error('Error processing image URL:', error);
+    return null;
+  }
+};
+
+export default function MobileProductBrowser({ 
+  products, 
+  categories = [], 
+  currentCategory,
+  className = '' 
+}: MobileProductBrowserProps) {
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [sortBy, setSortBy] = useState<SortOption>('name');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(currentCategory || '');
+  const [showFilters, setShowFilters] = useState(false);
+  const [filteredProducts, setFilteredProducts] = useState(products);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Filter and sort products
+  useEffect(() => {
+    let filtered = [...products];
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(product => 
+        product.name.toLowerCase().includes(query) ||
+        product.description?.toLowerCase().includes(query) ||
+        product.categorySlug?.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply category filter
+    if (selectedCategory && selectedCategory !== 'all') {
+      filtered = filtered.filter(product => 
+        product.categorySlug === selectedCategory
+      );
+    }
+
+    // Apply sorting
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'name':
+          return a.name.localeCompare(b.name);
+        case 'price':
+          // Assuming price is a string like "₹10,000" or empty
+          const priceA = parseFloat(a.price?.replace(/[^\d.]/g, '') || '0');
+          const priceB = parseFloat(b.price?.replace(/[^\d.]/g, '') || '0');
+          return priceA - priceB;
+        case 'newest':
+          return b.id - a.id; // Assuming higher ID means newer
+        default:
+          return 0;
+      }
+    });
+
+    setFilteredProducts(filtered);
+  }, [products, searchQuery, selectedCategory, sortBy]);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setSelectedCategory('');
+    setSortBy('name');
+  };
+
+  return (
+    <div className={`mobile-product-browser ${className}`}>
+      {/* Mobile Search Bar */}
+      <div className="sticky top-0 z-30 bg-white border-b border-gray-200 p-4">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+          {searchQuery && (
+            <button
+              onClick={() => handleSearch('')}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <FaTimes size={16} />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Mobile Controls */}
+      <div className="sticky top-16 z-20 bg-white border-b border-gray-200 p-4">
+        <div className="flex items-center justify-between">
+          {/* Filter Button */}
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className="flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <FaFilter className="mr-2" size={14} />
+            <span className="text-sm font-medium">Filters</span>
+            {(searchQuery || selectedCategory) && (
+              <span className="ml-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
+                {[searchQuery, selectedCategory].filter(Boolean).length}
+              </span>
+            )}
+          </button>
+
+          {/* View Mode and Sort */}
+          <div className="flex items-center space-x-2">
+            {/* Sort Dropdown */}
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as SortOption)}
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="name">Sort by Name</option>
+              <option value="price">Sort by Price</option>
+              <option value="newest">Sort by Newest</option>
+            </select>
+
+            {/* View Mode Toggle */}
+            <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-2 ${viewMode === 'grid' ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                aria-label="Grid view"
+              >
+                <FaTh size={14} />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-2 ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                aria-label="List view"
+              >
+                <FaList size={14} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Filter Panel */}
+        {showFilters && (
+          <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-medium text-gray-900">Filters</h3>
+              <button
+                onClick={clearFilters}
+                className="text-sm text-blue-600 hover:text-blue-800"
+              >
+                Clear All
+              </button>
+            </div>
+
+            {/* Category Filter */}
+            {categories.length > 0 && (
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Category
+                </label>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">All Categories</option>
+                  {categories.map((category) => (
+                    <option key={category.slug} value={category.slug}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Results Count */}
+      <div className="px-4 py-2 bg-gray-50 border-b border-gray-200">
+        <p className="text-sm text-gray-600">
+          {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} found
+          {searchQuery && ` for "${searchQuery}"`}
+        </p>
+      </div>
+
+      {/* Products Grid/List */}
+      <div className="p-4">
+        {filteredProducts.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="bg-gray-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FaSearch className="text-gray-400" size={24} />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">No Products Found</h3>
+            <p className="text-gray-600 mb-4">
+              Try adjusting your search or filters to find what you're looking for.
+            </p>
+            <button
+              onClick={clearFilters}
+              className="text-blue-600 hover:text-blue-800 font-medium"
+            >
+              Clear Filters
+            </button>
+          </div>
+        ) : (
+          <div className={
+            viewMode === 'grid' 
+              ? 'grid grid-cols-2 gap-4' 
+              : 'space-y-4'
+          }>
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                viewMode={viewMode}
+                isMounted={isMounted}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Mobile-optimized product card
+function ProductCard({ 
+  product, 
+  viewMode,
+  isMounted
+}: { 
+  product: SEOProduct; 
+  viewMode: ViewMode;
+  isMounted: boolean;
+}) {
+  const imageUrl = getSecureImageUrl(product.image);
+
+  if (viewMode === 'list') {
+    return (
+      <div className="flex bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 hover:border-blue-200">
+        {/* Product Image */}
+        <div className="w-24 h-24 flex-shrink-0 bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
+          {isMounted && imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={product.name}
+              className="w-full h-full object-cover"
+              loading="lazy"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                const parent = target.parentElement;
+                if (parent && !parent.querySelector('.fallback-placeholder')) {
+                  const fallback = document.createElement('div');
+                  fallback.className = 'fallback-placeholder w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100';
+                  fallback.innerHTML = `
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                  `;
+                  parent.appendChild(fallback);
+                }
+              }}
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+              </svg>
+            </div>
+          )}
+
+          {/* Price Badge for List View */}
+          {product.price && (
+            <div className="absolute -top-1 -right-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs font-bold px-1.5 py-0.5 rounded-full shadow-lg">
+              ₹{parseFloat(product.price).toLocaleString('en-IN')}
+            </div>
+          )}
+        </div>
+
+        {/* Product Info */}
+        <div className="flex-1 p-4 flex flex-col justify-between">
+          <div>
+            <h3 className="font-bold text-gray-900 text-sm line-clamp-2 mb-1 leading-tight">
+              {product.name}
+            </h3>
+            {product.description && (
+              <p className="text-xs text-gray-600 line-clamp-1 mb-2">
+                {product.description}
+              </p>
+            )}
+            
+            {/* Feature Tags for List View */}
+            <div className="flex gap-1 mb-2">
+              <span className="inline-block bg-blue-50 text-blue-700 text-xs px-1.5 py-0.5 rounded-full font-medium">
+                Commercial
+              </span>
+              <span className="inline-block bg-green-50 text-green-700 text-xs px-1.5 py-0.5 rounded-full font-medium">
+                Steel
+              </span>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/products/${product.categorySlug}/${product.slug}`}
+              className="flex-1 text-xs bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-2 px-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all text-center shadow-md"
+            >
+              View Details
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Grid view
+  return (
+    <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-1">
+      {/* Product Image */}
+      <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
+        {isMounted && imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={product.name}
+            className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+            loading="lazy"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              const parent = target.parentElement;
+              if (parent && !parent.querySelector('.fallback-placeholder')) {
+                const fallback = document.createElement('div');
+                fallback.className = 'fallback-placeholder w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100';
+                fallback.innerHTML = `
+                  <div class="text-center p-4">
+                    <div class="w-12 h-12 mx-auto mb-2 bg-blue-200 rounded-full flex items-center justify-center">
+                      <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                      </svg>
+                    </div>
+                    <p class="text-xs text-blue-600 font-medium">Equipment</p>
+                  </div>
+                `;
+                parent.appendChild(fallback);
+              }
+            }}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+            <div className="text-center p-4">
+              <div className="w-12 h-12 mx-auto mb-2 bg-blue-200 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+              </div>
+              <p className="text-xs text-blue-600 font-medium">Equipment</p>
+            </div>
+          </div>
+        )}
+
+        {/* Price Badge */}
+        {product.price && (
+          <div className="absolute top-2 right-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+            ₹{parseFloat(product.price).toLocaleString('en-IN')}
+          </div>
+        )}
+
+        {/* Category Badge */}
+        <div className="absolute top-2 left-2 bg-white bg-opacity-90 backdrop-blur-sm text-gray-700 text-xs font-medium px-2 py-1 rounded-full shadow-sm">
+          Commercial
+        </div>
+      </div>
+
+      {/* Product Info */}
+      <div className="p-4">
+        <h3 className="font-bold text-gray-900 text-sm line-clamp-2 mb-3 leading-tight">
+          {product.name}
+        </h3>
+        
+        {/* Feature Tags */}
+        <div className="mb-3 flex flex-wrap gap-1">
+          <span className="inline-block bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded-full font-medium">
+            Steel
+          </span>
+          <span className="inline-block bg-green-50 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">
+            Food Grade
+          </span>
+        </div>
+        
+        <div className="flex items-center justify-between gap-2">
+          <Link
+            href={`/products/${product.categorySlug}/${product.slug}`}
+            className="flex-1 text-xs text-blue-600 hover:text-blue-800 font-semibold text-center py-2 px-3 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+          >
+            Details
+          </Link>
+          <button
+            onClick={() => {
+              window.location.href = `/contact?product=${encodeURIComponent(product.name)}`;
+            }}
+            className="flex-1 text-xs bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-2 px-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md"
+          >
+            Quote
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

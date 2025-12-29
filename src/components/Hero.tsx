@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import './Hero.module.css';
+import styles from './Hero.module.css';
 
 const Hero = () => {
   const [isAndroid, setIsAndroid] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const videoRef = useRef(null);
+  const [isMounted, setIsMounted] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
+    setIsMounted(true);
     if (typeof navigator !== "undefined") {
       setIsAndroid(/Android/i.test(navigator.userAgent));
     }
@@ -18,16 +20,22 @@ const Hero = () => {
     setIsLoaded(true);
   };
 
+  // Use consistent className structure for both server and client
+  const heroClassName = styles.hero;
+  const videoContainerClassName = styles.videoContainer;
+  const videoClassName = isMounted 
+    ? `${styles.heroVideo} ${isAndroid ? styles.androidVideo : ''} ${isLoaded ? styles.videoLoaded : ''}`
+    : styles.heroVideo;
+
   return (
     <section
       id="Header"
-      className="hero relative w-screen flex flex-col justify-start items-center overflow-hidden bg-black"
+      className={heroClassName}
     >
-      {/* Video Container - Full width at top */}
-      <div className="video-container w-full">
+      <div className={videoContainerClassName}>
         <video
           ref={videoRef}
-          className={`hero-video ${isAndroid ? 'android-video' : ''} ${isLoaded ? 'video-loaded' : ''}`}
+          className={videoClassName}
           autoPlay
           loop
           muted
@@ -37,7 +45,7 @@ const Hero = () => {
         >
           <source
             src={
-              isAndroid
+              isMounted && isAndroid
                 ? "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/cinematic-mobile.mp4"
                 : "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/cinematic.mp4"
             }
@@ -45,10 +53,8 @@ const Hero = () => {
           />
           Your browser does not support the video tag.
         </video>
-        <div className="video-overlay"></div>
+        <div className={styles.videoOverlay}></div>
       </div>
-
-
     </section>
   );
 };
