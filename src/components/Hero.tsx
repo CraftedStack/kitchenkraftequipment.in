@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import Link from "next/link";
 import styles from './Hero.module.css';
 
 const Hero = () => {
   const [isAndroid, setIsAndroid] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -14,6 +16,16 @@ const Hero = () => {
     if (typeof navigator !== "undefined") {
       setIsAndroid(/Android/i.test(navigator.userAgent));
     }
+    
+    // Check if mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const handleVideoLoad = () => {
@@ -44,16 +56,14 @@ const Hero = () => {
           poster="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/cinematic-fallback.jpg"
         >
           <source
-            src={
-              isMounted && isAndroid
-                ? "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/cinematic-mobile.mp4"
-                : "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/cinematic.mp4"
-            }
+            src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/cinematic.mp4"
             type="video/mp4"
           />
           Your browser does not support the video tag.
         </video>
         <div className={styles.videoOverlay}></div>
+        
+
       </div>
     </section>
   );

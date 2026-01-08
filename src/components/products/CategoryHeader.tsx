@@ -37,15 +37,15 @@ export default function CategoryHeader({ category, productCount }: CategoryHeade
 
             <div className="flex items-center mb-8">
               <div className="bg-white bg-opacity-20 rounded-lg p-4 mr-6">
-                <div className="text-2xl font-bold">{productCount}</div>
-                <div className="text-sm opacity-90">Products Available</div>
+                <div className="text-2xl font-bold text-gray-900">{productCount}</div>
+                <div className="text-sm text-gray-700">Products Available</div>
               </div>
               
               <div className="bg-white bg-opacity-20 rounded-lg p-4">
-                <div className="text-2xl font-bold">
+                <div className="text-2xl font-bold text-gray-900">
                   {isManufacturing ? 'Custom' : 'Ready'}
                 </div>
-                <div className="text-sm opacity-90">
+                <div className="text-sm text-gray-700">
                   {isManufacturing ? 'Manufacturing' : 'Stock'}
                 </div>
               </div>

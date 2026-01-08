@@ -239,15 +239,15 @@ const ProductContainer = ({ isResell = false }: ProductContainerProps) => {
 
   const settings = {
     dots: true,
-    infinite: genres.length > 3,
+    infinite: genres.length > 1,
     speed: 500,
     slidesToShow: isMobile ? 1 : Math.min(3, genres.length),
     slidesToScroll: 1,
-    autoplay: genres.length > 3,
+    autoplay: genres.length > 1,
     autoplaySpeed: 3000,
     pauseOnHover: true,
-    centerMode: isMobile && genres.length > 0,
-    centerPadding: isMobile ? "20px" : "0px",
+    centerMode: false,
+    centerPadding: "0px",
     responsive: [
       {
         breakpoint: 1024,
@@ -260,8 +260,8 @@ const ProductContainer = ({ isResell = false }: ProductContainerProps) => {
         breakpoint: 640,
         settings: {
           slidesToShow: 1,
-          centerMode: genres.length > 1,
-          centerPadding: "40px"
+          centerMode: false,
+          centerPadding: "0px"
         }
       }
     ]

@@ -263,7 +263,7 @@ export default function MobileProductBrowser({
 
       {/* Results Count */}
       <div className="px-4 py-2 bg-gray-50 border-b border-gray-200">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-800 font-medium">
           {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} found
           {searchQuery && ` for "${searchQuery}"`}
         </p>
@@ -290,7 +290,7 @@ export default function MobileProductBrowser({
         ) : (
           <div className={
             viewMode === 'grid' 
-              ? 'grid grid-cols-2 gap-4' 
+              ? 'grid grid-cols-1 gap-4' 
               : 'space-y-4'
           }>
             {filteredProducts.map((product) => (
@@ -402,13 +402,13 @@ function ProductCard({
   // Grid view
   return (
     <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-1">
-      {/* Product Image */}
-      <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
+      {/* Product Image - Perfect Square */}
+      <div className="w-full h-0 pb-[100%] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
         {isMounted && imageUrl ? (
           <img
             src={imageUrl}
             alt={product.name}
-            className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+            className="absolute inset-0 w-full h-full object-cover hover:scale-110 transition-transform duration-500"
             loading="lazy"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
@@ -416,7 +416,7 @@ function ProductCard({
               const parent = target.parentElement;
               if (parent && !parent.querySelector('.fallback-placeholder')) {
                 const fallback = document.createElement('div');
-                fallback.className = 'fallback-placeholder w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100';
+                fallback.className = 'fallback-placeholder absolute inset-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100';
                 fallback.innerHTML = `
                   <div class="text-center p-4">
                     <div class="w-12 h-12 mx-auto mb-2 bg-blue-200 rounded-full flex items-center justify-center">
@@ -432,7 +432,7 @@ function ProductCard({
             }}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+          <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
             <div className="text-center p-4">
               <div className="w-12 h-12 mx-auto mb-2 bg-blue-200 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

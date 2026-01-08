@@ -5,7 +5,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   overflow: hidden;
   background: #000;
@@ -14,19 +14,44 @@
 .videoContainer {
   position: relative;
   width: 100%;
-  height: 70vh;
+  height: 100vh;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+/* Ensure horizontal video display on mobile */
+@media (max-width: 768px) {
+  .videoContainer {
+    height: 100vh;
+    width: 100%;
+    /* Ensure the container maintains aspect ratio for horizontal video */
+    aspect-ratio: 16/9;
+    min-height: 100vh;
+  }
+}
+
 .heroVideo {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center center;
   opacity: 0;
   transition: opacity 1.2s ease-in-out;
+}
+
+/* Mobile video adjustments for horizontal display */
+@media (max-width: 768px) {
+  .heroVideo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    /* Force horizontal aspect ratio on mobile */
+    min-width: 100%;
+    min-height: 100vh;
+  }
 }
 
 .videoLoaded {
@@ -45,232 +70,328 @@
   height: 100%;
   background: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0.2) 0%,
-    rgba(0, 0, 0, 0.4) 50%,
-    rgba(0, 0, 0, 0.8) 100%
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.5) 50%,
+    rgba(0, 0, 0, 0.7) 100%
   );
 }
 
-.welcome-content {
-  padding: 4rem 1rem;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 1s ease 0.5s;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(
-    to bottom,
-    rgba(13, 71, 161, 0.95) 0%,
-    rgba(13, 71, 161, 1) 100%
-  );
-  min-height: 30vh;
-}
-
-.welcome-content.content-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.welcome-title {
-  font-size: 3.5rem;
-  font-weight: 800;
-  margin-bottom: 1.5rem;
-  line-height: 1.2;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  letter-spacing: 0.5px;
-}
-
-.brand-accent {
-  color: #FFD700;
-  position: relative;
-  display: inline-block;
-}
-
-.brand-accent::after {
-  content: '';
+/* Hero Content Overlay */
+.heroContent {
   position: absolute;
-  bottom: -8px;
+  top: 0;
   left: 0;
   width: 100%;
-  height: 4px;
-  background: linear-gradient(90deg, transparent, #FFD700, transparent);
-  border-radius: 2px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 2rem 1rem;
 }
 
-.welcome-subtitle {
-  font-size: 1.6rem;
-  margin-bottom: 0;
+.heroText {
+  text-align: center;
+  color: white;
+  max-width: 800px;
+  width: 100%;
+}
+
+.heroTitle {
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+}
+
+.brandName {
+  display: block;
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.brandTagline {
+  display: block;
+  font-size: 1.5rem;
   font-weight: 300;
-  max-width: 700px;
+  color: #E3F2FD;
+  letter-spacing: 0.5px;
+}
+
+.heroSubtitle {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+  max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.5;
-  letter-spacing: 0.5px;
+}
+
+.heroActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  min-width: 160px;
+  justify-content: center;
+  text-shadow: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.ctaPrimary {
+  background: linear-gradient(135deg, #2196F3, #1976D2);
+  color: white;
+  border: 2px solid transparent;
+}
+
+.ctaPrimary:hover {
+  background: linear-gradient(135deg, #1976D2, #1565C0);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+}
+
+.ctaSecondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.ctaSecondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.ctaIcon {
+  font-size: 1.1rem;
+}
+
+.quickContact {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.quickContactItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.quickContactItem:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .welcome-title {
+  .brandName {
     font-size: 3rem;
   }
   
-  .welcome-subtitle {
-    font-size: 1.4rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .video-container {
-    height: 50vh;
+  .brandTagline {
+    font-size: 1.3rem;
   }
   
-  .welcome-content {
-    padding: 2rem 1rem;
-    min-height: 50vh;
-  }
-  
-  .welcome-title {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-  }
-  
-  .welcome-subtitle {
+  .heroSubtitle {
     font-size: 1.1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .video-container {
-    height: 40vh;
-  }
-  
-  .welcome-title {
-    font-size: 1.75rem;
-    line-height: 1.3;
-  }
-  
-  .welcome-subtitle {
-    font-size: 1rem;
-    padding: 0 0.5rem;
-    line-height: 1.4;
-  }
-  
-  .welcome-content {
-    padding: 1.5rem 0.5rem;
-    min-height: 60vh;
-  }
-}
-
-.welcomeContent {
-  padding: 4rem 1rem;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 1s ease 0.5s;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(
-    to bottom,
-    rgba(13, 71, 161, 0.95) 0%,
-    rgba(13, 71, 161, 1) 100%
-  );
-  min-height: 30vh;
-}
-
-.contentVisible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.welcomeTitle {
-  font-size: 3.5rem;
-  font-weight: 800;
-  margin-bottom: 1.5rem;
-  line-height: 1.2;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  letter-spacing: 0.5px;
-}
-
-.brandAccent {
-  color: #FFD700;
-  position: relative;
-  display: inline-block;
-}
-
-.brandAccent::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: linear-gradient(90deg, transparent, #FFD700, transparent);
-  border-radius: 2px;
-}
-
-.welcomeSubtitle {
-  font-size: 1.6rem;
-  margin-bottom: 0;
-  font-weight: 300;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.5;
-  letter-spacing: 0.5px;
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .welcomeTitle {
-    font-size: 3rem;
-  }
-  
-  .welcomeSubtitle {
-    font-size: 1.4rem;
   }
 }
 
 @media (max-width: 768px) {
   .videoContainer {
-    height: 50vh;
+    height: 100vh;
   }
   
-  .welcomeContent {
-    padding: 2rem 1rem;
-    min-height: 50vh;
+  .heroContent {
+    padding: 1rem;
   }
   
-  .welcomeTitle {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+  .brandName {
+    font-size: 2.5rem;
   }
   
-  .welcomeSubtitle {
+  .brandTagline {
     font-size: 1.1rem;
+  }
+  
+  .heroSubtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+  }
+  
+  .heroActions {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .ctaButton {
+    width: 100%;
+    max-width: 280px;
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
+  }
+  
+  .quickContact {
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .quickContactItem {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
   }
 }
 
 @media (max-width: 480px) {
-  .videoContainer {
-    height: 40vh;
+  .heroContent {
+    padding: 0.75rem;
   }
   
-  .welcomeTitle {
-    font-size: 1.75rem;
-    line-height: 1.3;
+  .brandName {
+    font-size: 2rem;
+    line-height: 1.2;
   }
   
-  .welcomeSubtitle {
+  .brandTagline {
     font-size: 1rem;
-    padding: 0 0.5rem;
-    line-height: 1.4;
   }
   
-  .welcomeContent {
-    padding: 1.5rem 0.5rem;
-    min-height: 60vh;
+  .heroSubtitle {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    padding: 0 0.5rem;
+  }
+  
+  .ctaButton {
+    padding: 0.9rem 1.2rem;
+    font-size: 0.9rem;
+    min-width: 140px;
+  }
+  
+  .quickContact {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .quickContactItem {
+    width: 100%;
+    max-width: 200px;
+    justify-content: center;
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Landscape mobile optimization */
+@media (max-width: 768px) and (orientation: landscape) {
+  .videoContainer {
+    height: 100vh;
+  }
+  
+  .heroContent {
+    padding: 1rem;
+  }
+  
+  .brandName {
+    font-size: 2.2rem;
+  }
+  
+  .heroSubtitle {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .heroActions {
+    flex-direction: row;
+    gap: 1rem;
+  }
+  
+  .ctaButton {
+    width: auto;
+    min-width: 140px;
+    padding: 0.8rem 1.5rem;
+  }
+  
+  .quickContact {
+    flex-direction: row;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .quickContactItem {
+    width: auto;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .heroVideo {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .heroVideo {
+    animation: none;
+  }
+  
+  .ctaButton {
+    transition: none;
+  }
+  
+  .quickContactItem {
+    transition: none;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .videoOverlay {
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.6) 50%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
   }
 }
