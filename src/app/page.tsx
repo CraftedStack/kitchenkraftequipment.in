@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import Hero from "@/components/Hero";
 import Clients from "@/components/Clients";
-import ProductContainer from "@/components/ProductContainer";
 import ProductInfoBox from "@/components/ProductInfoBox";
+import HomepageProductSection from "@/components/homepage/HomepageProductSection";
 import { seoManager } from "@/lib/seo";
 import { TouchButton, TouchCard } from "@/components/ui/TouchFeedback";
 
@@ -91,90 +91,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Products Section - Mobile Optimized */}
-      <section className="py-6 md:py-16">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="text-center mb-6 md:mb-12">
-            <h2 className="text-xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-4 px-2">
-              Premium Commercial Kitchen Equipment
-            </h2>
-            <p className="text-sm md:text-lg text-gray-600 max-w-3xl mx-auto px-2 md:px-4 leading-relaxed">
-              Discover our extensive range of high-quality commercial kitchen equipment. 
-              From custom-manufactured solutions to trusted brand products - everything you need for your professional kitchen.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-12 mb-6 md:mb-12">
-            {/* Manufacturing Products */}
-            <TouchCard className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 md:p-8 rounded-xl">
-              <div className="flex items-center mb-3 md:mb-4">
-                <div className="bg-blue-600 w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center mr-3 md:mr-4 flex-shrink-0">
-                  <svg className="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                  </svg>
-                </div>
-                <h3 className="text-lg md:text-2xl font-bold text-gray-900">Custom Manufacturing</h3>
-              </div>
-              <p className="text-gray-700 mb-4 md:mb-6 text-xs md:text-base leading-relaxed">
-                Precision-engineered stainless steel equipment manufactured to your exact specifications. 
-                Built for durability, efficiency, and compliance with food safety standards.
-              </p>
-              <div className="overflow-hidden mb-4 md:mb-6">
-                <ProductContainer />
-              </div>
-              <div>
-                <Link
-                  href="/products?type=manufacture"
-                  className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-xs md:text-base transition-colors"
-                >
-                  View All Manufacturing Products
-                  <svg className="ml-2 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </Link>
-              </div>
-            </TouchCard>
-
-            {/* Reseller Products */}
-            <TouchCard className="bg-gradient-to-br from-green-50 to-green-100 p-4 md:p-8 rounded-xl">
-              <div className="flex items-center mb-3 md:mb-4">
-                <div className="bg-green-600 w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center mr-3 md:mr-4 flex-shrink-0">
-                  <svg className="w-5 h-5 md:w-6 md:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                  </svg>
-                </div>
-                <h3 className="text-lg md:text-2xl font-bold text-gray-900">Premium Brands</h3>
-              </div>
-              <p className="text-gray-700 mb-4 md:mb-6 text-xs md:text-base leading-relaxed">
-                Curated selection of top-quality commercial kitchen equipment from trusted manufacturers. 
-                Ready-to-ship solutions for immediate deployment in your kitchen.
-              </p>
-              <div className="overflow-hidden mb-4 md:mb-6">
-                <ProductContainer isResell={true} />
-              </div>
-              <div>
-                <Link
-                  href="/products?type=resell"
-                  className="inline-flex items-center text-green-600 hover:text-green-800 font-medium text-xs md:text-base transition-colors"
-                >
-                  View All Brand Products
-                  <svg className="ml-2 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </Link>
-              </div>
-            </TouchCard>
-          </div>
-          
-          <div className="text-center">
-            <TouchButton className="bg-gray-900 text-white px-6 md:px-8 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors">
-              <Link href="/products" className="block w-full h-full">
-                Browse All Products
-              </Link>
-            </TouchButton>
-          </div>
-        </div>
-      </section>
+      {/* Featured Products Section - Updated with Category Cards */}
+      <HomepageProductSection />
 
       {/* Company Overview Section - Mobile Optimized */}
       <section className="py-6 md:py-16 bg-gray-50">
@@ -259,15 +177,6 @@ export default function HomePage() {
       {/* Trusted Clients Section */}
       <section className="py-6 md:py-16">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="text-center mb-6 md:mb-12">
-            <h2 className="text-xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-4 px-2">
-              Trusted by Leading Businesses
-            </h2>
-            <p className="text-sm md:text-lg text-gray-600 max-w-3xl mx-auto px-2 md:px-4 leading-relaxed">
-              From fine dining restaurants to large hotel chains, businesses across Pune trust 
-              Kitchen Kraft Equipments for their commercial kitchen needs.
-            </p>
-          </div>
           <div className="overflow-hidden">
             <Clients />
           </div>

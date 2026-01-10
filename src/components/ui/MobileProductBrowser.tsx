@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { SEOProduct, SEOGenre } from '@/lib/types';
-import { FaFilter, FaSort, FaTh, FaList, FaSearch, FaTimes, FaChevronDown } from 'react-icons/fa';
+import { FaFilter, FaTh, FaList, FaSearch, FaTimes } from 'react-icons/fa';
+import { getDisplayImageUrl } from '@/lib/imageUtils';
 
 interface MobileProductBrowserProps {
   products: SEOProduct[];
@@ -14,72 +15,6 @@ interface MobileProductBrowserProps {
 
 type ViewMode = 'grid' | 'list';
 type SortOption = 'name' | 'price' | 'newest';
-
-// Image URL utilities (same as ProductGrid)
-const getSecureImageUrl = (imageUrl: string | undefined): string | null => {
-  if (!imageUrl) return null;
-  
-  try {
-    const url = imageUrl.trim();
-    if (!url) return null;
-    
-    // Data URLs - return as-is
-    if (url.startsWith("data:")) {
-      return url;
-    }
-    
-    // Handle relative paths from backend server
-    if (url.startsWith("/")) {
-      // Use the backend server URL
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      return `${backendUrl}${url}`;
-    }
-    
-    // Handle protocol-relative URLs
-    if (url.startsWith("//")) {
-      return `https:${url}`;
-    }
-    
-    // Handle S3 URLs - fix potential certificate issues
-    if (url.includes('amazonaws.com') || url.includes('s3.')) {
-      // For S3 URLs that might have certificate issues, try to fix them
-      if (url.includes('.s3.') && url.includes('.amazonaws.com')) {
-        // Convert bucket.s3.region.amazonaws.com to s3.region.amazonaws.com/bucket format
-        const s3Match = url.match(/https?:\/\/([^.]+)\.s3\.([^.]+)\.amazonaws\.com\/(.+)/);
-        if (s3Match) {
-          const [, bucketName, region, path] = s3Match;
-          return `https://s3.${region}.amazonaws.com/${bucketName}/${path}`;
-        }
-      }
-      // Return S3 URL as-is if no conversion needed
-      return url.startsWith('http') ? url : `https://${url}`;
-    }
-    
-    // Handle URLs without protocol
-    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-      if (url.includes(".") && url.includes("/")) {
-        return `https://${url}`;
-      }
-      // Treat as relative path
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
-      return `${backendUrl}/${url}`;
-    }
-    
-    // Convert HTTP to HTTPS for security (except localhost)
-    if (url.startsWith("http://")) {
-      if (url.includes("localhost") || url.includes("127.0.0.1")) {
-        return url;
-      }
-      return url.replace("http://", "https://");
-    }
-    
-    // HTTPS URLs - return as-is
-    return url;
-  } catch (error) {
-    console.error('Error processing image URL:', error);
-    return null;
-  }
-};
 
 export default function MobileProductBrowser({ 
   products, 
@@ -318,13 +253,13 @@ function ProductCard({
   viewMode: ViewMode;
   isMounted: boolean;
 }) {
-  const imageUrl = getSecureImageUrl(product.image);
+  const imageUrl = getDisplayImageUrl(product.image, { width: 300, height: 300, quality: 80 });
 
   if (viewMode === 'list') {
     return (
       <div className="flex bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 hover:border-blue-200">
         {/* Product Image */}
-        <div className="w-24 h-24 flex-shrink-0 bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
+        <div className="w-24 h-24 flex-shrink-0 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden relative">
           {isMounted && imageUrl ? (
             <img
               src={imageUrl}
@@ -402,13 +337,13 @@ function ProductCard({
   // Grid view
   return (
     <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-1">
-      {/* Product Image - Perfect Square */}
-      <div className="w-full h-0 pb-[100%] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
+      {/* Product Image - Fixed like CategoryCard */}
+      <div className="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden relative">
         {isMounted && imageUrl ? (
           <img
             src={imageUrl}
             alt={product.name}
-            className="absolute inset-0 w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+            className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
             loading="lazy"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
@@ -432,7 +367,7 @@ function ProductCard({
             }}
           />
         ) : (
-          <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
             <div className="text-center p-4">
               <div className="w-12 h-12 mx-auto mb-2 bg-blue-200 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

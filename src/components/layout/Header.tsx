@@ -97,8 +97,8 @@ export default function Header() {
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-2">
-              {isMounted ? NAVIGATION.map((item) => {
-                const isActive = isActiveLink(item.href);
+              {NAVIGATION.map((item) => {
+                const isActive = isMounted ? isActiveLink(item.href) : false;
                 
                 return (
                   <Link
@@ -118,18 +118,7 @@ export default function Header() {
                     )}
                   </Link>
                 );
-              }) : (
-                // Server-side fallback - render without active states
-                NAVIGATION.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="px-3 py-2 text-sm font-medium transition-all duration-200 rounded-lg relative group text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                  >
-                    {item.name}
-                  </Link>
-                ))
-              )}
+              })}
             </nav>
 
             {/* Contact Info & CTA */}

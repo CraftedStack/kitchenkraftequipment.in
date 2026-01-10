@@ -37,7 +37,7 @@
   height: 100%;
   object-fit: cover;
   object-position: center center;
-  opacity: 0;
+  opacity: 1; /* Changed from 0 to 1 to show video immediately */
   transition: opacity 1.2s ease-in-out;
 }
 

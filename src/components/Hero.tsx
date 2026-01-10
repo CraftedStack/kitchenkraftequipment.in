@@ -32,6 +32,10 @@ const Hero = () => {
     setIsLoaded(true);
   };
 
+  const handleVideoError = (e: any) => {
+    console.error('Video failed to load:', e);
+  };
+
   // Use consistent className structure for both server and client
   const heroClassName = styles.hero;
   const videoContainerClassName = styles.videoContainer;
@@ -53,6 +57,7 @@ const Hero = () => {
           muted
           playsInline
           onLoadedData={handleVideoLoad}
+          onError={handleVideoError}
           poster="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/cinematic-fallback.jpg"
         >
           <source
