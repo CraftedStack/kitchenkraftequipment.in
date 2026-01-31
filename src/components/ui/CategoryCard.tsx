@@ -17,7 +17,7 @@ export default function CategoryCard({ category, type, className = '' }: Categor
   return (
     <Link
       href={`/products/${category.slug}`}
-      className={`group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-1 ${className}`}
+      className={`group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-300 hover-lift ${className}`}
     >
       {/* Category Image - Improved for visibility */}
       <div className="w-full h-48 bg-white overflow-hidden relative p-2 flex items-center justify-center">

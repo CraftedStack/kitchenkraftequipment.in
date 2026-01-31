@@ -53,50 +53,50 @@ export default function Clients() {
   }, [isAutoPlaying]);
 
   const logos: Logo[] = [
-    { 
-      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Nyati.png", 
-      alt: "Nyati Group", 
-      name: "Nyati Group" 
+    {
+      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Nyati.png",
+      alt: "Nyati Group",
+      name: "Nyati Group"
     },
-    { 
-      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/client2.png", 
-      alt: "Swiggy", 
-      name: "Swiggy" 
+    {
+      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/client2.png",
+      alt: "Swiggy",
+      name: "Swiggy"
     },
-    { 
-      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/wns.png", 
-      alt: "WNS Global Services", 
-      name: "WNS" 
+    {
+      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/wns.png",
+      alt: "WNS Global Services",
+      name: "WNS"
     },
-    { 
-      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/o_hotel.png", 
-      alt: "Oxford Hotel", 
-      name: "Oxford Hotel" 
+    {
+      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/o_hotel.png",
+      alt: "Oxford Hotel",
+      name: "Oxford Hotel"
     },
-    { 
-      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Smokin'Joe'sLogo.png", 
-      alt: "Smokin' Joe's Pizza", 
-      name: "Smokin' Joe's" 
+    {
+      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Smokin'Joe'sLogo.png",
+      alt: "Smokin' Joe's Pizza",
+      name: "Smokin' Joe's"
     },
-    { 
-      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/OGR1.png", 
-      alt: "OGR Group", 
-      name: "OGR Group" 
+    {
+      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/OGR1.png",
+      alt: "OGR Group",
+      name: "OGR Group"
     },
-    { 
-      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/siemens.png", 
-      alt: "Siemens", 
-      name: "Siemens" 
+    {
+      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/siemens.png",
+      alt: "Siemens",
+      name: "Siemens"
     },
-    { 
-      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Honeywell.png", 
-      alt: "Honeywell", 
-      name: "Honeywell" 
+    {
+      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Honeywell.png",
+      alt: "Honeywell",
+      name: "Honeywell"
     },
-    { 
-      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/mastercard-removebg-preview.png", 
-      alt: "MasterCard", 
-      name: "MasterCard" 
+    {
+      src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/mastercard-removebg-preview.png",
+      alt: "MasterCard",
+      name: "MasterCard"
     },
   ];
 
@@ -193,11 +193,11 @@ export default function Clients() {
     const displayText = isExpanded ? review.text : truncateText(review.text);
 
     return (
-      <p className="text-gray-600 text-sm leading-relaxed mb-4">
+      <p className="text-gray-700 text-base md:text-lg leading-relaxed italic mb-4 font-light">
         "{displayText}"
         {needsTruncation && (
           <button
-            className="text-blue-600 hover:text-blue-800 font-medium ml-1 transition-colors"
+            className="text-blue-600 hover:text-blue-800 font-medium ml-1 transition-colors text-sm not-italic"
             onClick={(e) => {
               e.stopPropagation();
               toggleExpand(review.id);
@@ -213,14 +213,14 @@ export default function Clients() {
   return (
     <section className="py-6 md:py-16">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        
+
         {/* Section Header */}
         <div className="text-center mb-6 md:mb-12">
           <h2 className="text-xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-4 px-2">
             Trusted by Leading Businesses
           </h2>
           <p className="text-sm md:text-lg text-gray-600 max-w-3xl mx-auto px-2 md:px-4 leading-relaxed">
-            From fine dining restaurants to large hotel chains, businesses across Pune trust 
+            From fine dining restaurants to large hotel chains, businesses across Pune trust
             Kitchen Kraft Equipments for their commercial kitchen needs.
           </p>
         </div>
@@ -233,32 +233,33 @@ export default function Clients() {
               {/* Gradient fade edges */}
               <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
               <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
-              
+
               {/* Fixed height container - prevents vertical scroll */}
               <div className="h-24 flex items-center overflow-hidden">
-                <Marquee 
-                  gradient={false} 
-                  speed={20} 
-                  direction="left" 
+                <Marquee
+                  gradient={false}
+                  speed={30}
+                  direction="left"
                   pauseOnHover={true}
+                  autoFill={true}
                   className="select-none h-full flex items-center"
                   style={{ height: '96px' }}
                 >
-                  {/* Minimal duplication for seamless loop */}
-                  {[...logos, ...logos].map((logo, idx) => (
-                    <div 
-                      key={`logo-${idx}`} 
-                      className="flex items-center justify-center mx-6"
+                  {/* Logos with AutoFill */}
+                  {logos.map((logo, idx) => (
+                    <div
+                      key={`logo-${idx}`}
+                      className="flex items-center justify-center mx-4 md:mx-8"
                       style={{ height: '96px' }}
                     >
                       {/* Fixed size logo container - prevents overlap */}
-                      <div className="group flex items-center justify-center w-36 h-20 bg-gray-50 rounded-lg p-3 hover:bg-white hover:shadow-md transition-all duration-300 flex-shrink-0">
-                        <img 
+                      <div className="group flex items-center justify-center w-32 h-20 md:w-40 md:h-24 bg-white/50 backdrop-blur-sm rounded-xl border border-gray-100 p-3 md:p-4 hover:bg-white hover:shadow-lg hover:border-blue-100 transition-all duration-300 flex-shrink-0">
+                        <img
                           src={getDisplayImageUrl(logo.src) || logo.src}
                           alt={logo.alt}
-                          className="w-30 h-14 object-contain opacity-85 group-hover:opacity-100 transition-all duration-500"
+                          className="w-full h-full object-contain group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
                           loading="lazy"
-                          style={{ maxWidth: '120px', maxHeight: '56px' }}
+                          style={{ maxWidth: '100%', maxHeight: '100%' }}
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
                             target.style.display = 'none';
@@ -269,12 +270,12 @@ export default function Clients() {
                   ))}
                 </Marquee>
               </div>
-              
+
               {/* Bottom accent line */}
               <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
             </div>
           </div>
-          
+
           {/* Trust indicators - simplified layout */}
           <div className="flex flex-wrap items-center justify-center mt-6 gap-6 text-sm text-gray-600">
             <div className="flex items-center space-x-2">
@@ -316,18 +317,7 @@ export default function Clients() {
 
           {/* Fallback Reviews Carousel */}
           {!widgetLoaded && (
-            <div className="relative px-4">
-              {/* Loading Indicator */}
-              <div className="text-center mb-6">
-                <div className="inline-flex items-center space-x-2 text-blue-600">
-                  <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  <span className="text-sm font-medium">Loading reviews...</span>
-                </div>
-              </div>
-
+            <div className="relative px-2 md:px-4">
               {/* Review Carousel */}
               <div className="relative">
                 <div className="bg-white rounded-xl shadow-md p-4 md:p-6 border border-gray-100">
@@ -338,7 +328,7 @@ export default function Clients() {
                         {sampleReviews[currentReview].avatar}
                       </div>
                     </div>
-                    
+
                     {/* Review Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between mb-2">
@@ -354,9 +344,9 @@ export default function Clients() {
                           {renderStars(sampleReviews[currentReview].rating)}
                         </div>
                       </div>
-                      
+
                       <ReviewText review={sampleReviews[currentReview]} />
-                      
+
                       <div className="text-xs text-gray-500">
                         {sampleReviews[currentReview].date}
                       </div>
@@ -367,36 +357,35 @@ export default function Clients() {
                 {/* Navigation Buttons */}
                 <button
                   onClick={prevReview}
-                  className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-2 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 text-gray-600 hover:text-blue-600 border border-gray-200"
+                  className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 md:-translate-x-2 bg-white rounded-full p-1.5 md:p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 text-gray-600 hover:text-blue-600 border border-gray-200 z-10"
                   aria-label="Previous review"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
 
                 <button
                   onClick={nextReview}
-                  className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-2 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 text-gray-600 hover:text-blue-600 border border-gray-200"
+                  className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1 md:translate-x-2 bg-white rounded-full p-1.5 md:p-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 text-gray-600 hover:text-blue-600 border border-gray-200 z-10"
                   aria-label="Next review"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
               </div>
 
-              {/* Dots Indicator */}
-              <div className="flex justify-center space-x-2 mt-4">
+              {/* Dots Indicator - Smaller on mobile */}
+              <div className="flex justify-center space-x-1.5 md:space-x-2 mt-4">
                 {sampleReviews.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => goToReview(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      index === currentReview 
-                        ? 'bg-blue-600 w-6' 
-                        : 'bg-gray-300 hover:bg-gray-400'
-                    }`}
+                    className={`rounded-full transition-all duration-300 ${index === currentReview
+                      ? 'bg-blue-600 w-4 h-1 md:w-6 md:h-2'
+                      : 'bg-gray-300 w-1 h-1 md:w-2 md:h-2 hover:bg-gray-400'
+                      }`}
                     aria-label={`Go to review ${index + 1}`}
                   />
                 ))}

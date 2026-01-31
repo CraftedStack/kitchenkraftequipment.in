@@ -1,6 +1,6 @@
 /**
  * Simple Header Component
- * Clean navigation without dropdowns, with loading states
+ * Clean navigation without dropdowns, with loading states.
  */
 
 'use client';
@@ -25,7 +25,7 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [isPending, startTransition] = useTransition();
-  
+
   const pathname = usePathname();
   const router = useRouter();
 
@@ -41,7 +41,7 @@ export default function Header() {
     }
 
     e.preventDefault();
-    
+
     // Use React 18 transition for proper loading state management
     startTransition(() => {
       router.push(href);
@@ -56,8 +56,8 @@ export default function Header() {
     return pathname.startsWith(href);
   };
 
-  // Static button class to prevent hydration mismatch
-  const buttonClass = "bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm hover:shadow-md";
+  // Enhanced premium button style
+  const buttonClass = "bg-gradient-to-r from-blue-600 to-blue-700 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 shadow-blue-500/30";
 
   return (
     <>
@@ -68,12 +68,12 @@ export default function Header() {
         </div>
       )}
 
-      <header className="fixed top-0 left-0 right-0 bg-white shadow-sm border-b border-gray-200 z-50">
+      <header className="fixed top-0 left-0 right-0 glass z-50 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 lg:h-16">
             {/* Logo */}
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="flex items-center space-x-3 z-10"
               onClick={(e) => handleNavigation('/', e)}
             >
@@ -86,10 +86,10 @@ export default function Header() {
                 priority
               />
               <div className="hidden sm:block">
-                <h1 className="text-base lg:text-lg font-bold text-gray-900">
+                <h1 className="text-lg lg:text-xl font-bold text-gray-900 tracking-tight leading-none">
                   Kitchen Kraft
                 </h1>
-                <p className="text-xs text-gray-600 -mt-0.5">
+                <p className="text-xs text-blue-600 font-medium tracking-wide uppercase">
                   Equipments
                 </p>
               </div>
@@ -99,7 +99,7 @@ export default function Header() {
             <nav className="hidden lg:flex items-center space-x-2">
               {NAVIGATION.map((item) => {
                 const isActive = isMounted ? isActiveLink(item.href) : false;
-                
+
                 return (
                   <Link
                     key={item.name}
@@ -107,8 +107,8 @@ export default function Header() {
                     onClick={(e) => handleNavigation(item.href, e)}
                     className={
                       isActive
-                        ? 'px-3 py-2 text-sm font-medium transition-all duration-200 rounded-lg relative group text-blue-600 bg-blue-50'
-                        : 'px-3 py-2 text-sm font-medium transition-all duration-200 rounded-lg relative group text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                        ? 'px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50/80 rounded-lg transition-all duration-200'
+                        : 'px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50/80 rounded-lg transition-all duration-200'
                     }
                   >
                     {item.name}

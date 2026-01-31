@@ -1,13 +1,85 @@
 @import "tailwindcss";
 
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden; /* Prevent horizontal scroll */
+:root {
+  --font-inter: 'Inter', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
+}
+
+/* Typography Defaults */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-outfit);
+  letter-spacing: -0.02em;
 }
 
 body {
-  overflow-x: hidden; /* Prevent horizontal scroll */
-  padding-top: 60px; /* Account for fixed header - reduced from 80px */
+  font-family: var(--font-inter);
+}
+
+/* Premium Utilities */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-dark {
+  background: rgba(17, 24, 39, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(to right, #2563eb, #1d4ed8);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.hover-lift {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  /* Prevent horizontal scroll */
+}
+
+body {
+  overflow-x: hidden;
+  /* Prevent horizontal scroll */
+  padding-top: 60px;
+  /* Account for fixed header - reduced from 80px */
 }
 
 /* Critical mobile fixes */
@@ -41,11 +113,20 @@ section {
 
 /* Fix flex layouts */
 .flex {
-  min-width: 0; /* Allow flex items to shrink */
+  min-width: 0;
+  /* Allow flex items to shrink */
 }
 
 /* Prevent text from breaking out of containers */
-h1, h2, h3, h4, h5, h6, p, div, span {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+div,
+span {
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
@@ -62,6 +143,7 @@ img {
   0% {
     transform: translateX(100%);
   }
+
   100% {
     transform: translateX(-100%);
   }
@@ -79,6 +161,7 @@ img {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -90,6 +173,7 @@ img {
     opacity: 1;
     transform: translateY(0);
   }
+
   100% {
     opacity: 0;
     transform: translateY(-10px);
@@ -140,11 +224,12 @@ img {
 /* Mobile-specific optimizations */
 @media (max-width: 768px) {
   body {
-    padding-top: 56px; /* Smaller header on mobile - reduced from 70px */
+    padding-top: 56px;
+    /* Smaller header on mobile - reduced from 70px */
   }
 
   /* Improve touch targets */
-  button, 
+  button,
   a[role="button"],
   input[type="button"],
   input[type="submit"] {
@@ -159,7 +244,8 @@ img {
   input[type="password"],
   textarea,
   select {
-    font-size: 16px; /* Prevents zoom on iOS */
+    font-size: 16px;
+    /* Prevents zoom on iOS */
     padding: 12px 16px;
   }
 
@@ -279,6 +365,7 @@ img {
 
 /* Extra small mobile devices */
 @media (max-width: 375px) {
+
   .container,
   .max-w-7xl,
   .max-w-6xl,
@@ -328,7 +415,9 @@ img {
 }
 
 /* High DPI display optimizations */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+
   /* Optimize images for retina displays */
   .retina-optimized {
     image-rendering: -webkit-optimize-contrast;
@@ -338,6 +427,7 @@ img {
 
 /* Landscape mobile optimizations */
 @media (max-width: 768px) and (orientation: landscape) {
+
   /* Optimize header height in landscape */
   .mobile-header {
     padding-top: 0.5rem;
@@ -369,6 +459,7 @@ img {
 
 /* Accessibility improvements for mobile */
 @media (max-width: 768px) {
+
   /* Improve focus indicators */
   button:focus,
   a:focus,
@@ -397,6 +488,7 @@ img {
 
 /* Mobile performance optimizations */
 @media (max-width: 768px) {
+
   /* Optimize animations for mobile */
   .mobile-animation {
     will-change: transform;

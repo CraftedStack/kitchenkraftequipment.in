@@ -11,6 +11,17 @@
   background: #000;
 }
 
+@media (max-width: 768px) {
+  .hero {
+    min-height: auto;
+    display: block;
+    /* Stack naturally on mobile */
+    padding-bottom: 2rem;
+    background: #fff !important;
+    /* "like in white" - white background for mobile if video doesn't cover */
+  }
+}
+
 .videoContainer {
   position: relative;
   width: 100%;
@@ -22,13 +33,17 @@
 }
 
 /* Ensure horizontal video display on mobile */
+/* Ensure horizontal video display on mobile */
 @media (max-width: 768px) {
   .videoContainer {
-    height: 100vh;
+    height: auto;
     width: 100%;
-    /* Ensure the container maintains aspect ratio for horizontal video */
+    /* Ensure the container maintains aspect ratio for horizontal video - "like in width" */
     aspect-ratio: 16/9;
-    min-height: 100vh;
+    min-height: auto;
+    position: relative;
+    margin-top: 0;
+    /* Align to top */
   }
 }
 
@@ -37,7 +52,8 @@
   height: 100%;
   object-fit: cover;
   object-position: center center;
-  opacity: 1; /* Changed from 0 to 1 to show video immediately */
+  opacity: 1;
+  /* Changed from 0 to 1 to show video immediately */
   transition: opacity 1.2s ease-in-out;
 }
 
@@ -46,11 +62,11 @@
   .heroVideo {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    /* Ensure full video is visible */
     object-position: center center;
-    /* Force horizontal aspect ratio on mobile */
-    min-width: 100%;
-    min-height: 100vh;
+    min-width: 0;
+    min-height: 0;
   }
 }
 
@@ -62,18 +78,23 @@
   filter: brightness(0.9) saturate(1.25);
 }
 
+/* Hide overlay on mobile since text is below */
+@media (max-width: 768px) {
+  .videoOverlay {
+    display: none;
+  }
+}
+
 .videoOverlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.3) 0%,
-    rgba(0, 0, 0, 0.5) 50%,
-    rgba(0, 0, 0, 0.7) 100%
-  );
+  background: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.5) 50%,
+      rgba(0, 0, 0, 0.7) 100%);
 }
 
 /* Hero Content Overlay */
@@ -221,57 +242,55 @@
   .brandName {
     font-size: 3rem;
   }
-  
+
   .brandTagline {
     font-size: 1.3rem;
   }
-  
+
   .heroSubtitle {
     font-size: 1.1rem;
   }
 }
 
 @media (max-width: 768px) {
-  .videoContainer {
-    height: 100vh;
-  }
-  
+  /* Removed conflicting .videoContainer height rule */
+
   .heroContent {
     padding: 1rem;
   }
-  
+
   .brandName {
     font-size: 2.5rem;
   }
-  
+
   .brandTagline {
     font-size: 1.1rem;
   }
-  
+
   .heroSubtitle {
     font-size: 1rem;
     margin-bottom: 2rem;
     line-height: 1.5;
   }
-  
+
   .heroActions {
     flex-direction: column;
     align-items: center;
     gap: 0.75rem;
   }
-  
+
   .ctaButton {
     width: 100%;
     max-width: 280px;
     padding: 1rem 1.5rem;
     font-size: 0.95rem;
   }
-  
+
   .quickContact {
     gap: 1rem;
     margin-top: 1.5rem;
   }
-  
+
   .quickContactItem {
     padding: 0.6rem 1.2rem;
     font-size: 0.85rem;
@@ -282,34 +301,34 @@
   .heroContent {
     padding: 0.75rem;
   }
-  
+
   .brandName {
     font-size: 2rem;
     line-height: 1.2;
   }
-  
+
   .brandTagline {
     font-size: 1rem;
   }
-  
+
   .heroSubtitle {
     font-size: 0.9rem;
     margin-bottom: 1.5rem;
     padding: 0 0.5rem;
   }
-  
+
   .ctaButton {
     padding: 0.9rem 1.2rem;
     font-size: 0.9rem;
     min-width: 140px;
   }
-  
+
   .quickContact {
     flex-direction: column;
     align-items: center;
     gap: 0.75rem;
   }
-  
+
   .quickContactItem {
     width: 100%;
     max-width: 200px;
@@ -324,37 +343,37 @@
   .videoContainer {
     height: 100vh;
   }
-  
+
   .heroContent {
     padding: 1rem;
   }
-  
+
   .brandName {
     font-size: 2.2rem;
   }
-  
+
   .heroSubtitle {
     font-size: 0.95rem;
     margin-bottom: 1.5rem;
   }
-  
+
   .heroActions {
     flex-direction: row;
     gap: 1rem;
   }
-  
+
   .ctaButton {
     width: auto;
     min-width: 140px;
     padding: 0.8rem 1.5rem;
   }
-  
+
   .quickContact {
     flex-direction: row;
     gap: 1rem;
     margin-top: 1rem;
   }
-  
+
   .quickContactItem {
     width: auto;
     padding: 0.5rem 1rem;
@@ -362,7 +381,8 @@
 }
 
 /* High DPI displays */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
   .heroVideo {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
@@ -374,11 +394,11 @@
   .heroVideo {
     animation: none;
   }
-  
+
   .ctaButton {
     transition: none;
   }
-  
+
   .quickContactItem {
     transition: none;
   }
@@ -387,11 +407,9 @@
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .videoOverlay {
-    background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.4) 0%,
-      rgba(0, 0, 0, 0.6) 50%,
-      rgba(0, 0, 0, 0.8) 100%
-    );
+    background: linear-gradient(to bottom,
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0.6) 50%,
+        rgba(0, 0, 0, 0.8) 100%);
   }
 }

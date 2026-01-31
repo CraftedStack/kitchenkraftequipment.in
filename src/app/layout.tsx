@@ -1,7 +1,21 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { Inter, Outfit } from "next/font/google"; // Import Google Fonts
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+
+// Configure fonts
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
+  display: "swap",
+});
 
 // SEO / meta config
 export const metadata: Metadata = {
@@ -15,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
       <head>
         {/* Mobile Viewport Configuration */}
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
@@ -25,7 +39,10 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
       </head>
-      <body className="bg-white text-gray-900 antialiased">
+      <body
+        className="bg-white text-gray-900 antialiased font-sans"
+        suppressHydrationWarning={true}
+      >
         <div className="min-h-screen flex flex-col">
           <Header />
           <main className="flex-1">
