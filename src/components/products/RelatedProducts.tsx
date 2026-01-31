@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { SEOProduct } from '@/lib/types';
+import { getDisplayImageUrl } from '@/lib/imageUtils';
 
 interface RelatedProductsProps {
   products: SEOProduct[];
@@ -27,7 +28,7 @@ export default function RelatedProducts({ products, categoryName, categorySlug }
               More {categoryName.toLowerCase()} from our collection
             </p>
           </div>
-          
+
           <Link
             href={`/products/${categorySlug}`}
             className="text-blue-600 hover:text-blue-800 font-medium flex items-center"
@@ -46,14 +47,37 @@ export default function RelatedProducts({ products, categoryName, categorySlug }
               className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group"
             >
               <Link href={`/products/${product.categorySlug}/${product.slug}`}>
-                <div className="relative h-48 bg-gray-200">
-                  {/* Product Image Placeholder */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="relative h-48 bg-white overflow-hidden p-2 flex items-center justify-center">
+                  {(() => {
+                    const imageUrl = getDisplayImageUrl(product.image, { width: 400, height: 400, quality: 80 });
+                    return imageUrl ? (
+                      <img
+                        src={imageUrl}
+                        alt={product.name}
+                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          target.parentElement?.querySelector('.placeholder-fallback')?.classList.remove('hidden');
+                        }}
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
+                        <svg className="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                        </svg>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Fallback for error */}
+                  <div className="placeholder-fallback hidden absolute inset-0 flex items-center justify-center bg-gray-50">
+                    <svg className="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                     </svg>
                   </div>
-                  
+
                   {/* Price Badge */}
                   {product.price && (
                     <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded">
@@ -71,20 +95,20 @@ export default function RelatedProducts({ products, categoryName, categorySlug }
                   </div>
                 </div>
               </Link>
-              
+
               <div className="p-4">
                 <Link href={`/products/${product.categorySlug}/${product.slug}`}>
                   <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
                     {product.name}
                   </h3>
                 </Link>
-                
+
                 {product.description && (
                   <p className="text-gray-600 text-sm mb-3 line-clamp-2">
                     {product.description}
                   </p>
                 )}
-                
+
                 <div className="flex items-center justify-between">
                   <Link
                     href={`/products/${product.categorySlug}/${product.slug}`}
@@ -95,7 +119,7 @@ export default function RelatedProducts({ products, categoryName, categorySlug }
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </Link>
-                  
+
                   <button
                     onClick={() => {
                       window.location.href = `/contact?product=${encodeURIComponent(product.name)}`;

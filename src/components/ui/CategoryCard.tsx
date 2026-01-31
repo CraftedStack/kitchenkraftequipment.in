@@ -19,13 +19,13 @@ export default function CategoryCard({ category, type, className = '' }: Categor
       href={`/products/${category.slug}`}
       className={`group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-1 ${className}`}
     >
-      {/* Category Image - Simplified */}
-      <div className="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden relative">
+      {/* Category Image - Improved for visibility */}
+      <div className="w-full h-48 bg-white overflow-hidden relative p-2 flex items-center justify-center">
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={`${category.name} - Commercial Kitchen Equipment`}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
             onLoad={() => {
               // Image loaded successfully
@@ -35,7 +35,7 @@ export default function CategoryCard({ category, type, className = '' }: Categor
             }}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
             <div className="text-center p-3">
               <div className="w-10 h-10 mx-auto mb-2 bg-blue-200 rounded-full flex items-center justify-center">
                 <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -46,9 +46,9 @@ export default function CategoryCard({ category, type, className = '' }: Categor
             </div>
           </div>
         )}
-        
+
         {/* Type Badge */}
-        <div className="absolute top-2 right-2 bg-white bg-opacity-90 backdrop-blur-sm text-gray-700 text-xs font-medium px-2 py-1 rounded-full shadow-sm">
+        <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm text-gray-700 text-xs font-medium px-2 py-1 rounded-full shadow-sm border border-gray-100">
           {type === 'manufacture' ? 'Custom Made' : 'Ready to Ship'}
         </div>
       </div>
@@ -58,7 +58,7 @@ export default function CategoryCard({ category, type, className = '' }: Categor
         <h3 className="font-semibold text-gray-900 text-sm mb-1 group-hover:text-blue-600 transition-colors line-clamp-1 leading-tight">
           {category.name}
         </h3>
-        
+
         {category.description && (
           <p className="text-gray-600 text-xs line-clamp-2 leading-relaxed mb-2">
             {category.description}

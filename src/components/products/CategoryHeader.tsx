@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { SEOGenre } from '@/lib/types';
+import { getDisplayImageUrl } from '@/lib/imageUtils';
 
 interface CategoryHeaderProps {
   category: SEOGenre;
@@ -11,6 +12,7 @@ interface CategoryHeaderProps {
 
 export default function CategoryHeader({ category, productCount }: CategoryHeaderProps) {
   const isManufacturing = category.type === 'manufacture';
+  const imageUrl = getDisplayImageUrl(category.image, { width: 800, height: 600, quality: 90 });
 
   return (
     <section className={`py-16 ${isManufacturing ? 'bg-gradient-to-r from-blue-600 to-blue-800' : 'bg-gradient-to-r from-green-600 to-green-800'} text-white`}>
@@ -18,19 +20,18 @@ export default function CategoryHeader({ category, productCount }: CategoryHeade
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <div className="flex items-center mb-4">
-              <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
-                isManufacturing 
-                  ? 'bg-blue-500 bg-opacity-30 text-blue-100' 
-                  : 'bg-green-500 bg-opacity-30 text-green-100'
-              }`}>
+              <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${isManufacturing
+                ? 'bg-blue-500 bg-opacity-30 text-blue-100'
+                : 'bg-green-500 bg-opacity-30 text-green-100'
+                }`}>
                 {isManufacturing ? 'Manufacturing' : 'Reseller'}
               </span>
             </div>
-            
+
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
               {category.name}
             </h1>
-            
+
             <p className="text-xl mb-6">
               {category.description || `Professional ${category.name.toLowerCase()} for commercial kitchens in Pune. Quality equipment designed for restaurants, hotels, and food service businesses.`}
             </p>
@@ -40,7 +41,7 @@ export default function CategoryHeader({ category, productCount }: CategoryHeade
                 <div className="text-2xl font-bold text-gray-900">{productCount}</div>
                 <div className="text-sm text-gray-700">Products Available</div>
               </div>
-              
+
               <div className="bg-white bg-opacity-20 rounded-lg p-4">
                 <div className="text-2xl font-bold text-gray-900">
                   {isManufacturing ? 'Custom' : 'Ready'}
@@ -58,7 +59,7 @@ export default function CategoryHeader({ category, productCount }: CategoryHeade
               >
                 Get Quote
               </Link>
-              
+
               {isManufacturing ? (
                 <Link
                   href="/services/equipment-manufacturing"
@@ -78,16 +79,37 @@ export default function CategoryHeader({ category, productCount }: CategoryHeade
           </div>
 
           <div className="relative">
-            {/* Category Image Placeholder */}
-            <div className="relative h-96 bg-white bg-opacity-10 rounded-lg overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <svg className="w-24 h-24 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {/* Category Image */}
+            <div className="relative h-96 bg-white overflow-hidden rounded-lg shadow-lg border border-gray-100 p-4 flex items-center justify-center">
+              {imageUrl ? (
+                <img
+                  src={imageUrl}
+                  alt={`${category.name} - Commercial Kitchen Equipment`}
+                  className="w-full h-full object-contain"
+                  loading="lazy"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    target.parentElement?.querySelector('.placeholder-fallback')?.classList.remove('hidden');
+                  }}
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
+                  <svg className="w-24 h-24 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                  </svg>
+                </div>
+              )}
+
+              {/* Fallback for error */}
+              <div className="placeholder-fallback hidden absolute inset-0 flex items-center justify-center bg-gray-50">
+                <svg className="w-24 h-24 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                 </svg>
               </div>
-              
-              {/* Category Features Overlay */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6">
+
+              {/* Category Features Overlay - Repositioned to bottom */}
+              <div className="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-t border-gray-100 p-4">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div className="flex items-center">
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

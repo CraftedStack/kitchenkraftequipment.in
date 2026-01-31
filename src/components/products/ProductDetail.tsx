@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { SEOProduct, SEOGenre } from '@/lib/types';
+import { getDisplayImageUrl } from '@/lib/imageUtils';
 
 interface ProductDetailProps {
   product: SEOProduct;
@@ -14,8 +15,9 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
   const isManufacturing = category.type === 'manufacture';
 
   // Mock images for demonstration - in real implementation, these would come from the product data
+  const mainImage = getDisplayImageUrl(product.image, { width: 800, height: 800, quality: 90 });
   const productImages = [
-    product.image || '/imgs/default-product.jpg',
+    mainImage || '/imgs/default-product.jpg',
     // Add more images when available
   ];
 
@@ -26,21 +28,29 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
           {/* Product Images */}
           <div>
             <div className="relative">
-              {/* Main Image */}
-              <div className="relative h-96 bg-gray-200 rounded-lg overflow-hidden mb-4">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg className="w-24 h-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                  </svg>
-                </div>
-                
+              {/* Main Image - Fixed with object-contain */}
+              <div className="relative h-96 bg-white overflow-hidden rounded-lg mb-4 border border-gray-100 flex items-center justify-center p-4">
+                {productImages[selectedImage] ? (
+                  <img
+                    src={productImages[selectedImage]}
+                    alt={product.name}
+                    className="w-full h-full object-contain"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
+                    <svg className="w-24 h-24 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                  </div>
+                )}
+
                 {/* Product Badge */}
                 <div className="absolute top-4 left-4">
-                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
-                    isManufacturing 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-green-600 text-white'
-                  }`}>
+                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${isManufacturing
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-green-600 text-white'
+                    }`}>
                     {isManufacturing ? 'Custom Manufacturing' : 'Ready Stock'}
                   </span>
                 </div>
@@ -62,14 +72,22 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
                     <button
                       key={index}
                       onClick={() => setSelectedImage(index)}
-                      className={`w-20 h-20 bg-gray-200 rounded-lg overflow-hidden ${
-                        selectedImage === index ? 'ring-2 ring-blue-600' : ''
-                      }`}
+                      className={`w-20 h-20 bg-gray-200 rounded-lg overflow-hidden ${selectedImage === index ? 'ring-2 ring-blue-600' : ''
+                        }`}
                     >
-                      <div className="w-full h-full flex items-center justify-center">
-                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
+                      {/* Thumbnail with object-contain */}
+                      <div className="w-full h-full flex items-center justify-center bg-white p-1">
+                        {image ? (
+                          <img
+                            src={image}
+                            alt=""
+                            className="w-full h-full object-contain"
+                          />
+                        ) : (
+                          <svg className="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        )}
                       </div>
                     </button>
                   ))}
@@ -141,7 +159,7 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
                     {isManufacturing ? 'Custom Manufacturing' : 'Pricing Information'}
                   </h3>
                   <p className="text-gray-600 text-sm">
-                    {isManufacturing 
+                    {isManufacturing
                       ? 'Pricing varies based on specifications and customization requirements.'
                       : 'Contact us for current pricing and bulk discounts.'
                     }

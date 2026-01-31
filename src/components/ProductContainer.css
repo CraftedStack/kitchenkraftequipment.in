@@ -18,7 +18,7 @@
   background: white;
   border-radius: 1rem;
   padding: 1rem;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
   text-align: center;
   transition: transform 0.3s, box-shadow 0.3s;
   position: relative;
@@ -32,16 +32,18 @@
 
 .product-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Image Styling */
 .product-image {
   width: 100%;
   aspect-ratio: 1;
-  object-fit: cover;
+  object-fit: contain !important;
   margin-bottom: 1rem;
   border-radius: 0.5rem;
+  padding: 1rem;
+  background-color: white;
 }
 
 /* Product Title */
@@ -62,6 +64,7 @@
   text-align: center;
   padding: 0 0.5rem;
 }
+
 /* Add these properties to your .product-detail-card h3 */
 .product-detail-card h3 {
   /* ADD THESE LINES FOR TEXT WRAPPING: */
@@ -73,6 +76,7 @@
   padding: 0 0.5rem;
   margin-bottom: 0.5rem;
 }
+
 /* Add these properties to your .product-detail-card p */
 .product-detail-card p {
   /* ADD THESE LINES FOR TEXT WRAPPING: */
@@ -86,6 +90,7 @@
   padding: 0 0.5rem;
   margin-bottom: 0.5rem;
 }
+
 .product-price {
   font-weight: 700;
   color: #1e40af;
@@ -133,11 +138,12 @@
   color: white;
 }
 
-.prev-btn { 
-  left: -0.5rem; 
+.prev-btn {
+  left: -0.5rem;
 }
-.next-btn { 
-  right: -0.5rem; 
+
+.next-btn {
+  right: -0.5rem;
 }
 
 /* Dots Styling */
@@ -195,11 +201,12 @@
 }
 
 @keyframes marquee {
-  0% { 
-    transform: translateX(0); 
+  0% {
+    transform: translateX(0);
   }
-  100% { 
-    transform: translateX(-100%); 
+
+  100% {
+    transform: translateX(-100%);
   }
 }
 
@@ -335,46 +342,47 @@
   .product-slider-container {
     padding: 0.75rem;
   }
-  
+
   .product-card {
     padding: 0.75rem;
     margin: 0 10px;
   }
-  
+
   .product-image {
     aspect-ratio: 1;
     object-fit: cover;
   }
-  
+
   .product-title {
     font-size: 0.9rem;
     min-height: 2.5rem;
   }
-  
+
   .nav-btn {
-    display: none; /* Hide navigation buttons on mobile */
+    display: none;
+    /* Hide navigation buttons on mobile */
   }
-  
+
   .info-text {
     font-size: 12px;
     margin: 0 1rem;
   }
-  
+
   .section-title {
     font-size: 1.25rem;
   }
-  
+
   /* Center mode styling for mobile */
   .slick-center .product-card {
     transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   }
-  
+
   /* Adjust slick slider for mobile */
   .slick-list {
     margin: 0 -10px;
   }
-  
+
   .slick-slide {
     padding: 0 5px;
   }
@@ -446,7 +454,7 @@
   background: white;
   border-radius: 0.8rem;
   padding: 1.2rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
   transition: transform 0.3s, box-shadow 0.3s;
   display: flex;
@@ -456,15 +464,17 @@
 
 .product-detail-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .product-detail-image {
   width: 100%;
   aspect-ratio: 1;
-  object-fit: cover;
+  object-fit: contain !important;
   margin-bottom: 1rem;
   border-radius: 0.5rem;
+  padding: 1rem;
+  background: #f8fafc;
 }
 
 /* Responsive adjustments for modal */
@@ -473,17 +483,17 @@
     padding: 1.5rem;
     margin: 1rem;
   }
-  
+
   .modal-title {
     font-size: 1.4rem;
     margin-bottom: 1.5rem;
   }
-  
+
   .products-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .product-detail-image {
     aspect-ratio: 1;
     object-fit: cover;
@@ -495,13 +505,13 @@
     aspect-ratio: 1;
     object-fit: cover;
   }
-  
-  .prev-btn { 
-    left: -0.75rem; 
+
+  .prev-btn {
+    left: -0.75rem;
   }
-  
-  .next-btn { 
-    right: -0.75rem; 
+
+  .next-btn {
+    right: -0.75rem;
   }
 }
 
@@ -510,17 +520,17 @@
     aspect-ratio: 1;
     object-fit: cover;
   }
-  
+
   .product-title {
     font-size: 1.1rem;
   }
-  
-  .prev-btn { 
-    left: -1rem; 
+
+  .prev-btn {
+    left: -1rem;
   }
-  
-  .next-btn { 
-    right: -1rem; 
+
+  .next-btn {
+    right: -1rem;
   }
 }
 
@@ -529,7 +539,7 @@
   margin: 0 -10px;
 }
 
-.slick-slide > div {
+.slick-slide>div {
   padding: 0 10px;
   height: 100%;
 }

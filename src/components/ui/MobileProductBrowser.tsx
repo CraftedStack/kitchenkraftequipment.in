@@ -16,11 +16,11 @@ interface MobileProductBrowserProps {
 type ViewMode = 'grid' | 'list';
 type SortOption = 'name' | 'price' | 'newest';
 
-export default function MobileProductBrowser({ 
-  products, 
-  categories = [], 
+export default function MobileProductBrowser({
+  products,
+  categories = [],
   currentCategory,
-  className = '' 
+  className = ''
 }: MobileProductBrowserProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [sortBy, setSortBy] = useState<SortOption>('name');
@@ -41,7 +41,7 @@ export default function MobileProductBrowser({
     // Apply search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(product => 
+      filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(query) ||
         product.description?.toLowerCase().includes(query) ||
         product.categorySlug?.toLowerCase().includes(query)
@@ -50,7 +50,7 @@ export default function MobileProductBrowser({
 
     // Apply category filter
     if (selectedCategory && selectedCategory !== 'all') {
-      filtered = filtered.filter(product => 
+      filtered = filtered.filter(product =>
         product.categorySlug === selectedCategory
       );
     }
@@ -224,8 +224,8 @@ export default function MobileProductBrowser({
           </div>
         ) : (
           <div className={
-            viewMode === 'grid' 
-              ? 'grid grid-cols-1 gap-4' 
+            viewMode === 'grid'
+              ? 'grid grid-cols-1 gap-4'
               : 'space-y-4'
           }>
             {filteredProducts.map((product) => (
@@ -244,12 +244,12 @@ export default function MobileProductBrowser({
 }
 
 // Mobile-optimized product card
-function ProductCard({ 
-  product, 
+function ProductCard({
+  product,
   viewMode,
   isMounted
-}: { 
-  product: SEOProduct; 
+}: {
+  product: SEOProduct;
   viewMode: ViewMode;
   isMounted: boolean;
 }) {
@@ -259,12 +259,12 @@ function ProductCard({
     return (
       <div className="flex bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 hover:border-blue-200">
         {/* Product Image */}
-        <div className="w-24 h-24 flex-shrink-0 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden relative">
+        <div className="w-24 h-24 flex-shrink-0 bg-white overflow-hidden relative p-1 flex items-center justify-center border-r border-gray-100">
           {isMounted && imageUrl ? (
             <img
               src={imageUrl}
               alt={product.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
               loading="lazy"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
@@ -272,7 +272,7 @@ function ProductCard({
                 const parent = target.parentElement;
                 if (parent && !parent.querySelector('.fallback-placeholder')) {
                   const fallback = document.createElement('div');
-                  fallback.className = 'fallback-placeholder w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100';
+                  fallback.className = 'fallback-placeholder w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg';
                   fallback.innerHTML = `
                     <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
@@ -283,7 +283,7 @@ function ProductCard({
               }}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
               <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
               </svg>
@@ -292,7 +292,7 @@ function ProductCard({
 
           {/* Price Badge for List View */}
           {product.price && (
-            <div className="absolute -top-1 -right-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs font-bold px-1.5 py-0.5 rounded-full shadow-lg">
+            <div className="absolute top-1 right-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-lg border border-white/20">
               ₹{parseFloat(product.price).toLocaleString('en-IN')}
             </div>
           )}
@@ -309,7 +309,7 @@ function ProductCard({
                 {product.description}
               </p>
             )}
-            
+
             {/* Feature Tags for List View */}
             <div className="flex gap-1 mb-2">
               <span className="inline-block bg-blue-50 text-blue-700 text-xs px-1.5 py-0.5 rounded-full font-medium">
@@ -320,7 +320,7 @@ function ProductCard({
               </span>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <Link
               href={`/products/${product.categorySlug}/${product.slug}`}
@@ -338,12 +338,12 @@ function ProductCard({
   return (
     <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-1">
       {/* Product Image - Fixed like CategoryCard */}
-      <div className="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden relative">
+      <div className="w-full h-48 bg-white overflow-hidden relative p-2 flex items-center justify-center">
         {isMounted && imageUrl ? (
           <img
             src={imageUrl}
             alt={product.name}
-            className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+            className="w-full h-full object-contain hover:scale-105 transition-transform duration-500"
             loading="lazy"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
@@ -351,7 +351,7 @@ function ProductCard({
               const parent = target.parentElement;
               if (parent && !parent.querySelector('.fallback-placeholder')) {
                 const fallback = document.createElement('div');
-                fallback.className = 'fallback-placeholder absolute inset-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100';
+                fallback.className = 'fallback-placeholder absolute inset-0 w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg';
                 fallback.innerHTML = `
                   <div class="text-center p-4">
                     <div class="w-12 h-12 mx-auto mb-2 bg-blue-200 rounded-full flex items-center justify-center">
@@ -367,7 +367,7 @@ function ProductCard({
             }}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
             <div className="text-center p-4">
               <div className="w-12 h-12 mx-auto mb-2 bg-blue-200 rounded-full flex items-center justify-center">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -381,13 +381,13 @@ function ProductCard({
 
         {/* Price Badge */}
         {product.price && (
-          <div className="absolute top-2 right-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+          <div className="absolute top-2 right-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg border border-white/20">
             ₹{parseFloat(product.price).toLocaleString('en-IN')}
           </div>
         )}
 
         {/* Category Badge */}
-        <div className="absolute top-2 left-2 bg-white bg-opacity-90 backdrop-blur-sm text-gray-700 text-xs font-medium px-2 py-1 rounded-full shadow-sm">
+        <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-gray-700 text-xs font-medium px-2 py-1 rounded-full shadow-sm border border-gray-100">
           Commercial
         </div>
       </div>
@@ -397,7 +397,7 @@ function ProductCard({
         <h3 className="font-bold text-gray-900 text-sm line-clamp-2 mb-3 leading-tight">
           {product.name}
         </h3>
-        
+
         {/* Feature Tags */}
         <div className="mb-3 flex flex-wrap gap-1">
           <span className="inline-block bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded-full font-medium">
@@ -407,7 +407,7 @@ function ProductCard({
             Food Grade
           </span>
         </div>
-        
+
         <div className="flex items-center justify-between gap-2">
           <Link
             href={`/products/${product.categorySlug}/${product.slug}`}
