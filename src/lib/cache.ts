@@ -61,7 +61,7 @@ export class CacheManager {
     
     // Listen for storage events (cross-tab synchronization)
     if (typeof window !== 'undefined') {
-      window.addEventListener('storage', this.handleStorageChange.bind(this));
+      window.addEventListener('storage', this.handleStorageChange);
     }
   }
 
@@ -151,15 +151,15 @@ export class CacheManager {
   clear(): void {
     this.memoryCache.clear();
     if (typeof window !== 'undefined') {
-      // Only clear our cache keys, not all localStorage
-      Object.values(CACHE_CONFIG.KEYS).forEach(keyPrefix => {
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key && key.startsWith(keyPrefix)) {
-            localStorage.removeItem(key);
-          }
+      // Collect all matching keys first, then remove (avoids index-shifting bug during iteration)
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && Object.values(CACHE_CONFIG.KEYS).some(prefix => key.startsWith(prefix))) {
+          keysToRemove.push(key);
         }
-      });
+      }
+      keysToRemove.forEach(key => localStorage.removeItem(key));
     }
     this.stats = { hits: 0, misses: 0, size: 0, memoryUsage: 0 };
   }
@@ -167,11 +167,12 @@ export class CacheManager {
   /**
    * Get cache statistics
    */
-  getStats(): CacheStats & { hitRate: number } {
+  getStats(): CacheStats & { hitRate: number; keys: string[] } {
     const total = this.stats.hits + this.stats.misses;
     return {
       ...this.stats,
       hitRate: total > 0 ? (this.stats.hits / total) * 100 : 0,
+      keys: Array.from(this.memoryCache.keys()),
     };
   }
 
@@ -331,12 +332,12 @@ export class CacheManager {
     }, 5 * 60 * 1000); // Every 5 minutes
   }
 
-  private handleStorageChange(event: StorageEvent): void {
+  private handleStorageChange = (event: StorageEvent): void => {
     if (event.key && Object.values(CACHE_CONFIG.KEYS).some(prefix => event.key!.startsWith(prefix))) {
       // Invalidate memory cache for changed key
       this.memoryCache.delete(event.key);
     }
-  }
+  };
 
   /**
    * Cleanup resources
@@ -346,9 +347,9 @@ export class CacheManager {
       clearInterval(this.cleanupInterval);
       this.cleanupInterval = null;
     }
-    
+
     if (typeof window !== 'undefined') {
-      window.removeEventListener('storage', this.handleStorageChange.bind(this));
+      window.removeEventListener('storage', this.handleStorageChange);
     }
   }
 }
@@ -399,7 +400,7 @@ export const cacheUtils = {
   },
 
   /**
-   * Get cache statistics
+   * Get cache statistics (includes keys, hitRate, hits, misses, size, memoryUsage)
    */
   getStats: () => cacheManager.getStats(),
 

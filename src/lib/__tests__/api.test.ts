@@ -15,7 +15,7 @@ describe('KitchenKraftAPI Property Tests', () => {
   beforeEach(() => {
     api = new KitchenKraftAPI();
     api.clearCache();
-    mockFetch.mockClear();
+    mockFetch.mockReset(); // Reset clears both call history and pending mock implementations
   });
 
   describe('Property: API response handling', () => {
@@ -89,7 +89,14 @@ describe('KitchenKraftAPI Property Tests', () => {
         }
       ];
 
-      // Mock the genres call first (required by getProductsByGenre)
+      // getProductsByGenre calls fetchWithCache for products first, then getGenres for category slug
+      // Mock the products call first
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockProducts,
+      } as Response);
+
+      // Then mock the genres call (used to resolve category slug)
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => [{
@@ -99,12 +106,6 @@ describe('KitchenKraftAPI Property Tests', () => {
           image: '/imgs/cooking.jpg',
           type: 'manufacture'
         }],
-      } as Response);
-
-      // Then mock the products call
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockProducts,
       } as Response);
 
       const result = await api.getProductsByGenre(1);
@@ -134,6 +135,11 @@ describe('KitchenKraftAPI Property Tests', () => {
     });
 
     test('should handle API errors gracefully', async () => {
+      // Two mocks needed: one for the first call, one for the second call in the try block
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+      } as Response);
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 404,
@@ -141,7 +147,7 @@ describe('KitchenKraftAPI Property Tests', () => {
 
       // Property: API errors should be properly typed and informative
       await expect(api.getGenres()).rejects.toThrow(APIError);
-      
+
       try {
         await api.getGenres();
       } catch (error) {
@@ -152,11 +158,13 @@ describe('KitchenKraftAPI Property Tests', () => {
     });
 
     test('should handle network errors', async () => {
+      // Two mocks needed: one for the first call, one for the second call in the try block
+      mockFetch.mockRejectedValueOnce(new Error('Network error'));
       mockFetch.mockRejectedValueOnce(new Error('Network error'));
 
       // Property: Network errors should be wrapped in APIError
       await expect(api.getGenres()).rejects.toThrow(APIError);
-      
+
       try {
         await api.getGenres();
       } catch (error) {
@@ -201,9 +209,9 @@ describe('KitchenKraftAPI Property Tests', () => {
       await api.getGenres();
       expect(mockFetch).toHaveBeenCalledTimes(1);
 
-      // Property: Cache should contain the expected key
+      // Property: Cache should contain the genres key (CACHE_CONFIG.KEYS.GENRES = 'kk_genres')
       const cacheStats = api.getCacheStats();
-      expect(cacheStats.keys).toContain('genres');
+      expect(cacheStats.keys).toContain('kk_genres');
     });
 
     test('should respect cache TTL', async () => {
@@ -232,8 +240,8 @@ describe('KitchenKraftAPI Property Tests', () => {
         await api.getGenres();
         expect(mockFetch).toHaveBeenCalledTimes(1);
 
-        // Simulate time passing beyond TTL (5 minutes = 300000ms)
-        currentTime += 400000;
+        // Simulate time passing beyond genres TTL (10 minutes = 600000ms)
+        currentTime += 700000;
 
         // Second call should fetch again due to expired cache
         await api.getGenres();

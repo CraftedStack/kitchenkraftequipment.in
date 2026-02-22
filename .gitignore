@@ -61,3 +61,12 @@ pnpm-debug.log*
 
 # OS generated
 Thumbs.db
+
+# tests
+**/__tests__/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+jest.config.*
+jest.setup.*

@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: false,
         message: 'Please check your input and try again.',
-        errors: error.errors.map(err => ({
+        errors: error.issues.map((err: { path: (string | number)[]; message: string }) => ({
           field: err.path.join('.'),
           message: err.message
         }))

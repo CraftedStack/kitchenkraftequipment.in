@@ -69,34 +69,51 @@ export class KitchenKraftAPI {
    */
   private async fetchWithCache<T>(
     endpoint: string,
-    cacheKey?: string
+    cacheKey?: string,
+    timeoutMs = 10000
   ): Promise<T> {
     const key = cacheKey || `api_${endpoint.replace(/[^a-zA-Z0-9]/g, '_')}`;
-    
+
     return cacheUtils.cacheApiResponse(
       key,
       async () => {
-        const response = await fetch(`${this.baseURL}${endpoint}`, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          // Add cache control headers
-          cache: 'no-store', // Let our cache handle it
-        });
-        
-        if (!response.ok) {
-          throw new APIError(
-            `Failed to fetch from ${endpoint}`,
-            response.status,
-            endpoint
-          );
-        }
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-        const data = await response.json();
-        return data;
+        try {
+          const response = await fetch(`${this.baseURL}${endpoint}`, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            cache: 'no-store', // Let our cache handle it
+            signal: controller.signal,
+          });
+
+          clearTimeout(timeoutId);
+
+          if (!response.ok) {
+            throw new APIError(
+              `Failed to fetch from ${endpoint}`,
+              response.status,
+              endpoint
+            );
+          }
+
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          clearTimeout(timeoutId);
+          if (error instanceof Error && error.name === 'AbortError') {
+            throw new APIError(`Request timed out after ${timeoutMs}ms`, undefined, endpoint);
+          }
+          throw error;
+        }
       },
       CACHE_CONFIG.TTL.PRODUCTS
-    );
+    ).catch((error) => {
+      if (error instanceof APIError) throw error;
+      throw new APIError(error.message, undefined, endpoint);
+    }) as Promise<T>;
   }
 
   /**
@@ -279,7 +296,7 @@ export class KitchenKraftAPI {
   /**
    * Get cache statistics (for debugging)
    */
-  getCacheStats(): { hitRate: number; size: number; memoryUsage: number } {
+  getCacheStats(): { hitRate: number; size: number; memoryUsage: number; keys: string[] } {
     return cacheUtils.getStats();
   }
 
