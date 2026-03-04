@@ -5,6 +5,9 @@ import { api } from '@/lib/api';
 import { SEOGenre } from '@/lib/api';
 import CategoryGrid from './CategoryGrid';
 
+const SESSION_KEY_TAB = 'products_active_tab';
+const SESSION_KEY_SCROLL = 'products_scroll_y';
+
 interface Tab {
   id: 'manufacturing' | 'bestselling';
   label: string;
@@ -39,10 +42,16 @@ interface TabData {
 }
 
 export default function TabbedProductSection() {
-  const [activeTab, setActiveTab] = useState<'manufacturing' | 'bestselling'>('manufacturing');
+  const [activeTab, setActiveTab] = useState<'manufacturing' | 'bestselling'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = sessionStorage.getItem(SESSION_KEY_TAB);
+      if (saved === 'manufacturing' || saved === 'bestselling') return saved;
+    }
+    return 'manufacturing';
+  });
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
-  
+
   // Separate data for each tab
   const [tabData, setTabData] = useState<Record<string, TabData>>({
     manufacturing: {
@@ -66,6 +75,7 @@ export default function TabbedProductSection() {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadingTriggerRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const didRestoreScroll = useRef(false);
 
   // Fetch all categories for a tab type
   const fetchAllCategoriesForTab = useCallback(async (tabId: 'manufacturing' | 'bestselling') => {
@@ -180,45 +190,67 @@ export default function TabbedProductSection() {
   // Handle tab switching
   const handleTabSwitch = useCallback(async (tabId: 'manufacturing' | 'bestselling') => {
     if (tabId === activeTab || isTransitioning) return;
-    
-    // Save current scroll position
-    if (containerRef.current) {
-      setTabData(prev => ({
-        ...prev,
-        [activeTab]: {
-          ...prev[activeTab],
-          scrollPosition: window.scrollY
-        }
-      }));
-    }
-    
+
     setIsTransitioning(true);
-    
-    // Small delay for smooth transition
+
     setTimeout(() => {
       setActiveTab(tabId);
+      sessionStorage.setItem(SESSION_KEY_TAB, tabId);
       setIsTransitioning(false);
-      
+
       // Load initial batch if tab hasn't been loaded yet
       if (tabData[tabId].categories.length === 0 && !tabData[tabId].loading) {
         loadInitialBatch(tabId);
       }
-      
-      // Reset scroll position to top for new tab
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Scroll just to the tab bar, not the top of the page
+      if (containerRef.current) {
+        const y = containerRef.current.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
     }, 150);
   }, [activeTab, isTransitioning, tabData, loadInitialBatch]);
 
-  // Load initial data
+  // Load initial data — load whichever tab was active when user left
   useEffect(() => {
     const initializeData = async () => {
       setInitialLoading(true);
-      await loadInitialBatch('manufacturing'); // Load default tab
+      await loadInitialBatch(activeTab);
       setInitialLoading(false);
     };
-    
+
     initializeData();
-  }, [loadInitialBatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Restore scroll position after data loads (back-navigation)
+  useEffect(() => {
+    if (initialLoading || didRestoreScroll.current) return;
+    const saved = sessionStorage.getItem(SESSION_KEY_SCROLL);
+    if (saved) {
+      const y = parseInt(saved, 10);
+      sessionStorage.removeItem(SESSION_KEY_SCROLL);
+      // rAF ensures layout is painted before we scroll
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: y, behavior: 'instant' as ScrollBehavior });
+      });
+    }
+    didRestoreScroll.current = true;
+  }, [initialLoading]);
+
+  // Save scroll position when user clicks into a category or product page
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      const anchor = (e.target as HTMLElement).closest('a');
+      if (!anchor?.href) return;
+      const url = new URL(anchor.href, window.location.href);
+      if (url.pathname.startsWith('/products/')) {
+        sessionStorage.setItem(SESSION_KEY_SCROLL, String(window.scrollY));
+      }
+    };
+    document.addEventListener('click', handleClick, true);
+    return () => document.removeEventListener('click', handleClick, true);
+  }, []);
 
   // Retry function
   const handleRetry = useCallback(() => {
