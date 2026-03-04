@@ -37,7 +37,7 @@ export function OrganizationSchema() {
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "customer service",
-      "telephone": "+91-XXXXXXXXXX",
+      "telephone": "+918830696290",
       "email": "info@kitchenkraftequipments.com",
       "availableLanguage": ["English", "Hindi", "Marathi"]
     },
@@ -71,7 +71,7 @@ export function LocalBusinessSchema() {
     "name": "Kitchen Kraft Equipments",
     "description": "Leading manufacturer of commercial kitchen equipment in Pune. Quality stainless steel kitchen solutions for hotels, restaurants, and food businesses.",
     "url": "https://kitchenkraftequipments.com",
-    "telephone": "+91-XXXXXXXXXX",
+    "telephone": "+918830696290",
     "email": "info@kitchenkraftequipments.com",
     "address": {
       "@type": "PostalAddress",

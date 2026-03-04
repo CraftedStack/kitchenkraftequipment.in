@@ -218,10 +218,10 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
                 </div>
                 <div className="text-right">
                   <a
-                    href="tel:+91-XXXXXXXXXX"
+                    href="tel:+918830696290"
                     className="text-blue-600 hover:text-blue-800 font-semibold"
                   >
-                    +91-XXXXXXXXXX
+                    +91 88306 96290
                   </a>
                   <p className="text-xs text-gray-500">Mon-Sat: 9AM-6PM</p>
                 </div>

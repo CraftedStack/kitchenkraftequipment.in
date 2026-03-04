@@ -337,7 +337,7 @@ export class StructuredDataManager {
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "customer service",
-        "telephone": "+91-XXXXXXXXXX",
+        "telephone": "+918830696290",
         "email": "info@kitchenkraftequipments.com"
       },
       "sameAs": [
@@ -427,7 +427,7 @@ export class StructuredDataManager {
       "name": SITE_CONFIG.name,
       "description": SITE_CONFIG.description,
       "url": this.baseURL,
-      "telephone": "+91-XXXXXXXXXX",
+      "telephone": "+918830696290",
       "email": "info@kitchenkraftequipments.com",
       "address": {
         "@type": "PostalAddress",

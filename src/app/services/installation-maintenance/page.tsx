@@ -340,10 +340,10 @@ export default function InstallationMaintenancePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="tel:+91-XXXXXXXXXX"
+                href="tel:+918830696290"
                 className="bg-red-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors"
               >
-                Call Emergency: +91-XXXXXXXXXX
+                Call Emergency: +91 88306 96290
               </Link>
               <Link
                 href="/contact?type=emergency"
