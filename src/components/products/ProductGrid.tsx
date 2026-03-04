@@ -186,8 +186,7 @@ export default function ProductGrid({ products, categorySlug, className = '' }: 
 
                     <button
                       onClick={() => {
-                        // Handle inquiry action
-                        window.location.href = `/contact?product=${encodeURIComponent(product.name)}`;
+                        window.location.href = `/quote?product=${encodeURIComponent(product.name)}`;
                       }}
                       className="w-full bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center group"
                     >

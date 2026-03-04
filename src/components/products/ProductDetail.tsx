@@ -178,7 +178,7 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
-                  href={`/contact?product=${encodeURIComponent(product.name)}&type=quote`}
+                  href={`/quote?product=${encodeURIComponent(product.name)}`}
                   className="flex-1 bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-center"
                 >
                   Get Quote

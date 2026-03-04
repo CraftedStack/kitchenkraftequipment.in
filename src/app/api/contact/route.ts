@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+
 // Validation schema for contact form
 const contactSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(50, 'Name must be less than 50 characters'),
@@ -14,53 +16,61 @@ const contactSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     // Validate the request body
     const validatedData = contactSchema.parse(body);
-    
-    // Here you would typically:
-    // 1. Save to database
-    // 2. Send email notification
-    // 3. Send confirmation email to user
-    
-    // For now, we'll simulate the process
-    console.log('Contact form submission:', validatedData);
-    
-    // Simulate email sending delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // In a real implementation, you would:
-    // - Save the inquiry to your database
-    // - Send an email to your team
-    // - Send a confirmation email to the customer
-    // - Integrate with CRM systems if needed
-    
+
+    // Forward submission to backend for persistent storage
+    try {
+      await fetch(`${BACKEND_URL}/api/quotes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          submission_type: 'contact',
+          customer_name: validatedData.name,
+          email: validatedData.email,
+          phone: validatedData.phone,
+          product_service: validatedData.service || null,
+          message: validatedData.message,
+          metadata: {
+            company: validatedData.company || null,
+            service: validatedData.service || null,
+          },
+        }),
+      });
+    } catch (forwardErr) {
+      // Non-fatal — log but don't fail the user-facing response
+      console.error('[contact] Failed to forward to backend:', forwardErr);
+    }
+
+    const submissionId = `CONTACT_${Date.now()}`;
+
     return NextResponse.json({
       success: true,
       message: 'Thank you for your message. We will get back to you within 24 hours.',
       data: {
-        submissionId: `CONTACT_${Date.now()}`,
+        submissionId,
         timestamp: new Date().toISOString(),
-      }
+      },
     }, { status: 200 });
-    
+
   } catch (error) {
     console.error('Contact form submission error:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json({
         success: false,
         message: 'Please check your input and try again.',
         errors: error.issues.map((err: { path: (string | number)[]; message: string }) => ({
           field: err.path.join('.'),
-          message: err.message
-        }))
+          message: err.message,
+        })),
       }, { status: 400 });
     }
-    
+
     return NextResponse.json({
       success: false,
-      message: 'Something went wrong. Please try again later.'
+      message: 'Something went wrong. Please try again later.',
     }, { status: 500 });
   }
 }

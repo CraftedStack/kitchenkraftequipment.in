@@ -417,7 +417,7 @@ function ProductCard({
           </Link>
           <button
             onClick={() => {
-              window.location.href = `/contact?product=${encodeURIComponent(product.name)}`;
+              window.location.href = `/quote?product=${encodeURIComponent(product.name)}`;
             }}
             className="flex-1 text-xs bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-2 px-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md"
           >

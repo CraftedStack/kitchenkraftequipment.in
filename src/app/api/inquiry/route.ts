@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+
 // Validation schema for product inquiry form
 const inquirySchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(50, 'Name must be less than 50 characters'),
@@ -13,36 +15,57 @@ const inquirySchema = z.object({
   quantity: z.number().min(1, 'Quantity must be at least 1').optional().default(1),
   message: z.string().max(500, 'Message must be less than 500 characters').optional(),
   inquiryType: z.enum(['product', 'service', 'quote']).default('product'),
+  // ServiceInquiryForm extra fields
+  projectType: z.string().optional(),
+  budget: z.string().optional(),
+  timeline: z.string().optional(),
+  location: z.string().optional(),
 });
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     // Validate the request body
     const validatedData = inquirySchema.parse(body);
-    
-    // Here you would typically:
-    // 1. Save to database
-    // 2. Send email notification to sales team
-    // 3. Send confirmation email to customer
-    // 4. Create lead in CRM system
-    
-    // For now, we'll simulate the process
-    console.log('Product inquiry submission:', validatedData);
-    
-    // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // In a real implementation, you would:
-    // - Save the inquiry to your database with proper categorization
-    // - Send detailed email to sales team with product information
-    // - Send personalized confirmation email to customer
-    // - Set up follow-up reminders
-    // - Track inquiry source and conversion
-    
+
+    // Determine a friendly product/service label
+    const productService =
+      validatedData.productName ||
+      validatedData.categoryName ||
+      null;
+
+    // Forward submission to backend for persistent storage
+    try {
+      await fetch(`${BACKEND_URL}/api/quotes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          submission_type: 'inquiry',
+          customer_name: validatedData.name,
+          email: validatedData.email,
+          phone: validatedData.phone,
+          product_service: productService,
+          message: validatedData.message || null,
+          metadata: {
+            company: validatedData.company || null,
+            productId: validatedData.productId || null,
+            categoryName: validatedData.categoryName || null,
+            quantity: validatedData.quantity,
+            inquiryType: validatedData.inquiryType,
+            projectType: validatedData.projectType || null,
+            budget: validatedData.budget || null,
+            timeline: validatedData.timeline || null,
+            location: validatedData.location || null,
+          },
+        }),
+      });
+    } catch (forwardErr) {
+      console.error('[inquiry] Failed to forward to backend:', forwardErr);
+    }
+
     const submissionId = `INQ_${validatedData.inquiryType.toUpperCase()}_${Date.now()}`;
-    
+
     return NextResponse.json({
       success: true,
       message: 'Thank you for your inquiry. Our team will contact you within 2 hours with detailed information.',
@@ -55,28 +78,28 @@ export async function POST(request: NextRequest) {
           'Our sales team will review your inquiry',
           'We will prepare a detailed quotation',
           'You will receive a call within 2 hours',
-          'We will schedule a consultation if needed'
-        ]
-      }
+          'We will schedule a consultation if needed',
+        ],
+      },
     }, { status: 200 });
-    
+
   } catch (error) {
     console.error('Product inquiry submission error:', error);
-    
+
     if (error instanceof z.ZodError) {
       return NextResponse.json({
         success: false,
         message: 'Please check your input and try again.',
         errors: error.errors.map(err => ({
           field: err.path.join('.'),
-          message: err.message
-        }))
+          message: err.message,
+        })),
       }, { status: 400 });
     }
-    
+
     return NextResponse.json({
       success: false,
-      message: 'Something went wrong. Please try again later.'
+      message: 'Something went wrong. Please try again later.',
     }, { status: 500 });
   }
 }
