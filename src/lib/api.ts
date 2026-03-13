@@ -20,6 +20,8 @@ export interface Product {
   price?: string;
   genre_id?: number;
   genre_name?: string;
+  highlights?: string[];
+  features?: { title: string; description: string }[];
 }
 
 // Enhanced interfaces with SEO properties

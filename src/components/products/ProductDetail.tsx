@@ -36,14 +36,22 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
                     alt={product.name}
                     className="w-full h-full object-contain"
                     loading="lazy"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      target.parentElement?.querySelector('.img-placeholder')?.classList.remove('hidden');
+                    }}
                   />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
-                    <svg className="w-24 h-24 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                ) : null}
+                <div className={`img-placeholder absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 ${productImages[selectedImage] ? 'hidden' : ''}`}>
+                  <div className="w-24 h-24 mb-4 bg-blue-200 rounded-full flex items-center justify-center">
+                    <svg className="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                     </svg>
                   </div>
-                )}
+                  <p className="text-blue-700 font-semibold text-sm">Kitchen Kraft</p>
+                  <p className="text-blue-500 text-xs mt-1">Commercial Equipment</p>
+                </div>
 
                 {/* Product Badge */}
                 <div className="absolute top-4 left-4">
@@ -121,35 +129,21 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
             </div>
 
             {/* Product Highlights */}
-            <div className="bg-gray-50 rounded-lg p-6 mb-8">
-              <h3 className="font-semibold text-gray-900 mb-4">Product Highlights</h3>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div className="flex items-center">
-                  <svg className="w-5 h-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="text-sm text-gray-700">Stainless Steel Construction</span>
-                </div>
-                <div className="flex items-center">
-                  <svg className="w-5 h-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="text-sm text-gray-700">Commercial Grade Quality</span>
-                </div>
-                <div className="flex items-center">
-                  <svg className="w-5 h-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="text-sm text-gray-700">Easy to Clean & Maintain</span>
-                </div>
-                <div className="flex items-center">
-                  <svg className="w-5 h-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span className="text-sm text-gray-700">Warranty Included</span>
+            {product.highlights && product.highlights.length > 0 && (
+              <div className="bg-gray-50 rounded-lg p-6 mb-8">
+                <h3 className="font-semibold text-gray-900 mb-4">Product Highlights</h3>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {product.highlights.map((highlight, i) => (
+                    <div key={i} className="flex items-center">
+                      <svg className="w-5 h-5 text-green-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span className="text-sm text-gray-700">{highlight}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Pricing Information */}
             <div className="bg-blue-50 rounded-lg p-6 mb-8">
