@@ -104,7 +104,7 @@ export default function MobileNavigation({ navigationItems, className = '' }: Mo
           </div>
           <button
             onClick={() => setIsOpen(false)}
-            className="p-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="btn-close btn-close-light p-2 rounded-lg"
             aria-label="Close menu"
           >
             <FaTimes size={20} />

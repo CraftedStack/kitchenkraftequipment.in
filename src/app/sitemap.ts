@@ -32,30 +32,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/services/commercial-kitchen-design`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/services/equipment-manufacturing`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/services/installation-maintenance`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/services/consultation`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/products`,
       lastModified: new Date(),
       changeFrequency: 'daily',
@@ -82,7 +58,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
-    return [...staticPages, ...categoryPages, ...productPages];
+    // Dynamic service pages
+    const services = await api.getServices();
+    const servicePages: MetadataRoute.Sitemap = services.map((s) => ({
+      url: `${baseUrl}/services/${s.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    }));
+
+    return [...staticPages, ...categoryPages, ...productPages, ...servicePages];
   } catch (error) {
     console.error('Error generating sitemap:', error);
     // Return static pages only if API fails

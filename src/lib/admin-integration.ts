@@ -17,6 +17,9 @@ export const ADMIN_CONFIG = {
     GENRE_CREATED: '/api/webhooks/genre-created',
     GENRE_UPDATED: '/api/webhooks/genre-updated',
     GENRE_DELETED: '/api/webhooks/genre-deleted',
+    SERVICE_CREATED: '/api/webhooks/service-created',
+    SERVICE_UPDATED: '/api/webhooks/service-updated',
+    SERVICE_DELETED: '/api/webhooks/service-deleted',
   },
   
   // Polling intervals for fallback sync
@@ -29,24 +32,28 @@ export const ADMIN_CONFIG = {
   INVALIDATION_PATTERNS: {
     PRODUCTS: ['products', 'all_products'],
     GENRES: ['genres'],
-    ALL: ['products', 'genres', 'all_products'],
+    SERVICES: ['services'],
+    ALL: ['products', 'genres', 'all_products', 'services'],
   }
 } as const;
 
 // Admin operation types
-export type AdminOperation = 
+export type AdminOperation =
   | 'product_created'
-  | 'product_updated' 
+  | 'product_updated'
   | 'product_deleted'
   | 'genre_created'
   | 'genre_updated'
   | 'genre_deleted'
+  | 'service_created'
+  | 'service_updated'
+  | 'service_deleted'
   | 'bulk_operation';
 
 // Admin event interface
 export interface AdminEvent {
   operation: AdminOperation;
-  resourceType: 'product' | 'genre';
+  resourceType: 'product' | 'genre' | 'service';
   resourceId: string | number;
   data?: any;
   timestamp: number;

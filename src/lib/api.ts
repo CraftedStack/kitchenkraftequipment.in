@@ -10,6 +10,9 @@ export interface Genre {
   description: string;
   image: string;
   type: 'manufacture' | 'resell';
+  seo_title?: string;
+  seo_description?: string;
+  seo_keywords?: string;
 }
 
 export interface Product {
@@ -20,6 +23,11 @@ export interface Product {
   price?: string;
   genre_id?: number;
   genre_name?: string;
+  seo_title?: string;
+  seo_description?: string;
+  seo_keywords?: string;
+  stock_quantity?: number | null;
+  low_stock_threshold?: number | null;
 }
 
 // Enhanced interfaces with SEO properties
@@ -37,6 +45,27 @@ export interface SEOProduct extends Product {
   seoDescription: string;
   keywords: string[];
   specifications?: Record<string, string>;
+}
+
+export interface Service {
+  id: number;
+  slug: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  icon?: string;
+  image_url?: string;
+  color_theme: string;
+  is_active: boolean;
+  sort_order: number;
+  seo_title?: string;
+  seo_description?: string;
+  seo_keywords?: string;
+  features: { title: string; description: string }[];
+  process_steps: { step: string; title: string; description: string }[];
+  benefits: { title: string; description: string }[];
+  packages: { name: string; price: string; features: string[] }[];
+  faq: { question: string; answer: string }[];
 }
 
 // API Error types
@@ -130,7 +159,7 @@ export class KitchenKraftAPI {
   }
 
   /**
-   * Enhance genre data with SEO properties
+   * Enhance genre data with SEO properties (DB values take priority over auto-generated)
    */
   private enhanceGenreWithSEO(genre: Genre): SEOGenre {
     const slug = this.generateSlug(genre.name);
@@ -149,22 +178,28 @@ export class KitchenKraftAPI {
       baseKeywords.push('reseller', 'best sellers');
     }
 
+    // Merge DB SEO keywords with auto-generated ones
+    const dbKeywords = genre.seo_keywords
+      ? genre.seo_keywords.split(',').map(k => k.trim()).filter(Boolean)
+      : [];
+    const keywords = dbKeywords.length > 0 ? dbKeywords : baseKeywords;
+
     return {
       ...genre,
       slug,
-      seoTitle: `${genre.name} - Commercial Kitchen Equipment | Kitchen Kraft Equipments`,
-      seoDescription: `Professional ${genre.name.toLowerCase()} for commercial kitchens in Pune. ${genre.description || `Quality ${genre.name.toLowerCase()} from Kitchen Kraft Equipments.`}`.substring(0, 160),
-      keywords: baseKeywords
+      seoTitle: genre.seo_title || `${genre.name} - Commercial Kitchen Equipment | Kitchen Kraft Equipments`,
+      seoDescription: (genre.seo_description || `Professional ${genre.name.toLowerCase()} for commercial kitchens in Pune. ${genre.description || `Quality ${genre.name.toLowerCase()} from Kitchen Kraft Equipments.`}`).substring(0, 160),
+      keywords,
     };
   }
 
   /**
-   * Enhance product data with SEO properties
+   * Enhance product data with SEO properties (DB values take priority over auto-generated)
    */
   private enhanceProductWithSEO(product: Product, categorySlug?: string): SEOProduct {
     const slug = this.generateSlug(product.name);
     const category = categorySlug || (product.genre_name ? this.generateSlug(product.genre_name) : '');
-    
+
     const baseKeywords = [
       product.name.toLowerCase(),
       'commercial kitchen equipment',
@@ -182,13 +217,19 @@ export class KitchenKraftAPI {
       baseKeywords.push('price', 'cost', 'buy');
     }
 
+    // Merge DB SEO keywords with auto-generated ones
+    const dbKeywords = product.seo_keywords
+      ? product.seo_keywords.split(',').map(k => k.trim()).filter(Boolean)
+      : [];
+    const keywords = dbKeywords.length > 0 ? dbKeywords : baseKeywords;
+
     return {
       ...product,
       slug,
       categorySlug: category,
-      seoTitle: `${product.name} - Commercial Kitchen Equipment | Kitchen Kraft`,
-      seoDescription: `${product.description || product.name} - Professional commercial kitchen equipment from Kitchen Kraft Equipments, Pune. Get quote for ${product.name.toLowerCase()}.`.substring(0, 160),
-      keywords: baseKeywords
+      seoTitle: product.seo_title || `${product.name} - Commercial Kitchen Equipment | Kitchen Kraft`,
+      seoDescription: (product.seo_description || `${product.description || product.name} - Professional commercial kitchen equipment from Kitchen Kraft Equipments, Pune. Get quote for ${product.name.toLowerCase()}.`).substring(0, 160),
+      keywords,
     };
   }
 
@@ -199,7 +240,7 @@ export class KitchenKraftAPI {
   async getGenres(): Promise<SEOGenre[]> {
     return cacheUtils.cacheGenres(async () => {
       const genres: Genre[] = await this.fetchWithCache('/api/genres', 'genres');
-      
+
       if (!Array.isArray(genres)) {
         throw new APIError('Invalid genres response format');
       }
@@ -287,6 +328,39 @@ export class KitchenKraftAPI {
   }
 
   /**
+   * Fetch all active services
+   */
+  async getServices(): Promise<Service[]> {
+    return cacheUtils.cacheApiResponse(
+      'services',
+      async () => {
+        const services: Service[] = await this.fetchWithCache('/api/services', 'services');
+        return Array.isArray(services) ? services : [];
+      },
+      CACHE_CONFIG.TTL.PRODUCTS
+    );
+  }
+
+  /**
+   * Fetch a single service by slug
+   */
+  async getServiceBySlug(slug: string): Promise<Service | null> {
+    return cacheUtils.cacheApiResponse(
+      `service_${slug}`,
+      async () => {
+        try {
+          const service: Service = await this.fetchWithCache(`/api/services/${slug}`, `service-${slug}`);
+          return service;
+        } catch (error) {
+          if (error instanceof APIError && error.status === 404) return null;
+          throw error;
+        }
+      },
+      CACHE_CONFIG.TTL.PRODUCTS
+    );
+  }
+
+  /**
    * Clear cache (useful for testing or forced refresh)
    */
   clearCache(): void {
@@ -305,10 +379,35 @@ export class KitchenKraftAPI {
    */
   invalidateCache(pattern?: string): void {
     if (pattern) {
-      // Use cache manager's invalidatePattern method
       cacheUtils.invalidateProducts();
     } else {
       cacheUtils.clearAll();
+    }
+  }
+
+  /**
+   * Fetch public company metadata from the settings endpoint.
+   * Returns a flat object with company name, address, phone, email, GST, website.
+   * Falls back gracefully — never throws.
+   */
+  async getCompanyMetadata(): Promise<{
+    name: string;
+    address: string;
+    phone: string;
+    email: string;
+    gst_number: string;
+    website: string;
+    logo_url: string;
+  } | null> {
+    try {
+      const response = await fetch(`${this.baseURL}/api/settings/public`, {
+        next: { revalidate: 300 }, // cache for 5 minutes on Next.js server
+      } as RequestInit);
+      if (!response.ok) return null;
+      const data = await response.json();
+      return data.success ? data.metadata : null;
+    } catch {
+      return null;
     }
   }
 }

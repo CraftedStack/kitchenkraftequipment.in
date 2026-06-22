@@ -244,7 +244,7 @@ export default function MobileImageViewer({
             
             <button
               onClick={onClose}
-              className="p-2 rounded-full bg-black/30 hover:bg-black/50 transition-colors"
+              className="btn-close btn-close-on-dark p-2 rounded-full"
               aria-label="Close viewer"
             >
               <FaTimes size={16} />

@@ -239,7 +239,8 @@ export default function ProductQuoteForm({ allProducts, preselectedProduct }: Pr
                     <button
                       type="button"
                       onClick={() => removeProduct(name)}
-                      className="text-blue-500 hover:text-blue-700 transition-colors"
+                      className="inline-flex items-center text-blue-500 hover:text-red-500 transition-colors duration-150 hover:scale-110 active:scale-90"
+                      style={{ transition: "color 150ms ease, transform 150ms ease" }}
                       aria-label={`Remove ${name}`}
                     >
                       <FaTimes size={11} />
@@ -263,7 +264,7 @@ export default function ProductQuoteForm({ allProducts, preselectedProduct }: Pr
                 <button
                   type="button"
                   onClick={() => setProductSearch('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="btn-close absolute right-3 top-1/2 -translate-y-1/2 p-0.5 rounded"
                 >
                   <FaTimes size={14} />
                 </button>

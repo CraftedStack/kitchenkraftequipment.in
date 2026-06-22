@@ -19,16 +19,19 @@ interface Logo {
   name: string;
 }
 
+// Base URL for images — uses backend proxy to avoid direct S3 public access
+const IMG_BASE = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/images/imgs`;
+
 const logos: Logo[] = [
-  { src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Nyati.png", alt: "Nyati Group", name: "Nyati Group" },
-  { src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/client2.png", alt: "Swiggy", name: "Swiggy" },
-  { src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/wns.png", alt: "WNS Global Services", name: "WNS" },
-  { src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/o_hotel.png", alt: "Oxford Hotel", name: "Oxford Hotel" },
-  { src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Smokin'Joe'sLogo.png", alt: "Smokin' Joe's Pizza", name: "Smokin' Joe's" },
-  { src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/OGR1.png", alt: "OGR Group", name: "OGR Group" },
-  { src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/siemens.png", alt: "Siemens", name: "Siemens" },
-  { src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/Honeywell.png", alt: "Honeywell", name: "Honeywell" },
-  { src: "https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/imgs/mastercard-removebg-preview.png", alt: "MasterCard", name: "MasterCard" },
+  { src: `${IMG_BASE}/Nyati.png`, alt: "Nyati Group", name: "Nyati Group" },
+  { src: `${IMG_BASE}/client2.png`, alt: "Swiggy", name: "Swiggy" },
+  { src: `${IMG_BASE}/wns.png`, alt: "WNS Global Services", name: "WNS" },
+  { src: `${IMG_BASE}/o_hotel.png`, alt: "Oxford Hotel", name: "Oxford Hotel" },
+  { src: `${IMG_BASE}/Smokin'Joe'sLogo.png`, alt: "Smokin' Joe's Pizza", name: "Smokin' Joe's" },
+  { src: `${IMG_BASE}/OGR1.png`, alt: "OGR Group", name: "OGR Group" },
+  { src: `${IMG_BASE}/siemens.png`, alt: "Siemens", name: "Siemens" },
+  { src: `${IMG_BASE}/Honeywell.png`, alt: "Honeywell", name: "Honeywell" },
+  { src: `${IMG_BASE}/mastercard-removebg-preview.png`, alt: "MasterCard", name: "MasterCard" },
 ];
 
 const sampleReviews: Review[] = [

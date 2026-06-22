@@ -103,7 +103,7 @@ export function MobileMenu({
             </Link>
             <button
               onClick={onClose}
-              className="p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+              className="btn-close p-2 rounded-lg"
               aria-label="Close mobile menu"
             >
               <svg

@@ -101,7 +101,7 @@ export default function MobileProductBrowser({
           {searchQuery && (
             <button
               onClick={() => handleSearch('')}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="btn-close absolute right-3 top-1/2 transform -translate-y-1/2 p-0.5 rounded"
             >
               <FaTimes size={16} />
             </button>

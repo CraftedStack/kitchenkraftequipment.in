@@ -20,6 +20,77 @@ body {
   font-family: var(--font-inter);
 }
 
+/* ─── Close / dismiss button ─────────────────────────────────────────────────
+   Usage: add  btn-close  to any close/dismiss button. The icon inside should
+   use currentColor for stroke/fill so the colour transition applies to it.
+────────────────────────────────────────────────────────────────────────────── */
+.btn-close {
+  color: #6b7280;             /* gray-500  */
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    color            180ms cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 180ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform        180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-close:hover {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.08);
+  transform: scale(1.08);
+}
+
+.btn-close:active {
+  transform: scale(0.93);
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+.btn-close > svg,
+.btn-close > * {
+  transition: transform 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-close:hover > svg,
+.btn-close:hover > * {
+  transform: rotate(90deg);
+}
+
+.btn-close:focus-visible {
+  outline: 2px solid #ef4444;
+  outline-offset: 2px;
+}
+
+/* On dark / image backgrounds (mobile image viewer, dark overlays) */
+.btn-close-on-dark {
+  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.btn-close-on-dark:hover {
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.5);
+  transform: scale(1.08);
+}
+
+.btn-close-on-dark:active {
+  transform: scale(0.93);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-close,
+  .btn-close > svg,
+  .btn-close > * {
+    transition: color 100ms linear, background-color 100ms linear;
+  }
+  .btn-close:hover > svg,
+  .btn-close:hover > * { transform: none; }
+  .btn-close:hover      { transform: none; }
+}
+
 /* Premium Utilities */
 .glass {
   background: rgba(255, 255, 255, 0.7);

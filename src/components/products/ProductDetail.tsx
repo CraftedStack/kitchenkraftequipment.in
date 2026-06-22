@@ -47,12 +47,47 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
 
                 {/* Product Badge */}
                 <div className="absolute top-4 left-4">
-                  <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${isManufacturing
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-green-600 text-white'
-                    }`}>
-                    {isManufacturing ? 'Custom Manufacturing' : 'Ready Stock'}
-                  </span>
+                  {(() => {
+                    const stock = product.stock_quantity;
+                    const threshold = product.low_stock_threshold ?? 5;
+
+                    // Out of stock
+                    if (stock === 0) {
+                      return (
+                        <span className="inline-block px-3 py-1 rounded-full text-sm font-semibold bg-red-600 text-white shadow-sm ring-1 ring-red-700">
+                          Out of Stock
+                        </span>
+                      );
+                    }
+                    
+                    // Limited stock
+                    if (stock !== null && stock !== undefined && stock <= threshold) {
+                      return (
+                        <span className="inline-block px-3 py-1 rounded-full text-sm font-semibold bg-amber-500 text-white shadow-sm ring-1 ring-amber-600">
+                          Limited Stock (Only {stock} left)
+                        </span>
+                      );
+                    }
+                    
+                    // In stock
+                    if (stock !== null && stock !== undefined && stock > threshold) {
+                      return (
+                        <span className="inline-block px-3 py-1 rounded-full text-sm font-semibold bg-green-600 text-white shadow-sm ring-1 ring-green-700">
+                          In Stock
+                        </span>
+                      );
+                    }
+
+                    // Untracked fallback
+                    return (
+                      <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold shadow-sm ${isManufacturing
+                        ? 'bg-blue-600 text-white ring-1 ring-blue-700'
+                        : 'bg-emerald-600 text-white ring-1 ring-emerald-700'
+                        }`}>
+                        {isManufacturing ? 'Custom Manufacturing' : 'Ready Stock'}
+                      </span>
+                    );
+                  })()}
                 </div>
 
                 {/* Price Badge */}

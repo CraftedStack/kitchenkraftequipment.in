@@ -1,11 +1,11 @@
-import { Metadata } from 'next';
 import Link from 'next/link';
-import Image from 'next/image';
 import { seoManager } from '@/lib/seo';
-import { SERVICES, NAVIGATION } from '@/lib/constants';
+import { api } from '@/lib/api';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
+import type { Metadata } from 'next';
 
-// Generate metadata for services page
+export const revalidate = 3600;
+
 export const metadata: Metadata = seoManager.generatePageMetadata({
   title: 'Professional Commercial Kitchen Services',
   description: 'Comprehensive commercial kitchen services including design, manufacturing, installation, and maintenance. Expert solutions for restaurants, hotels, and food businesses in Pune.',
@@ -25,14 +25,27 @@ const breadcrumbItems = [
   { name: 'Services', href: '/services' }
 ];
 
-export default function ServicesPage() {
-  const servicesNav = NAVIGATION.main.find(item => item.name === 'Services');
-  const servicesList = servicesNav?.children || [];
+const COLOR_GRADIENTS: Record<string, string> = {
+  blue: 'from-blue-600 to-blue-800',
+  green: 'from-green-600 to-green-800',
+  purple: 'from-purple-600 to-purple-800',
+  gray: 'from-gray-600 to-gray-800',
+  red: 'from-red-600 to-red-800',
+  orange: 'from-orange-500 to-orange-700',
+};
+
+export default async function ServicesPage() {
+  let services: Awaited<ReturnType<typeof api.getServices>> = [];
+  try {
+    services = await api.getServices();
+  } catch (error) {
+    console.error('Failed to load services:', error);
+  }
 
   return (
     <>
       <Breadcrumbs items={breadcrumbItems} />
-      
+
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -41,7 +54,7 @@ export default function ServicesPage() {
               Professional Kitchen Services
             </h1>
             <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-              Complete commercial kitchen solutions from design to maintenance. 
+              Complete commercial kitchen solutions from design to maintenance.
               We handle every aspect of your kitchen project with expertise and precision.
             </p>
             <Link
@@ -62,117 +75,80 @@ export default function ServicesPage() {
               Comprehensive Commercial Kitchen Services
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              From initial consultation and custom design to manufacturing, installation, and ongoing maintenance, 
-              we provide end-to-end commercial kitchen solutions tailored to your business needs. 
+              From initial consultation and custom design to manufacturing, installation, and ongoing maintenance,
+              we provide end-to-end commercial kitchen solutions tailored to your business needs.
               Serving restaurants, hotels, catering businesses, and food service establishments across Pune and Maharashtra.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {[
-              {
-                name: 'Commercial Kitchen Design',
-                description: 'Expert kitchen layout planning and design services optimized for workflow efficiency, food safety compliance, and operational excellence. Custom solutions for restaurants, hotels, and food service businesses.',
-                features: [
-                  'Space optimization and workflow planning',
-                  'Equipment selection and placement',
-                  '3D visualization and technical drawings',
-                  'Compliance with food safety regulations',
-                  'Cost-effective design solutions'
-                ],
-                href: '/services/commercial-kitchen-design',
-                image: 'commercial-kitchen-design'
-              },
-              {
-                name: 'Equipment Manufacturing',
-                description: 'Custom manufacturing of high-quality stainless steel commercial kitchen equipment. Built to your exact specifications using premium SS 304/316 grade materials with precision engineering.',
-                features: [
-                  'Custom stainless steel fabrication',
-                  'Precision engineering and manufacturing',
-                  'Premium SS 304/316 grade materials',
-                  'Quality testing and certification',
-                  'Fast turnaround and delivery'
-                ],
-                href: '/services/equipment-manufacturing',
-                image: 'equipment-manufacturing'
-              },
-              {
-                name: 'Installation & Maintenance',
-                description: 'Professional installation, commissioning, and ongoing maintenance services for commercial kitchen equipment. Ensuring optimal performance and longevity of your kitchen investments.',
-                features: [
-                  'Professional equipment installation',
-                  'System commissioning and testing',
-                  'Preventive maintenance programs',
-                  'Emergency repair services',
-                  '24/7 technical support'
-                ],
-                href: '/services/installation-maintenance',
-                image: 'installation-maintenance'
-              },
-              {
-                name: 'Expert Consultation',
-                description: 'Professional consultation services for kitchen planning, equipment selection, operational optimization, and compliance. Expert guidance from concept to completion.',
-                features: [
-                  'Kitchen planning and optimization',
-                  'Equipment selection guidance',
-                  'Operational efficiency consulting',
-                  'Compliance and safety advisory',
-                  'Cost analysis and budgeting'
-                ],
-                href: '/services/consultation',
-                image: 'consultation'
-              }
-            ].map((service, index) => (
-              <div
-                key={service.name}
-                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-              >
-                <div className="relative h-48">
-                  <Image
-                    src={`/imgs/services/${service.image}.jpg`}
-                    alt={`${service.name} - Commercial Kitchen Services in Pune`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-40" />
-                  <div className="absolute bottom-4 left-4 text-white">
-                    <h3 className="text-xl font-bold">{service.name}</h3>
-                  </div>
-                </div>
-                
-                <div className="p-6">
-                  <p className="text-gray-600 mb-4">
-                    {service.description}
-                  </p>
-                  
-                  <div className="mb-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Key Services Include:</h4>
-                    <ul className="text-sm text-gray-600 space-y-2">
-                      {service.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-start">
-                          <svg className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <Link
-                    href={service.href}
-                    className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
+          {services.length > 0 ? (
+            <div className="grid md:grid-cols-2 gap-8">
+              {services.map((service) => {
+                const gradient = COLOR_GRADIENTS[service.color_theme] || COLOR_GRADIENTS.blue;
+                const firstFeatures = service.features?.slice(0, 5) || [];
+                return (
+                  <div
+                    key={service.id}
+                    className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
                   >
-                    Learn More About {service.name}
-                    <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
+                    <div className={`relative h-48 bg-gradient-to-r ${gradient} flex items-end`}>
+                      {service.image_url && (
+                        <div className="absolute inset-0">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={service.image_url}
+                            alt={`${service.title} - Commercial Kitchen Services in Pune`}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-black bg-opacity-40" />
+                        </div>
+                      )}
+                      <div className="relative z-10 p-4">
+                        <h3 className="text-xl font-bold text-white">{service.title}</h3>
+                        {service.subtitle && (
+                          <p className="text-sm text-white/80 mt-1">{service.subtitle}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="p-6">
+                      {service.description && (
+                        <p className="text-gray-600 mb-4">{service.description}</p>
+                      )}
+
+                      {firstFeatures.length > 0 && (
+                        <div className="mb-6">
+                          <h4 className="font-semibold text-gray-900 mb-3">Key Services Include:</h4>
+                          <ul className="text-sm text-gray-600 space-y-2">
+                            {firstFeatures.map((feature, idx) => (
+                              <li key={idx} className="flex items-start">
+                                <svg className="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                                {feature.title}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      <Link
+                        href={`/services/${service.slug}`}
+                        className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
+                      >
+                        Learn More About {service.title}
+                        <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-center text-gray-500 py-8">Services coming soon.</p>
+          )}
         </div>
       </section>
 
@@ -184,7 +160,7 @@ export default function ServicesPage() {
               Why Choose Kitchen Kraft?
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              With years of experience and a commitment to excellence, we deliver 
+              With years of experience and a commitment to excellence, we deliver
               commercial kitchen solutions that exceed expectations.
             </p>
           </div>
@@ -236,7 +212,7 @@ export default function ServicesPage() {
             Ready to Transform Your Kitchen?
           </h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Contact us today for a free consultation and discover how we can help 
+            Contact us today for a free consultation and discover how we can help
             create the perfect commercial kitchen for your business.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
