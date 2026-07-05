@@ -8,6 +8,9 @@ import ProductDetail from '@/components/products/ProductDetail';
 import RelatedProducts from '@/components/products/RelatedProducts';
 import InquiryForm from '@/components/forms/InquiryForm';
 
+// Render at request time — data comes from a live API with no-store fetch
+export const dynamic = 'force-dynamic';
+
 interface ProductPageProps {
   params: Promise<{
     category: string;

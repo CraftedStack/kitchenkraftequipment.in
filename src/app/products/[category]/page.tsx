@@ -7,6 +7,9 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import ProductGrid from '@/components/products/ProductGrid';
 import CategoryHeader from '@/components/products/CategoryHeader';
 
+// Render at request time — data comes from a live API with no-store fetch
+export const dynamic = 'force-dynamic';
+
 interface CategoryPageProps {
   params: Promise<{
     category: string;
