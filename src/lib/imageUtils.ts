@@ -141,11 +141,14 @@ export const optimizeImageUrl = (url: string, options?: { width?: number; height
   try {
     const parsedUrl = new URL(url);
     
-    // For S3 URLs, don't add optimization parameters as they're not supported by default
-    // Only add optimization parameters for services that support them (like Cloudinary, ImageKit, etc.)
+    // For S3 URLs, don't add optimization parameters
     if (parsedUrl.hostname.includes('amazonaws.com') || parsedUrl.hostname.includes('s3.')) {
-      // S3 doesn't support query parameters for image optimization by default
-      // Return the URL as-is for S3
+      return parsedUrl.toString();
+    }
+
+    // For backend image proxy URLs, don't add optimization parameters either
+    // The proxy streams raw S3 bytes and doesn't support resizing
+    if (parsedUrl.pathname.includes('/api/images/')) {
       return parsedUrl.toString();
     }
     
