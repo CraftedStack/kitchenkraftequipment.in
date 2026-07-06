@@ -7,7 +7,7 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { ServiceSchema } from '@/components/seo/StructuredData';
 import ServiceInquiryForm from '@/components/forms/ServiceInquiryForm';
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 const COLOR_GRADIENTS: Record<string, string> = {
   blue: 'from-blue-600 to-blue-800',
