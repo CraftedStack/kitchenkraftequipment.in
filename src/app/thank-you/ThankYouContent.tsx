@@ -2,6 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import { COMPANY_INFO } from '@/lib/constants';
+import { trackPhoneCall, trackWhatsAppClick, trackEmailClick } from '@/components/seo/Analytics';
 
 export default function ThankYouContent() {
   const searchParams = useSearchParams();
@@ -135,6 +136,7 @@ export default function ThankYouContent() {
               <p className="text-gray-600 mb-3">Speak with our experts directly</p>
               <a
                 href={`tel:${COMPANY_INFO.contact.phone}`}
+                onClick={() => trackPhoneCall(COMPANY_INFO.contact.phone)}
                 className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block"
               >
                 {COMPANY_INFO.contact.phone}
@@ -153,6 +155,7 @@ export default function ThankYouContent() {
                 href={`https://wa.me/${COMPANY_INFO.contact.whatsapp.replace(/[^0-9]/g, '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackWhatsAppClick()}
                 className="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors inline-block"
               >
                 Chat Now
@@ -169,6 +172,7 @@ export default function ThankYouContent() {
               <p className="text-gray-600 mb-3">Send detailed requirements</p>
               <a
                 href={`mailto:${COMPANY_INFO.contact.email}`}
+                onClick={() => trackEmailClick(COMPANY_INFO.contact.email)}
                 className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors inline-block"
               >
                 Send Email

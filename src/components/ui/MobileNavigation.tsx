@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FaBars, FaTimes, FaChevronDown, FaChevronRight, FaSearch, FaPhone, FaWhatsapp } from 'react-icons/fa';
+import { trackPhoneCall, trackWhatsAppClick } from '@/components/seo/Analytics';
 
 interface NavigationItem {
   name: string;
@@ -201,16 +202,18 @@ export default function MobileNavigation({ navigationItems, className = '' }: Mo
           <div className="grid grid-cols-2 gap-3">
             <a
               href="tel:+918830696290"
+              onClick={() => trackPhoneCall('+918830696290')}
               className="flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
             >
               <FaPhone className="mr-2" size={14} />
               Call Now
             </a>
-            
+
             <a
               href="https://wa.me/918830696290?text=Hi, I am interested in your commercial kitchen equipment. Please provide more information."
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackWhatsAppClick()}
               className="flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
             >
               <FaWhatsapp className="mr-2" size={14} />

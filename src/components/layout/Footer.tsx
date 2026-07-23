@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { NAVIGATION, COMPANY_INFO, SITE_CONFIG } from '@/lib/constants';
 import { api } from '@/lib/api';
+import TrackedContactLink from '@/components/seo/TrackedContactLink';
 
 export default async function Footer() {
   const currentYear = new Date().getFullYear();
@@ -183,12 +184,14 @@ export default async function Footer() {
               >
                 Get Free Quote
               </Link>
-              <Link
+              <TrackedContactLink
+                type="phone"
                 href={`tel:${COMPANY_INFO.contact.phone}`}
+                trackValue={COMPANY_INFO.contact.phone}
                 className="border border-gray-600 text-gray-300 px-4 py-2 rounded-lg text-sm font-medium hover:border-gray-500 hover:text-white transition-colors"
               >
                 Call Now
-              </Link>
+              </TrackedContactLink>
             </div>
           </div>
         </div>

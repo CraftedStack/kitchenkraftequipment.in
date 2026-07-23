@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { FORM_CONFIG, ERROR_MESSAGES, COMPANY_INFO } from '@/lib/constants';
+import { trackFormSubmission, trackPhoneCall, trackWhatsAppClick, trackEmailClick } from '@/components/seo/Analytics';
 
 interface FormData {
   name: string;
@@ -205,6 +206,7 @@ export default function ServiceInquiryForm({
       }
 
       // Success - redirect to thank you page
+      trackFormSubmission(serviceSlug, 'inquiry');
       const submissionId = result.data?.submissionId;
       const thankYouUrl = `/thank-you?type=service&service=${encodeURIComponent(serviceName)}${submissionId ? `&id=${submissionId}` : ''}`;
       window.location.href = thankYouUrl;
@@ -495,6 +497,7 @@ export default function ServiceInquiryForm({
           <div className="flex flex-col sm:flex-row gap-4 text-sm">
             <a
               href={`tel:${COMPANY_INFO.contact.phone}`}
+              onClick={() => trackPhoneCall(COMPANY_INFO.contact.phone)}
               className="flex items-center text-blue-600 hover:text-blue-800"
             >
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -506,6 +509,7 @@ export default function ServiceInquiryForm({
               href={`https://wa.me/${COMPANY_INFO.contact.whatsapp.replace(/[^0-9]/g, '')}`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackWhatsAppClick()}
               className="flex items-center text-green-600 hover:text-green-800"
             >
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -515,6 +519,7 @@ export default function ServiceInquiryForm({
             </a>
             <a
               href={`mailto:${COMPANY_INFO.contact.email}`}
+              onClick={() => trackEmailClick(COMPANY_INFO.contact.email)}
               className="flex items-center text-red-600 hover:text-red-800"
             >
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

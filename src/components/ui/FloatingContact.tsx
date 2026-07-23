@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { FaPhone, FaWhatsapp, FaEnvelope, FaTimes, FaComments } from 'react-icons/fa';
+import { trackPhoneCall, trackWhatsAppClick, trackEmailClick } from '@/components/seo/Analytics';
 
 interface FloatingContactProps {
   className?: string;
@@ -34,7 +35,8 @@ export default function FloatingContact({ className = '' }: FloatingContactProps
       icon: FaPhone,
       href: 'tel:+918830696290',
       color: 'bg-blue-600 hover:bg-blue-700',
-      description: 'Speak with our experts'
+      description: 'Speak with our experts',
+      onClick: () => trackPhoneCall('+918830696290')
     },
     {
       name: 'WhatsApp',
@@ -42,14 +44,16 @@ export default function FloatingContact({ className = '' }: FloatingContactProps
       href: 'https://wa.me/918830696290?text=Hi, I am interested in your commercial kitchen equipment. Please provide more information.',
       color: 'bg-green-600 hover:bg-green-700',
       description: 'Quick chat support',
-      external: true
+      external: true,
+      onClick: () => trackWhatsAppClick()
     },
     {
       name: 'Email Us',
       icon: FaEnvelope,
       href: 'mailto:info@kitchenkraftequipments.com?subject=Commercial Kitchen Equipment Inquiry',
       color: 'bg-red-600 hover:bg-red-700',
-      description: 'Send detailed inquiry'
+      description: 'Send detailed inquiry',
+      onClick: () => trackEmailClick('info@kitchenkraftequipments.com')
     }
   ];
 
@@ -74,6 +78,7 @@ export default function FloatingContact({ className = '' }: FloatingContactProps
                 href={option.href}
                 target={option.external ? '_blank' : '_self'}
                 rel={option.external ? 'noopener noreferrer' : undefined}
+                onClick={option.onClick}
                 className={`${option.color} text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl`}
                 aria-label={option.name}
               >
@@ -137,6 +142,7 @@ export function QuickContactBar() {
         <div className="p-2 space-y-2">
           <a
             href="tel:+918830696290"
+            onClick={() => trackPhoneCall('+918830696290')}
             className="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded transition-colors"
           >
             <FaPhone className="w-4 h-4 mr-2 text-blue-600" />
@@ -146,6 +152,7 @@ export function QuickContactBar() {
             href="https://wa.me/918830696290"
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackWhatsAppClick()}
             className="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-green-50 rounded transition-colors"
           >
             <FaWhatsapp className="w-4 h-4 mr-2 text-green-600" />
@@ -153,6 +160,7 @@ export function QuickContactBar() {
           </a>
           <a
             href="mailto:info@kitchenkraftequipments.com"
+            onClick={() => trackEmailClick('info@kitchenkraftequipments.com')}
             className="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-red-50 rounded transition-colors"
           >
             <FaEnvelope className="w-4 h-4 mr-2 text-red-600" />

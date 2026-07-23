@@ -3,6 +3,7 @@ import { seoManager } from '@/lib/seo';
 import { COMPANY_INFO } from '@/lib/constants';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import ContactForm from '@/components/forms/ContactForm';
+import TrackedContactLink from '@/components/seo/TrackedContactLink';
 
 // Generate metadata for contact page
 export const metadata: Metadata = seoManager.generatePageMetadata({
@@ -163,12 +164,14 @@ export default function ContactPage() {
               <p className="text-gray-600 mb-4">
                 Speak directly with our experts for immediate assistance and consultation.
               </p>
-              <a
+              <TrackedContactLink
+                type="phone"
                 href={`tel:${COMPANY_INFO.contact.phone}`}
+                trackValue={COMPANY_INFO.contact.phone}
                 className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block"
               >
                 {COMPANY_INFO.contact.phone}
-              </a>
+              </TrackedContactLink>
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-md text-center">
@@ -181,14 +184,15 @@ export default function ContactPage() {
               <p className="text-gray-600 mb-4">
                 Quick messages and instant responses for urgent inquiries and support.
               </p>
-              <a
+              <TrackedContactLink
+                type="whatsapp"
                 href={`https://wa.me/${COMPANY_INFO.contact.whatsapp.replace(/[^0-9]/g, '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-green-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors inline-block"
               >
                 Chat on WhatsApp
-              </a>
+              </TrackedContactLink>
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-md text-center">
@@ -201,12 +205,14 @@ export default function ContactPage() {
               <p className="text-gray-600 mb-4">
                 Send detailed project requirements and receive comprehensive proposals.
               </p>
-              <a
+              <TrackedContactLink
+                type="email"
                 href={`mailto:${COMPANY_INFO.contact.email}`}
+                trackValue={COMPANY_INFO.contact.email}
                 className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors inline-block"
               >
                 Send Email
-              </a>
+              </TrackedContactLink>
             </div>
           </div>
         </div>
@@ -243,12 +249,14 @@ export default function ContactPage() {
             <p className="text-gray-600 mb-4">
               Don't see your city? We provide services across India.
             </p>
-            <a
+            <TrackedContactLink
+              type="phone"
               href={`tel:${COMPANY_INFO.contact.phone}`}
+              trackValue={COMPANY_INFO.contact.phone}
               className="text-blue-600 hover:text-blue-800 font-semibold"
             >
               Call us to discuss your location →
-            </a>
+            </TrackedContactLink>
           </div>
         </div>
       </section>
@@ -294,20 +302,23 @@ export default function ContactPage() {
             transform your commercial kitchen with our expert solutions.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
+            <TrackedContactLink
+              type="phone"
               href={`tel:${COMPANY_INFO.contact.phone}`}
+              trackValue={COMPANY_INFO.contact.phone}
               className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
             >
               Call Now: {COMPANY_INFO.contact.phone}
-            </a>
-            <a
+            </TrackedContactLink>
+            <TrackedContactLink
+              type="whatsapp"
               href={`https://wa.me/${COMPANY_INFO.contact.whatsapp.replace(/[^0-9]/g, '')}`}
               target="_blank"
               rel="noopener noreferrer"
               className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
             >
               WhatsApp Us
-            </a>
+            </TrackedContactLink>
           </div>
         </div>
       </section>

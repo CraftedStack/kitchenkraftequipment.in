@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import { FaPhone, FaWhatsapp, FaEnvelope, FaSearch, FaTimes, FaCheck } from 'react-icons/fa';
 import { SEOProduct } from '@/lib/types';
+import { trackQuoteRequest, trackPhoneCall, trackWhatsAppClick, trackEmailClick } from '@/components/seo/Analytics';
 
 interface ProductQuoteFormProps {
   /** All available products (fetched server-side) */
@@ -143,6 +144,7 @@ export default function ProductQuoteForm({ allProducts, preselectedProduct }: Pr
         return;
       }
 
+      trackQuoteRequest(productLabel);
       setSubmissionId(result.data?.submissionId || '');
       setSubmitted(true);
     } catch {
@@ -185,6 +187,7 @@ export default function ProductQuoteForm({ allProducts, preselectedProduct }: Pr
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <a
             href="tel:+918830696290"
+            onClick={() => trackPhoneCall('+918830696290')}
             className="flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
           >
             <FaPhone size={14} /> Call Now
@@ -193,6 +196,7 @@ export default function ProductQuoteForm({ allProducts, preselectedProduct }: Pr
             href="https://wa.me/918830696290"
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackWhatsAppClick()}
             className="flex items-center justify-center gap-2 px-5 py-2.5 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors"
           >
             <FaWhatsapp size={14} /> WhatsApp
@@ -480,13 +484,13 @@ export default function ProductQuoteForm({ allProducts, preselectedProduct }: Pr
           <div className="pt-2 border-t border-gray-100 text-center">
             <p className="text-sm text-gray-500 mb-3">Or reach us directly:</p>
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
-              <a href="tel:+918830696290" className="flex items-center gap-1.5 text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors">
+              <a href="tel:+918830696290" onClick={() => trackPhoneCall('+918830696290')} className="flex items-center gap-1.5 text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors">
                 <FaPhone size={13} /> Call
               </a>
-              <a href="https://wa.me/918830696290" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-green-600 hover:text-green-800 text-sm font-medium transition-colors">
+              <a href="https://wa.me/918830696290" target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppClick()} className="flex items-center gap-1.5 text-green-600 hover:text-green-800 text-sm font-medium transition-colors">
                 <FaWhatsapp size={13} /> WhatsApp
               </a>
-              <a href="mailto:info@kitchenkraftequipments.com" className="flex items-center gap-1.5 text-red-600 hover:text-red-800 text-sm font-medium transition-colors">
+              <a href="mailto:info@kitchenkraftequipments.com" onClick={() => trackEmailClick('info@kitchenkraftequipments.com')} className="flex items-center gap-1.5 text-red-600 hover:text-red-800 text-sm font-medium transition-colors">
                 <FaEnvelope size={13} /> Email
               </a>
             </div>

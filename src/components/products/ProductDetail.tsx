@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { SEOProduct, SEOGenre } from '@/lib/types';
 import { getDisplayImageUrl } from '@/lib/imageUtils';
+import { trackPhoneCall, trackProductView } from '@/components/seo/Analytics';
 
 interface ProductDetailProps {
   product: SEOProduct;
@@ -13,6 +14,10 @@ interface ProductDetailProps {
 export default function ProductDetail({ product, category }: ProductDetailProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const isManufacturing = category.type === 'manufacture';
+
+  useEffect(() => {
+    trackProductView(product.name, category.name, product.price);
+  }, [product.name, category.name, product.price]);
 
   // Mock images for demonstration - in real implementation, these would come from the product data
   const mainImage = getDisplayImageUrl(product.image, { width: 800, height: 800, quality: 90 });
@@ -254,6 +259,7 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
                 <div className="text-right">
                   <a
                     href="tel:+918830696290"
+                    onClick={() => trackPhoneCall('+918830696290')}
                     className="text-blue-600 hover:text-blue-800 font-semibold"
                   >
                     +91 88306 96290

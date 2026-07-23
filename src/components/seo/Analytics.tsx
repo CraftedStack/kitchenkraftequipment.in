@@ -42,7 +42,7 @@ export const trackEvent = (action: string, category: string, label?: string, val
 // Track page views
 export const trackPageView = (url: string, title: string) => {
   if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('config', process.env.NEXT_PUBLIC_GA_ID, {
+    window.gtag('config', process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID, {
       page_path: url,
       page_title: title,
     });

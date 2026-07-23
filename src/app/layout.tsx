@@ -2,8 +2,10 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google"; // Import Google Fonts
 import Script from "next/script";
+import { Suspense } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { GoogleAnalytics } from "@/components/seo/Analytics";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
@@ -62,6 +64,11 @@ export default function RootLayout({
         className="bg-white text-gray-900 antialiased font-sans"
         suppressHydrationWarning={true}
       >
+        {GA_ID && process.env.NODE_ENV === "production" && (
+          <Suspense fallback={null}>
+            <GoogleAnalytics gaId={GA_ID} />
+          </Suspense>
+        )}
         <div className="min-h-screen flex flex-col">
           <Header />
           <main className="flex-1">

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { FaPhone, FaWhatsapp, FaEnvelope } from 'react-icons/fa';
+import { trackQuoteRequest, trackPhoneCall, trackWhatsAppClick, trackEmailClick } from '@/components/seo/Analytics';
 
 interface QuickQuoteFormProps {
   productName?: string;
@@ -95,6 +96,7 @@ export default function QuickQuoteForm({
       }
 
       // Success - redirect to thank you page
+      trackQuoteRequest(productName, categoryName);
       const submissionId = result.data?.submissionId;
       let thankYouUrl = '/thank-you?type=quote';
       
@@ -149,6 +151,7 @@ export default function QuickQuoteForm({
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
                 href="tel:+918830696290"
+                onClick={() => trackPhoneCall('+918830696290')}
                 className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 <FaPhone className="w-4 h-4 mr-2" />
@@ -158,6 +161,7 @@ export default function QuickQuoteForm({
                 href="https://wa.me/918830696290"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackWhatsAppClick()}
                 className="flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
               >
                 <FaWhatsapp className="w-4 h-4 mr-2" />
@@ -302,6 +306,7 @@ export default function QuickQuoteForm({
           </a>
           <a
             href="mailto:info@kitchenkraftequipments.com"
+            onClick={() => trackEmailClick('info@kitchenkraftequipments.com')}
             className="flex items-center text-red-600 hover:text-red-800 text-sm"
           >
             <FaEnvelope className="w-4 h-4 mr-1" />

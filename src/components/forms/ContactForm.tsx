@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { FORM_CONFIG, ERROR_MESSAGES, SUCCESS_MESSAGES } from '@/lib/constants';
 import MobileContactForm from '@/components/forms/MobileContactForm';
+import { trackFormSubmission } from '@/components/seo/Analytics';
 
 interface FormData {
   name: string;
@@ -156,6 +157,7 @@ export default function ContactForm() {
       }
 
       // Success - redirect to thank you page
+      trackFormSubmission('desktop', 'contact');
       const submissionId = result.data?.submissionId;
       const thankYouUrl = `/thank-you?type=contact${submissionId ? `&id=${submissionId}` : ''}`;
       window.location.href = thankYouUrl;

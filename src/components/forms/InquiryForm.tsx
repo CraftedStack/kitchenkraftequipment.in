@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { FORM_CONFIG, ERROR_MESSAGES, SUCCESS_MESSAGES } from '@/lib/constants';
 import { SEOProduct } from '@/lib/types';
+import { trackFormSubmission, trackPhoneCall, trackWhatsAppClick } from '@/components/seo/Analytics';
 
 interface FormData {
   name: string;
@@ -165,6 +166,7 @@ export default function InquiryForm({ product }: InquiryFormProps) {
       }
 
       // Success - redirect to thank you page
+      trackFormSubmission('product', 'inquiry');
       const submissionId = result.data?.submissionId;
       const thankYouUrl = `/thank-you?type=inquiry&product=${encodeURIComponent(product.name)}${submissionId ? `&id=${submissionId}` : ''}`;
       window.location.href = thankYouUrl;
@@ -200,6 +202,7 @@ export default function InquiryForm({ product }: InquiryFormProps) {
           </button>
           <a
             href="tel:+918830696290"
+            onClick={() => trackPhoneCall('+918830696290')}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
           >
             Call Us: +91 88306 96290
@@ -392,6 +395,7 @@ export default function InquiryForm({ product }: InquiryFormProps) {
         <div className="flex flex-col sm:flex-row gap-4 text-sm">
           <a
             href="tel:+918830696290"
+            onClick={() => trackPhoneCall('+918830696290')}
             className="flex items-center text-blue-600 hover:text-blue-800"
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -403,6 +407,7 @@ export default function InquiryForm({ product }: InquiryFormProps) {
             href="https://wa.me/918830696290"
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackWhatsAppClick()}
             className="flex items-center text-green-600 hover:text-green-800"
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

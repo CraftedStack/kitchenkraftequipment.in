@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { FaPhone, FaWhatsapp, FaEnvelope, FaUser, FaBuilding, FaComment, FaTimes, FaCheck } from 'react-icons/fa';
+import { trackFormSubmission, trackPhoneCall, trackWhatsAppClick } from '@/components/seo/Analytics';
 
 interface FormData {
   name: string;
@@ -171,6 +172,7 @@ export default function MobileContactForm({
         return;
       }
 
+      trackFormSubmission('mobile', 'contact');
       setIsSubmitted(true);
       onSuccess?.();
       
@@ -199,6 +201,7 @@ export default function MobileContactForm({
           <div className="space-y-3">
             <a
               href="tel:+918830696290"
+              onClick={() => trackPhoneCall('+918830696290')}
               className="block w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
             >
               <FaPhone className="inline mr-2" />
@@ -208,6 +211,7 @@ export default function MobileContactForm({
               href="https://wa.me/918830696290"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackWhatsAppClick()}
               className="block w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors"
             >
               <FaWhatsapp className="inline mr-2" />
@@ -460,6 +464,7 @@ export default function MobileContactForm({
         <div className="grid grid-cols-2 gap-3">
           <a
             href="tel:+918830696290"
+            onClick={() => trackPhoneCall('+918830696290')}
             className="flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
           >
             <FaPhone className="mr-2" size={14} />
@@ -469,6 +474,7 @@ export default function MobileContactForm({
             href="https://wa.me/918830696290"
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackWhatsAppClick()}
             className="flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
           >
             <FaWhatsapp className="mr-2" size={14} />
