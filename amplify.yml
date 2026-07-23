@@ -5,7 +5,11 @@ frontend:
       commands:
         - nvm use 20 || nvm install 20
         - node -v
-        - npm ci
+        # Next.js production builds need devDependencies (Tailwind, TypeScript,
+        # PostCSS). Amplify sets NODE_ENV=production, which makes plain `npm ci`
+        # skip devDeps — so force them in explicitly.
+        - npm ci --include=dev
+        - npm ls @tailwindcss/postcss tailwindcss typescript || true
     build:
       commands:
         - npm run build
