@@ -84,7 +84,7 @@ export default function CategoryHeader({ category, productCount }: CategoryHeade
               {imageUrl ? (
                 <img
                   src={imageUrl}
-                  alt={`${category.name} - Commercial Kitchen Equipment`}
+                  alt={category.image_alt || `${category.name} - Commercial Kitchen Equipment`}
                   className="w-full h-full object-contain"
                   loading="lazy"
                   onError={(e) => {

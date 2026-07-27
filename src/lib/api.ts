@@ -9,6 +9,7 @@ export interface Genre {
   name: string;
   description: string;
   image: string;
+  image_alt?: string;
   type: 'manufacture' | 'resell';
   seo_title?: string;
   seo_description?: string;
@@ -19,6 +20,7 @@ export interface Product {
   id: number;
   name: string;
   image: string;
+  image_alt?: string;
   description: string;
   price?: string;
   genre_id?: number;

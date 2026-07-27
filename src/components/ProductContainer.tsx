@@ -11,6 +11,7 @@ interface Product {
   id: number;
   name: string;
   image: string;
+  image_alt?: string;
   description: string;
   price?: string;
   genre_id?: number;
@@ -22,6 +23,7 @@ interface Genre {
   name: string;
   description: string;
   image: string;
+  image_alt?: string;
   type: string;
 }
 
@@ -123,7 +125,7 @@ const ProductDetailsModal = ({ genreId, genreTitle, isOpen, onClose, isResell }:
               <div key={product.id} className="product-detail-card">
                 <img 
                   src={product.image || 'https://via.placeholder.com/300'} 
-                  alt={`${product.name} - Commercial Kitchen Equipment in Pune`}
+                  alt={product.image_alt || `${product.name} - Commercial Kitchen Equipment in Pune`}
                   className="product-detail-image"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
@@ -351,7 +353,7 @@ const ProductContainer = ({ isResell = false }: ProductContainerProps) => {
                 <div className="product-card">
                   <img 
                     src={genre.image || 'https://via.placeholder.com/400x300?text=No+Image'} 
-                    alt={`${genre.name} - Commercial Kitchen Equipment in Pune`}
+                    alt={genre.image_alt || `${genre.name} - Commercial Kitchen Equipment in Pune`}
                     className="product-image"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;

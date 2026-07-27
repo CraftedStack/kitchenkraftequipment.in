@@ -40,6 +40,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   try {
+    // Only advertise absolute http(s) image URLs to the sitemap — Google Images
+    // ignores relative paths, and a bad value can invalidate the whole entry.
+    const absoluteImage = (img?: string): string[] =>
+      img && /^https?:\/\//.test(img) ? [img] : [];
+
     // Dynamic category pages
     const categories = await api.getGenres();
     const categoryPages: MetadataRoute.Sitemap = categories.map((category) => ({
@@ -47,6 +52,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.7,
+      images: absoluteImage(category.image),
     }));
 
     // Dynamic product pages
@@ -56,6 +62,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.6,
+      images: absoluteImage(product.image),
     }));
 
     // Dynamic service pages

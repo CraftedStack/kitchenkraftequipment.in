@@ -108,7 +108,7 @@ export default function ProductGrid({ products, categorySlug, className = '' }: 
                   {imageUrl ? (
                     <img
                       src={imageUrl}
-                      alt={product.name}
+                      alt={product.image_alt || product.name}
                       className="w-full h-full object-contain hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                       onLoad={() => {

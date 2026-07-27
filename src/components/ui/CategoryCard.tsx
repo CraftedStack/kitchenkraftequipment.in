@@ -24,7 +24,7 @@ export default function CategoryCard({ category, type, className = '' }: Categor
         {imageUrl ? (
           <img
             src={imageUrl}
-            alt={`${category.name} - Commercial Kitchen Equipment`}
+            alt={category.image_alt || `${category.name} - Commercial Kitchen Equipment`}
             className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
             onLoad={() => {

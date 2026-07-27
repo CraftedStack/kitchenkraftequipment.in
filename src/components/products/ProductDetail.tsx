@@ -38,7 +38,7 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
                 {productImages[selectedImage] ? (
                   <img
                     src={productImages[selectedImage]}
-                    alt={product.name}
+                    alt={product.image_alt || product.name}
                     className="w-full h-full object-contain"
                     loading="lazy"
                   />

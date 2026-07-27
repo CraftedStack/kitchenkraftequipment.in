@@ -53,7 +53,7 @@ export default function RelatedProducts({ products, categoryName, categorySlug }
                     return imageUrl ? (
                       <img
                         src={imageUrl}
-                        alt={product.name}
+                        alt={product.image_alt || product.name}
                         className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                         loading="lazy"
                         onError={(e) => {
