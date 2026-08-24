@@ -30,6 +30,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.8,
     },
+    // Footer content pages. Low priority: useful and linked, but not what we
+    // want ranking ahead of product and category pages.
+    ...['support', 'warranty', 'careers', 'news', 'privacy', 'terms'].map((slug) => ({
+      url: `${baseUrl}/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'yearly' as const,
+      priority: 0.3,
+    })),
     {
       url: `${baseUrl}/products`,
       lastModified: new Date(),

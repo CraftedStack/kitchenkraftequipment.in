@@ -41,6 +41,8 @@ export interface Product {
   low_stock_threshold?: number | null;
   /** Admin-entered selling points, shown on product cards. */
   highlights?: string[];
+  /** Admin-entered buyer questions, shown on the public product page. */
+  faq?: { question: string; answer: string }[];
   // Sale / discount (from the backend; on_sale is server-computed w/ schedule)
   sale_price?: number | string | null;
   sale_percent?: number | string | null;

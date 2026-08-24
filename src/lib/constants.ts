@@ -32,12 +32,14 @@ export const NAVIGATION = {
   // visibility flags so disabled sections leave no link behind. This object now
   // only carries the footer column definitions.
   footer: {
+    // Fallback only. Footer.tsx replaces this with real genres from the API on
+    // every render; these show solely when that request fails. The previous
+    // entries pointed at invented slugs (/products/cooking, /refrigeration...)
+    // that no genre uses, so an API outage rendered a footer full of dead links.
+    // Everything here now resolves to a page that exists.
     products: [
-      { name: "Commercial Refrigeration", href: "/products/refrigeration" },
-      { name: "Cooking Equipment", href: "/products/cooking" },
-      { name: "Food Preparation", href: "/products/preparation" },
-      { name: "Storage Solutions", href: "/products/storage" },
-      { name: "Dishwashing Systems", href: "/products/dishwashing" },
+      { name: "All Products", href: "/products" },
+      { name: "Best Selling", href: "/products/best-selling" },
       { name: "Custom Manufacturing", href: "/manufacturing" }
     ],
     services: [

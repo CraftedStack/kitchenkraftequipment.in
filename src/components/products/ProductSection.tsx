@@ -7,6 +7,7 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import ProductDetail from '@/components/products/ProductDetail';
 import RelatedProducts from '@/components/products/RelatedProducts';
 import InquiryForm from '@/components/forms/InquiryForm';
+import ProductFaq from '@/components/products/ProductFaq';
 import { sectionForGenre, type ProductSection } from '@/lib/productSections';
 
 interface Props {
@@ -204,6 +205,12 @@ export default async function ProductSection({ category, slug, section }: Props)
               </div>
             </div>
           </section>
+
+          {/* FAQ. Placed before the enquiry form on purpose: answer what the
+              buyer is wondering, then ask them to get in touch. */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <ProductFaq faqs={product.faq} />
+          </div>
 
           {/* Inquiry Form Section */}
           <section className="py-16">
