@@ -5,6 +5,9 @@ import Script from "next/script";
 import { Suspense } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { getPublicFlags } from "@/lib/publicFlags";
+import { buildFlatNavigation } from "@/lib/navigation";
+import BannerBar from "@/components/layout/BannerBar";
 import { GoogleAnalytics } from "@/components/seo/Analytics";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
@@ -28,11 +31,15 @@ export const metadata: Metadata = {
   description: 'Leading manufacturer of commercial kitchen equipment in Pune. Custom design, manufacturing, and installation services.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Resolved on the server so a disabled section never reaches the client as a
+  // link — no flash, and nothing for a crawler to follow.
+  const flags = await getPublicFlags();
+  const navigation = buildFlatNavigation(flags);
   return (
     <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
       <head>
@@ -70,11 +77,12 @@ export default function RootLayout({
           </Suspense>
         )}
         <div className="min-h-screen flex flex-col">
-          <Header />
+          <BannerBar />
+          <Header navigation={navigation} />
           <main className="flex-1">
             {children}
           </main>
-          <Footer />
+          <Footer flags={flags} />
         </div>
       </body>
     </html>

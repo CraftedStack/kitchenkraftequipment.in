@@ -5,6 +5,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./ProductContainer.css";
+import { getSaleInfo, formatINR } from "@/lib/sale";
 
 // Define TypeScript interfaces
 interface Product {
@@ -16,6 +17,9 @@ interface Product {
   price?: string;
   genre_id?: number;
   genre_name?: string;
+  sale_price?: number | string | null;
+  sale_percent?: number | string | null;
+  on_sale?: boolean;
 }
 
 interface Genre {
@@ -136,7 +140,18 @@ const ProductDetailsModal = ({ genreId, genreTitle, isOpen, onClose, isResell }:
                 <p className="product-description">
                   {enhanceProductDescription(product)}
                 </p>
-                {product.price && <p className="product-price">₹{product.price}</p>}
+                {product.price && (() => {
+                  const s = getSaleInfo(product);
+                  return s.onSale ? (
+                    <p className="product-price">
+                      <span style={{ textDecoration: 'line-through', color: '#9ca3af', marginRight: 6 }}>{formatINR(s.original!)}</span>
+                      <span style={{ color: '#dc2626', fontWeight: 700 }}>{formatINR(s.sale!)}</span>
+                      <span style={{ color: '#dc2626', fontSize: '0.75em', marginLeft: 6 }}>({s.percent}% OFF)</span>
+                    </p>
+                  ) : (
+                    <p className="product-price">₹{product.price}</p>
+                  );
+                })()}
                 
                 <div className="product-features">
                   <h4 className="features-title">Key Features:</h4>

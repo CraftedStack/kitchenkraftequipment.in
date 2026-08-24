@@ -226,6 +226,10 @@ export function ProductSchema({
     brand?: string;
   }
 }) {
+  // schema.org needs a bare numeric price (no ₹ / commas) alongside priceCurrency.
+  const numericPrice = product.price
+    ? String(product.price).replace(/[^\d.]/g, '')
+    : '';
   const productData = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -249,7 +253,7 @@ export function ProductSchema({
         "@type": "Organization",
         "name": "Kitchen Kraft Equipments"
       },
-      ...(product.price && { price: product.price })
+      ...(numericPrice && { price: numericPrice })
     },
     "category": "Commercial Kitchen Equipment",
     "material": "Stainless Steel",

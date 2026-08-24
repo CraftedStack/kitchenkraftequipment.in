@@ -197,10 +197,10 @@ export default function ThankYouContent() {
               Browse Products
             </a>
             <a
-              href="/services"
+              href="/manufacturing"
               className="border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-600 hover:text-white transition-colors inline-block"
             >
-              View Services
+              Custom Manufacturing
             </a>
           </div>
         </div>

@@ -45,10 +45,10 @@ export default function NotFound() {
               Browse Products
             </Link>
             <Link
-              href="/services"
+              href="/contact"
               className="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors"
             >
-              Our Services
+              Contact Us
             </Link>
           </div>
         </div>

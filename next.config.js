@@ -58,10 +58,13 @@ const nextConfig = {
             value: 'origin-when-cross-origin'
           },
           // Performance headers
-          {
-            key: 'X-Robots-Tag',
-            value: 'index, follow'
-          },
+          // NOTE: X-Robots-Tag is deliberately NOT set globally here.
+          // A blanket 'index, follow' header applies to every route and
+          // overrides per-page intent — it contradicted the `noindex` meta tag
+          // on pages that opt out (e.g. /services while the section is
+          // disabled), sending crawlers a mixed signal. Indexing is controlled
+          // per page through the Metadata API (`robots` in generateMetadata),
+          // which is the single source of truth.
         ],
       },
       {
@@ -108,6 +111,33 @@ const nextConfig = {
         destination: '/services/:slug',
         permanent: true,
       },
+      // The manufacturing landing page was promoted from a child of /products
+      // to its own top-level section. Permanent so any accumulated ranking and
+      // any existing link lands on the canonical URL.
+      {
+        source: '/products/manufactured',
+        destination: '/manufacturing',
+        permanent: true,
+      },
+      // Legacy query-param forms predate the dedicated landing pages and are
+      // still linked from parts of the nav. Collapsing them removes a
+      // duplicate-content split where two URLs served the same listing.
+      {
+        source: '/products',
+        has: [{ type: 'query', key: 'type', value: 'manufacture' }],
+        destination: '/manufacturing',
+        permanent: true,
+      },
+      {
+        source: '/products',
+        has: [{ type: 'query', key: 'type', value: 'resell' }],
+        destination: '/products/best-selling',
+        permanent: true,
+      },
+      // Per-category redirects between /products and /manufacturing are handled
+      // by src/middleware.ts, which resolves each genre's type from live data.
+      // They were previously a hardcoded slug list here, which broke silently
+      // whenever a genre was renamed or retyped in the admin panel.
     ];
   },
 
@@ -130,8 +160,12 @@ const nextConfig = {
 
   // Webpack optimizations
   webpack: (config, { dev, isServer }) => {
-    // Production optimizations
-    if (!dev) {
+    // Production optimizations.
+    // Client only: applying this splitChunks config to the server build bundles
+    // browser-only vendor code into a server chunk, which throws
+    // "ReferenceError: self is not defined" when prerendering. Next already
+    // chunks the server build sensibly on its own.
+    if (!dev && !isServer) {
       config.optimization = {
         ...config.optimization,
         splitChunks: {

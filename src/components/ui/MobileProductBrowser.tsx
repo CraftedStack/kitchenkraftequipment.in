@@ -3,13 +3,20 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { SEOProduct, SEOGenre } from '@/lib/types';
+import { productPath } from '@/lib/productSections';
 import { FaFilter, FaTh, FaList, FaSearch, FaTimes } from 'react-icons/fa';
 import { getDisplayImageUrl } from '@/lib/imageUtils';
+import { getSaleInfo, formatINR } from '@/lib/sale';
 
 interface MobileProductBrowserProps {
   products: SEOProduct[];
   categories?: SEOGenre[];
   currentCategory?: string;
+  /**
+   * Section these products belong to — '/manufacturing' or '/products'.
+   * Passed down by ProductGrid, which knows the section it is rendering in.
+   */
+  basePath?: string;
   className?: string;
 }
 
@@ -20,8 +27,19 @@ export default function MobileProductBrowser({
   products,
   categories = [],
   currentCategory,
+  basePath = '/products',
   className = ''
 }: MobileProductBrowserProps) {
+  // A product's URL follows its category's section. Prefer the category's own
+  // type when the list is available; otherwise use the section this grid was
+  // rendered in, which ProductGrid passes down.
+  const productHref = (product: SEOProduct) => {
+    const parent = categories?.find((c) => c.slug === product.categorySlug);
+    return parent
+      ? productPath(parent, product.slug)
+      : `${basePath}/${product.categorySlug}/${product.slug}`;
+  };
+
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [sortBy, setSortBy] = useState<SortOption>('name');
   const [searchQuery, setSearchQuery] = useState('');
@@ -234,6 +252,7 @@ export default function MobileProductBrowser({
                 product={product}
                 viewMode={viewMode}
                 isMounted={isMounted}
+                href={productHref(product)}
               />
             ))}
           </div>
@@ -247,11 +266,14 @@ export default function MobileProductBrowser({
 function ProductCard({
   product,
   viewMode,
-  isMounted
+  isMounted,
+  href
 }: {
   product: SEOProduct;
   viewMode: ViewMode;
   isMounted: boolean;
+  /** Resolved by the parent, which knows each category's section. */
+  href: string;
 }) {
   const imageUrl = getDisplayImageUrl(product.image, { width: 300, height: 300, quality: 80 });
 
@@ -290,12 +312,20 @@ function ProductCard({
             </div>
           )}
 
-          {/* Price Badge for List View */}
-          {product.price && (
-            <div className="absolute top-1 right-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-lg border border-white/20">
-              ₹{parseFloat(product.price).toLocaleString('en-IN')}
-            </div>
-          )}
+          {/* Price Badge for List View (sale-aware) */}
+          {product.price && (() => {
+            const s = getSaleInfo(product);
+            return (
+              <div className="absolute top-1 right-1 flex flex-col items-end gap-0.5">
+                <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-lg border border-white/20 text-white ${s.onSale ? 'bg-red-600' : 'bg-gradient-to-r from-blue-600 to-blue-700'}`}>
+                  {formatINR(s.onSale ? s.sale! : parseFloat(product.price))}
+                </div>
+                {s.onSale && (
+                  <div className="bg-white/90 text-red-600 text-[9px] font-bold px-1 py-0.5 rounded">{s.percent}% OFF</div>
+                )}
+              </div>
+            );
+          })()}
         </div>
 
         {/* Product Info */}
@@ -310,20 +340,19 @@ function ProductCard({
               </p>
             )}
 
-            {/* Feature Tags for List View */}
-            <div className="flex gap-1 mb-2">
-              <span className="inline-block bg-blue-50 text-blue-700 text-xs px-1.5 py-0.5 rounded-full font-medium">
-                Commercial
-              </span>
-              <span className="inline-block bg-green-50 text-green-700 text-xs px-1.5 py-0.5 rounded-full font-medium">
-                Steel
-              </span>
+            {/* One quiet material line. Replaced identical filler chips that
+                consumed scarce mobile space without distinguishing products. */}
+            <div className="mb-2 flex items-center gap-1.5 text-xs text-gray-500">
+              <svg className="w-3.5 h-3.5 flex-shrink-0 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Food-grade stainless steel</span>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             <Link
-              href={`/products/${product.categorySlug}/${product.slug}`}
+              href={href}
               className="flex-1 text-xs bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-2 px-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all text-center shadow-md"
             >
               View Details
@@ -379,12 +408,20 @@ function ProductCard({
           </div>
         )}
 
-        {/* Price Badge */}
-        {product.price && (
-          <div className="absolute top-2 right-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg border border-white/20">
-            ₹{parseFloat(product.price).toLocaleString('en-IN')}
-          </div>
-        )}
+        {/* Price Badge (sale-aware) */}
+        {product.price && (() => {
+          const s = getSaleInfo(product);
+          return (
+            <div className="absolute top-2 right-2 flex flex-col items-end gap-0.5">
+              <div className={`text-xs font-bold px-2 py-1 rounded-full shadow-lg border border-white/20 text-white ${s.onSale ? 'bg-red-600' : 'bg-gradient-to-r from-blue-600 to-blue-700'}`}>
+                {formatINR(s.onSale ? s.sale! : parseFloat(product.price))}
+              </div>
+              {s.onSale && (
+                <div className="bg-white/90 text-red-600 text-[10px] font-bold px-1.5 py-0.5 rounded">{s.percent}% OFF</div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Category Badge */}
         <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-gray-700 text-xs font-medium px-2 py-1 rounded-full shadow-sm border border-gray-100">
@@ -398,31 +435,13 @@ function ProductCard({
           {product.name}
         </h3>
 
-        {/* Feature Tags */}
-        <div className="mb-3 flex flex-wrap gap-1">
-          <span className="inline-block bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded-full font-medium">
-            Steel
-          </span>
-          <span className="inline-block bg-green-50 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">
-            Food Grade
-          </span>
-        </div>
-
-        <div className="flex items-center justify-between gap-2">
-          <Link
-            href={`/products/${product.categorySlug}/${product.slug}`}
-            className="flex-1 text-xs text-blue-600 hover:text-blue-800 font-semibold text-center py-2 px-3 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
-          >
-            Details
-          </Link>
-          <button
-            onClick={() => {
-              window.location.href = `/quote?product=${encodeURIComponent(product.name)}`;
-            }}
-            className="flex-1 text-xs bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-2 px-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md"
-          >
-            Quote
-          </button>
+        {/* One quiet material line. Replaced identical filler chips that
+            consumed scarce mobile space without distinguishing products. */}
+        <div className="mb-2 flex items-center gap-1.5 text-xs text-gray-500">
+          <svg className="w-3.5 h-3.5 flex-shrink-0 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Food-grade stainless steel</span>
         </div>
       </div>
     </div>

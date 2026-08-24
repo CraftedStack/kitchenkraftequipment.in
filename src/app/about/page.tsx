@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getPublicFlags } from '@/lib/publicFlags';
 import { seoManager } from '@/lib/seo';
 import { COMPANY_INFO } from '@/lib/constants';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
@@ -25,7 +26,9 @@ const breadcrumbItems = [
   { name: 'About Us', href: '/about' }
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const flags = await getPublicFlags();
+
   return (
     <>
       <Breadcrumbs items={breadcrumbItems} />
@@ -51,10 +54,10 @@ export default function AboutPage() {
                   Contact Us
                 </Link>
                 <Link
-                  href="/services"
+                  href={flags.services ? '/services' : '/products'}
                   className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors text-center"
                 >
-                  Our Services
+                  {flags.services ? 'Our Services' : 'Our Products'}
                 </Link>
               </div>
             </div>

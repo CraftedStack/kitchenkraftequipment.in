@@ -4,14 +4,21 @@ import React from 'react';
 import Link from 'next/link';
 import { SEOProduct } from '@/lib/types';
 import { getDisplayImageUrl } from '@/lib/imageUtils';
+import { getSaleInfo, formatINR } from '@/lib/sale';
 
 interface RelatedProductsProps {
+  /**
+   * Section these products live in — '/manufacturing' or '/products'.
+   * Related products always share the current category, so they share its
+   * section too. Defaults to '/products'.
+   */
+  basePath?: string;
   products: SEOProduct[];
   categoryName: string;
   categorySlug: string;
 }
 
-export default function RelatedProducts({ products, categoryName, categorySlug }: RelatedProductsProps) {
+export default function RelatedProducts({ products, categoryName, categorySlug, basePath = '/products' }: RelatedProductsProps) {
   if (!products || products.length === 0) {
     return null;
   }
@@ -30,7 +37,7 @@ export default function RelatedProducts({ products, categoryName, categorySlug }
           </div>
 
           <Link
-            href={`/products/${categorySlug}`}
+            href={`${basePath}/${categorySlug}`}
             className="text-blue-600 hover:text-blue-800 font-medium flex items-center"
           >
             View All {categoryName}
@@ -46,7 +53,7 @@ export default function RelatedProducts({ products, categoryName, categorySlug }
               key={product.id}
               className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow group"
             >
-              <Link href={`/products/${product.categorySlug}/${product.slug}`}>
+              <Link href={`${basePath}/${product.categorySlug}/${product.slug}`}>
                 <div className="relative h-48 bg-white overflow-hidden p-2 flex items-center justify-center">
                   {(() => {
                     const imageUrl = getDisplayImageUrl(product.image, { width: 400, height: 400, quality: 80 });
@@ -78,12 +85,20 @@ export default function RelatedProducts({ products, categoryName, categorySlug }
                     </svg>
                   </div>
 
-                  {/* Price Badge */}
-                  {product.price && (
-                    <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded">
-                      {product.price}
-                    </div>
-                  )}
+                  {/* Price Badge (sale-aware) */}
+                  {product.price && (() => {
+                    const s = getSaleInfo(product);
+                    return s.onSale ? (
+                      <div className="absolute top-2 right-2 flex flex-col items-end gap-0.5">
+                        <div className="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">{formatINR(s.sale!)}</div>
+                        <div className="bg-white/90 text-red-600 text-[10px] font-bold px-1.5 py-0.5 rounded">{s.percent}% OFF</div>
+                      </div>
+                    ) : (
+                      <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded">
+                        {product.price}
+                      </div>
+                    );
+                  })()}
 
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
@@ -97,7 +112,7 @@ export default function RelatedProducts({ products, categoryName, categorySlug }
               </Link>
 
               <div className="p-4">
-                <Link href={`/products/${product.categorySlug}/${product.slug}`}>
+                <Link href={`${basePath}/${product.categorySlug}/${product.slug}`}>
                   <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
                     {product.name}
                   </h3>
@@ -111,7 +126,7 @@ export default function RelatedProducts({ products, categoryName, categorySlug }
 
                 <div className="flex items-center justify-between">
                   <Link
-                    href={`/products/${product.categorySlug}/${product.slug}`}
+                    href={`${basePath}/${product.categorySlug}/${product.slug}`}
                     className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center"
                   >
                     View Details
@@ -137,7 +152,7 @@ export default function RelatedProducts({ products, categoryName, categorySlug }
         {/* View More CTA */}
         <div className="text-center mt-12">
           <Link
-            href={`/products/${categorySlug}`}
+            href={`${basePath}/${categorySlug}`}
             className="inline-flex items-center bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
           >
             View All {categoryName} Products

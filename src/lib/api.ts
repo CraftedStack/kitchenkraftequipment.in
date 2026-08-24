@@ -16,11 +16,20 @@ export interface Genre {
   seo_keywords?: string;
 }
 
+export interface ProductImage {
+  id: number;
+  image_url: string;
+  image_alt?: string | null;
+  sort_order?: number;
+}
+
 export interface Product {
   id: number;
   name: string;
   image: string;
   image_alt?: string;
+  /** Additional gallery images (excludes the primary `image`). */
+  images?: ProductImage[];
   description: string;
   price?: string;
   genre_id?: number;
@@ -30,6 +39,25 @@ export interface Product {
   seo_keywords?: string;
   stock_quantity?: number | null;
   low_stock_threshold?: number | null;
+  /** Admin-entered selling points, shown on product cards. */
+  highlights?: string[];
+  // Sale / discount (from the backend; on_sale is server-computed w/ schedule)
+  sale_price?: number | string | null;
+  sale_percent?: number | string | null;
+  sale_entered?: string | null;
+  sale_starts?: string | null;
+  sale_ends?: string | null;
+  on_sale?: boolean;
+}
+
+// Editable per-page SEO + on-page copy (landing pages, etc.)
+export interface PageSeo {
+  page_key: string;
+  seo_title: string;
+  seo_description: string;
+  seo_keywords: string;
+  heading: string;
+  intro_content: string;
 }
 
 // Enhanced interfaces with SEO properties
@@ -408,6 +436,24 @@ export class KitchenKraftAPI {
       if (!response.ok) return null;
       const data = await response.json();
       return data.success ? data.metadata : null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Fetch editable per-page SEO + on-page copy for a given page_key
+   * (e.g. 'products-manufactured'). The backend always returns safe defaults,
+   * so this only returns null on a hard network failure.
+   */
+  async getPageSeo(pageKey: string): Promise<PageSeo | null> {
+    try {
+      const response = await fetch(`${this.baseURL}/api/page-seo/${pageKey}`, {
+        next: { revalidate: 300 }, // cache 5 min on the Next.js server
+      } as RequestInit);
+      if (!response.ok) return null;
+      const data = await response.json();
+      return data.success ? (data.page as PageSeo) : null;
     } catch {
       return null;
     }

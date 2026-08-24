@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { api } from '@/lib/api';
 import { seoManager } from '@/lib/seo';
 import ProductSection from '@/components/products/ProductSection';
-import { PRODUCTS_SECTION, sectionForGenre } from '@/lib/productSections';
+import { MANUFACTURING_SECTION, sectionForGenre } from '@/lib/productSections';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,16 +12,14 @@ interface PageProps {
 
 export async function generateStaticParams() {
   try {
-    // Only products in resell categories — manufacturing products live under
-    // /manufacturing/[category]/[slug].
-    const genres = await api.getGenresByType('resell');
-    const resellSlugs = new Set(genres.map((g) => g.slug));
+    const genres = await api.getGenresByType('manufacture');
+    const manufacturingSlugs = new Set(genres.map((g) => g.slug));
     const allProducts = await api.getAllProducts();
     return allProducts
-      .filter((product) => resellSlugs.has(product.categorySlug))
+      .filter((product) => manufacturingSlugs.has(product.categorySlug))
       .map((product) => ({ category: product.categorySlug, slug: product.slug }));
   } catch (error) {
-    console.error('Failed to generate static params for products:', error);
+    console.error('Failed to generate static params for manufacturing products:', error);
     return [];
   }
 }
@@ -31,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const { category, slug } = await params;
     const categoryData = await api.getGenreBySlug(category);
 
-    if (!categoryData || sectionForGenre(categoryData).basePath !== PRODUCTS_SECTION.basePath) {
+    if (!categoryData || sectionForGenre(categoryData).basePath !== MANUFACTURING_SECTION.basePath) {
       return {
         title: 'Product Not Found | Kitchen Kraft Equipments',
         description: 'The requested product was not found.',
@@ -46,9 +44,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       };
     }
 
-    return seoManager.generateProductMetadata(product, PRODUCTS_SECTION.basePath);
+    return seoManager.generateProductMetadata(product, MANUFACTURING_SECTION.basePath);
   } catch (error) {
-    console.error('Failed to generate metadata for product:', error);
+    console.error('Failed to generate metadata for manufacturing product:', error);
     return {
       title: 'Product | Kitchen Kraft Equipments',
       description: 'Commercial kitchen equipment from Kitchen Kraft Equipments.',
@@ -56,7 +54,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default async function ProductPage({ params }: PageProps) {
+export default async function ManufacturingProductPage({ params }: PageProps) {
   const { category, slug } = await params;
-  return <ProductSection category={category} slug={slug} section={PRODUCTS_SECTION} />;
+  return <ProductSection category={category} slug={slug} section={MANUFACTURING_SECTION} />;
 }

@@ -9,32 +9,51 @@ import Image from 'next/image';
 import { NAVIGATION, COMPANY_INFO, SITE_CONFIG } from '@/lib/constants';
 import { api } from '@/lib/api';
 import TrackedContactLink from '@/components/seo/TrackedContactLink';
+import { DEFAULT_PUBLIC_FLAGS, type PublicFlags } from '@/lib/publicFlags';
+import { categoryPath } from '@/lib/productSections';
 
-export default async function Footer() {
+interface FooterProps {
+  /** Resolved by the root layout. Defaults keep the footer safe in isolation. */
+  flags?: PublicFlags;
+}
+
+export default async function Footer({ flags = DEFAULT_PUBLIC_FLAGS }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   let productLinks = NAVIGATION.footer.products;
-  let serviceLinks = NAVIGATION.footer.services;
+  let serviceLinks: { name: string; href: string }[] = flags.services
+    ? NAVIGATION.footer.services
+    : [];
   let companyPhone = COMPANY_INFO.contact.phone;
   let companyEmail = COMPANY_INFO.contact.email;
   let companyAddress = COMPANY_INFO.contact.address.full;
   let companyName = COMPANY_INFO.name;
 
   try {
+    // Skip the services request entirely when the section is off — no point
+    // paying for a fetch whose result is discarded.
     const [genres, services, metadata] = await Promise.all([
       api.getGenres(),
-      api.getServices(),
+      flags.services ? api.getServices() : Promise.resolve([]),
       api.getCompanyMetadata()
     ]);
 
     if (genres && genres.length > 0) {
       productLinks = genres.slice(0, 6).map(g => ({
         name: g.name,
-        href: `/products/${g.slug}`
+        href: categoryPath(g)
       }));
     }
 
-    if (services && services.length > 0) {
+    // Surface the enabled landing pages at the top of the products list.
+    // Manufacturing is top-level now; the old /products/manufactured URL 301s.
+    productLinks = [
+      ...(flags.manufacturing ? [{ name: 'Custom Manufacturing', href: '/manufacturing' }] : []),
+      ...(flags.bestSelling ? [{ name: 'Best Selling', href: '/products/best-selling' }] : []),
+      ...productLinks,
+    ];
+
+    if (flags.services && services && services.length > 0) {
       serviceLinks = services.slice(0, 6).map(s => ({
         name: s.title,
         href: `/services/${s.slug}`
@@ -114,22 +133,24 @@ export default async function Footer() {
             </ul>
           </div>
 
-          {/* Services Links */}
-          <div>
-            <h4 className="text-lg font-semibold mb-4">Services</h4>
-            <ul className="space-y-2">
-              {serviceLinks.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="text-gray-400 hover:text-white transition-colors text-sm"
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Services Links — omitted entirely when the section is disabled */}
+          {serviceLinks.length > 0 && (
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Services</h4>
+              <ul className="space-y-2">
+                {serviceLinks.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      className="text-gray-400 hover:text-white transition-colors text-sm"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Company & Support Links */}
           <div>

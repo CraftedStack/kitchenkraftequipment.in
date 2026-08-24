@@ -12,16 +12,31 @@ import { usePathname, useRouter } from 'next/navigation';
 import { COMPANY_INFO } from '@/lib/constants';
 import { MobileMenu } from './MobileMenu';
 
-// Simple navigation structure without dropdowns
-const NAVIGATION = [
+interface NavItem {
+  name: string;
+  href: string;
+}
+
+interface HeaderProps {
+  /**
+   * Nav items, resolved on the server so disabled sections are never rendered.
+   * Falls back to a products-only structure if omitted, which matches the
+   * backend's default when the flags cannot be read.
+   */
+  navigation?: NavItem[];
+}
+
+// Fallback only. The real list is built in the root layout from the public
+// visibility flags — see buildMainNavigation() in lib/navigation.ts.
+const FALLBACK_NAVIGATION: NavItem[] = [
   { name: 'Home', href: '/' },
   { name: 'Products', href: '/products' },
-  { name: 'Services', href: '/services' },
   { name: 'About Us', href: '/about' },
   { name: 'Contact', href: '/contact' }
 ];
 
-export default function Header() {
+export default function Header({ navigation }: HeaderProps) {
+  const NAVIGATION = navigation && navigation.length > 0 ? navigation : FALLBACK_NAVIGATION;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [isPending, startTransition] = useTransition();

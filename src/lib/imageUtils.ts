@@ -141,13 +141,17 @@ export const optimizeImageUrl = (url: string, options?: { width?: number; height
   try {
     const parsedUrl = new URL(url);
     
-    // For S3 URLs, don't add optimization parameters
+    // Deliberate: no resize parameters for S3 or the backend proxy.
+    //
+    // Uploads are capped at 1MB (see /api/settings/upload-limits) and the proxy
+    // already serves from an in-memory cache with a 7-day browser and 30-day
+    // CDN Cache-Control plus `immutable`. Adding a server-side resize pass would
+    // spend CPU shrinking files that are already small, which works against the
+    // cost control this setup exists for. The width/height/quality options below
+    // apply only to third-party image services that resize via URL.
     if (parsedUrl.hostname.includes('amazonaws.com') || parsedUrl.hostname.includes('s3.')) {
       return parsedUrl.toString();
     }
-
-    // For backend image proxy URLs, don't add optimization parameters either
-    // The proxy streams raw S3 bytes and doesn't support resizing
     if (parsedUrl.pathname.includes('/api/images/')) {
       return parsedUrl.toString();
     }

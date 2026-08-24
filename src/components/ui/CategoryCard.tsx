@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { SEOGenre } from '@/lib/api';
 import { getDisplayImageUrl } from '@/lib/imageUtils';
+import { categoryPath } from '@/lib/productSections';
 
 interface CategoryCardProps {
   category: SEOGenre;
@@ -16,17 +17,20 @@ export default function CategoryCard({ category, type, className = '' }: Categor
 
   return (
     <Link
-      href={`/products/${category.slug}`}
+      href={categoryPath(category)}
       className={`group bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-300 hover-lift ${className}`}
     >
       {/* Category Image - Improved for visibility */}
-      <div className="w-full h-48 bg-white overflow-hidden relative p-2 flex items-center justify-center">
+      <div className="w-full h-56 md:h-64 bg-white overflow-hidden relative p-3 flex items-center justify-center">
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={category.image_alt || `${category.name} - Commercial Kitchen Equipment`}
             className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+            width={400}
+            height={320}
             loading="lazy"
+            decoding="async"
             onLoad={() => {
               // Image loaded successfully
             }}
@@ -65,13 +69,21 @@ export default function CategoryCard({ category, type, className = '' }: Categor
           </p>
         )}
 
-        {/* Features */}
-        <div className="flex flex-wrap gap-1 mb-2">
-          <span className="inline-block bg-blue-50 text-blue-700 text-xs px-1.5 py-0.5 rounded-full font-medium">
-            Commercial
-          </span>
-          <span className="inline-block bg-green-50 text-green-700 text-xs px-1.5 py-0.5 rounded-full font-medium">
-            Quality
+        {/* Type chip.
+            Replaces two chips ("Commercial", "Quality") that appeared on every
+            category and so distinguished nothing. The manufacture/resell type
+            is the one attribute that genuinely differs between categories, and
+            it tells a buyer whether this is built to order or ready to ship. */}
+        <div className="mb-2">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600">
+            <svg className="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              {type === 'manufacture' ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-8.25m0-11.25h6.375c.621 0 1.125.504 1.125 1.125v9m-8.25 0V6.375c0-.621.504-1.125 1.125-1.125H9.75" />
+              )}
+            </svg>
+            {type === 'manufacture' ? 'Built to order' : 'Ready to ship'}
           </span>
         </div>
 

@@ -1,7 +1,9 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { api } from '@/lib/api';
+import { getPublicFlags } from '@/lib/publicFlags';
+import SectionMoved from '@/components/sections/SectionMoved';
 import { SITE_CONFIG } from '@/lib/seo';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { ServiceSchema } from '@/components/seo/StructuredData';
@@ -38,6 +40,10 @@ const COLOR_BG: Record<string, string> = {
 
 export async function generateStaticParams() {
   try {
+    // Nothing to pre-render while the section is disabled.
+    const flags = await getPublicFlags();
+    if (!flags.services) return [];
+
     const services = await api.getServices();
     return services.map((s) => ({ slug: s.slug }));
   } catch {
@@ -51,6 +57,17 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+
+  const flags = await getPublicFlags();
+  if (!flags.services) {
+    return {
+      title: 'We’ve Reorganized | Kitchen Kraft Equipments',
+      description: 'This page is no longer available. Browse our commercial kitchen equipment instead.',
+      robots: { index: false, follow: true },
+      alternates: { canonical: `${SITE_CONFIG.url}/products` },
+    };
+  }
+
   const service = await api.getServiceBySlug(slug);
   if (!service) return {};
 
@@ -79,6 +96,16 @@ export default async function ServicePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+
+  const flags = await getPublicFlags();
+  if (!flags.services) {
+    if (flags.servicesDisabledMode === 'redirect') redirect('/products');
+    // Look up the title purely so the copy can name what they were after.
+    // A failure here is fine — the placeholder falls back to generic wording.
+    const previous = await api.getServiceBySlug(slug).catch(() => null);
+    return <SectionMoved subject={previous?.title} />;
+  }
+
   const service = await api.getServiceBySlug(slug);
   if (!service) notFound();
 

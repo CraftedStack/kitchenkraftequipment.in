@@ -346,7 +346,7 @@ export default function MobileContactForm({
             {/* Service Interest */}
             <div>
               <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-2">
-                Service Interest
+                What can we help with?
               </label>
               <select
                 id="service"
@@ -356,11 +356,11 @@ export default function MobileContactForm({
                 onBlur={handleBlur}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors text-lg"
               >
-                <option value="">Select a service (optional)</option>
-                <option value="kitchen-design">Commercial Kitchen Design</option>
-                <option value="manufacturing">Equipment Manufacturing</option>
-                <option value="installation">Installation & Maintenance</option>
-                <option value="consultation">Kitchen Planning Consultation</option>
+                {/* Enquiry types, not service pages — these stay accurate whether
+                    or not the Services section is enabled. */}
+                <option value="">Select an option (optional)</option>
+                <option value="manufacturing">Custom Equipment Manufacturing</option>
+                <option value="products">Product Enquiry</option>
                 <option value="quote">General Quote Request</option>
                 <option value="support">Technical Support</option>
                 <option value="other">Other</option>

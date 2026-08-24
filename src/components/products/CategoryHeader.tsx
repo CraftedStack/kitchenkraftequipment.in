@@ -62,7 +62,7 @@ export default function CategoryHeader({ category, productCount }: CategoryHeade
 
               {isManufacturing ? (
                 <Link
-                  href="/services/equipment-manufacturing"
+                  href="/manufacturing"
                   className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-900 transition-colors text-center"
                 >
                   Manufacturing Process

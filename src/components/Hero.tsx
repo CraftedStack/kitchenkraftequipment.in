@@ -49,6 +49,17 @@ const Hero = () => {
       className={heroClassName}
     >
       <div className={videoContainerClassName}>
+        {/*
+          Video and poster are served from /public via Amplify's CloudFront.
+          They previously pointed straight at S3 and returned 403 (the bucket is
+          private, which is why images go through the backend image proxy), and
+          the poster did not exist in the bucket at all.
+
+          The source was 1920x1080 / 44.7s / 11.5 Mbps with an unused audio
+          track = 61.3MB on every homepage visit. Re-encoded to a 12s muted loop
+          at 1.8MB. preload="metadata" fetches only the header, so nothing
+          downloads the full clip before playback starts.
+        */}
         <video
           ref={videoRef}
           className={videoClassName}
@@ -58,12 +69,10 @@ const Hero = () => {
           playsInline
           onLoadedData={handleVideoLoad}
           onError={handleVideoError}
-          poster="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/cinematic-fallback.jpg"
+          preload="metadata"
+          poster="/cinematic-poster.jpg"
         >
-          <source
-            src="https://s3.ap-south-1.amazonaws.com/kitchenkraftequipement.in/cinematic.mp4"
-            type="video/mp4"
-          />
+          <source src="/cinematic-web.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         <div className={styles.videoOverlay}></div>

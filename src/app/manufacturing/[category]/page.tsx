@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { api } from '@/lib/api';
 import { seoManager } from '@/lib/seo';
 import CategorySection from '@/components/products/CategorySection';
-import { PRODUCTS_SECTION, RESERVED_SLUGS, sectionForGenre } from '@/lib/productSections';
+import { MANUFACTURING_SECTION, RESERVED_SLUGS, sectionForGenre } from '@/lib/productSections';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,14 +12,12 @@ interface PageProps {
 
 export async function generateStaticParams() {
   try {
-    // Only resell categories live under /products — manufacturing categories
-    // have their own section at /manufacturing/[category].
-    const genres = await api.getGenresByType('resell');
+    const genres = await api.getGenresByType('manufacture');
     return genres
       .filter((genre) => !RESERVED_SLUGS.has(genre.slug))
       .map((genre) => ({ category: genre.slug }));
   } catch (error) {
-    console.error('Failed to generate static params for categories:', error);
+    console.error('Failed to generate static params for manufacturing categories:', error);
     return [];
   }
 }
@@ -29,7 +27,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const { category } = await params;
     const categoryData = await api.getGenreBySlug(category);
 
-    if (!categoryData || sectionForGenre(categoryData).basePath !== PRODUCTS_SECTION.basePath) {
+    // Only own the metadata for categories that belong to this section.
+    if (!categoryData || sectionForGenre(categoryData).basePath !== MANUFACTURING_SECTION.basePath) {
       return {
         title: 'Category Not Found | Kitchen Kraft Equipments',
         description: 'The requested product category was not found.',
@@ -38,15 +37,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     return seoManager.generateCategoryMetadata(categoryData);
   } catch (error) {
-    console.error('Failed to generate metadata for category:', error);
+    console.error('Failed to generate metadata for manufacturing category:', error);
     return {
-      title: 'Product Category | Kitchen Kraft Equipments',
-      description: 'Browse our commercial kitchen equipment categories.',
+      title: 'Manufacturing | Kitchen Kraft Equipments',
+      description: 'Custom-manufactured commercial kitchen equipment.',
     };
   }
 }
 
-export default async function CategoryPage({ params }: PageProps) {
+export default async function ManufacturingCategoryPage({ params }: PageProps) {
   const { category } = await params;
-  return <CategorySection categorySlug={category} section={PRODUCTS_SECTION} />;
+  return <CategorySection categorySlug={category} section={MANUFACTURING_SECTION} />;
 }

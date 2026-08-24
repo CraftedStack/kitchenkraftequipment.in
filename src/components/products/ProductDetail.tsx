@@ -3,8 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { SEOProduct, SEOGenre } from '@/lib/types';
+import { categoryPath } from '@/lib/productSections';
 import { getDisplayImageUrl } from '@/lib/imageUtils';
 import { trackPhoneCall, trackProductView } from '@/components/seo/Analytics';
+import { getSaleInfo, formatINR } from '@/lib/sale';
 
 interface ProductDetailProps {
   product: SEOProduct;
@@ -19,12 +21,24 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
     trackProductView(product.name, category.name, product.price);
   }, [product.name, category.name, product.price]);
 
-  // Mock images for demonstration - in real implementation, these would come from the product data
-  const mainImage = getDisplayImageUrl(product.image, { width: 800, height: 800, quality: 90 });
-  const productImages = [
-    mainImage || '/imgs/default-product.jpg',
-    // Add more images when available
-  ];
+  // Build the gallery: the primary `image` first, then any additional gallery
+  // images from product.images (ordered by the admin). Each entry keeps its own
+  // alt text for accessibility/SEO.
+  const primaryImage = getDisplayImageUrl(product.image, { width: 800, height: 800, quality: 90 });
+  const gallery: { src: string; alt: string }[] = [];
+  if (primaryImage) {
+    gallery.push({ src: primaryImage, alt: product.image_alt || product.name });
+  }
+  for (const img of product.images || []) {
+    const src = getDisplayImageUrl(img.image_url, { width: 800, height: 800, quality: 90 });
+    if (src) gallery.push({ src, alt: img.image_alt || product.name });
+  }
+  // Always render at least a placeholder so the layout is stable.
+  const productImages = gallery.length > 0
+    ? gallery
+    : [{ src: '/imgs/default-product.jpg', alt: product.image_alt || product.name }];
+
+  const sale = getSaleInfo(product);
 
   return (
     <section className="py-16">
@@ -37,8 +51,8 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
               <div className="relative h-96 bg-white overflow-hidden rounded-lg mb-4 border border-gray-100 flex items-center justify-center p-4">
                 {productImages[selectedImage] ? (
                   <img
-                    src={productImages[selectedImage]}
-                    alt={product.image_alt || product.name}
+                    src={productImages[selectedImage].src}
+                    alt={productImages[selectedImage].alt}
                     className="w-full h-full object-contain"
                     loading="lazy"
                   />
@@ -97,10 +111,22 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
 
                 {/* Price Badge */}
                 {product.price && (
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-white text-gray-900 px-3 py-1 rounded-full text-sm font-semibold shadow-md">
-                      {product.price}
-                    </span>
+                  <div className="absolute top-4 right-4 flex flex-col items-end gap-1">
+                    {sale.onSale ? (
+                      <>
+                        <span className="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-md">
+                          {formatINR(sale.sale!)}
+                        </span>
+                        <span className="bg-white/90 text-gray-700 px-2 py-0.5 rounded-full text-xs shadow-sm">
+                          <span className="line-through text-gray-400 mr-1">{formatINR(sale.original!)}</span>
+                          <span className="text-red-600 font-bold">{sale.percent}% OFF</span>
+                        </span>
+                      </>
+                    ) : (
+                      <span className="bg-white text-gray-900 px-3 py-1 rounded-full text-sm font-semibold shadow-md">
+                        {formatINR(parseFloat(product.price))}
+                      </span>
+                    )}
                   </div>
                 )}
               </div>
@@ -119,8 +145,8 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
                       <div className="w-full h-full flex items-center justify-center bg-white p-1">
                         {image ? (
                           <img
-                            src={image}
-                            alt=""
+                            src={image.src}
+                            alt={image.alt}
                             className="w-full h-full object-contain"
                           />
                         ) : (
@@ -141,7 +167,7 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
             {/* Category Link */}
             <div className="mb-4">
               <Link
-                href={`/products/${category.slug}`}
+                href={categoryPath(category)}
                 className="text-blue-600 hover:text-blue-800 font-medium text-sm"
               >
                 ← Back to {category.name}
@@ -207,7 +233,17 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
                 </div>
                 {product.price && (
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-blue-600">{product.price}</div>
+                    {sale.onSale ? (
+                      <>
+                        <div className="flex items-center justify-end gap-2">
+                          <span className="text-lg text-gray-400 line-through">{formatINR(sale.original!)}</span>
+                          <span className="px-2 py-0.5 text-xs font-semibold bg-red-600 text-white rounded">{sale.percent}% OFF</span>
+                        </div>
+                        <div className="text-2xl font-bold text-red-600">{formatINR(sale.sale!)}</div>
+                      </>
+                    ) : (
+                      <div className="text-2xl font-bold text-blue-600">{formatINR(parseFloat(product.price))}</div>
+                    )}
                     <div className="text-sm text-gray-500">Starting from</div>
                   </div>
                 )}
@@ -232,15 +268,17 @@ export default function ProductDetail({ product, category }: ProductDetailProps)
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
+                {/* Consultation used to link into /services; with services off,
+                    contact is the equivalent destination. */}
                 <Link
-                  href="/services/consultation"
+                  href="/contact?intent=consultation"
                   className="flex-1 bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors text-center text-sm"
                 >
                   Expert Consultation
                 </Link>
                 {isManufacturing && (
                   <Link
-                    href="/services/equipment-manufacturing"
+                    href="/manufacturing"
                     className="flex-1 bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors text-center text-sm"
                   >
                     Manufacturing Process

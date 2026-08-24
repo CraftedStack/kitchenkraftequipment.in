@@ -1,24 +1,42 @@
 import Link from 'next/link';
-import { seoManager } from '@/lib/seo';
+import { redirect } from 'next/navigation';
+import { seoManager, SITE_CONFIG } from '@/lib/seo';
 import { api } from '@/lib/api';
+import { getPublicFlags } from '@/lib/publicFlags';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
+import SectionMoved from '@/components/sections/SectionMoved';
 import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = seoManager.generatePageMetadata({
-  title: 'Professional Commercial Kitchen Services',
-  description: 'Comprehensive commercial kitchen services including design, manufacturing, installation, and maintenance. Expert solutions for restaurants, hotels, and food businesses in Pune.',
-  keywords: [
-    'commercial kitchen services',
-    'kitchen design services',
-    'equipment manufacturing',
-    'kitchen installation',
-    'maintenance services',
-    'pune commercial kitchen'
-  ],
-  path: '/services'
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const flags = await getPublicFlags();
+
+  // Section disabled: keep the placeholder out of the index but let it pass
+  // link equity onward, and point the canonical at where visitors should go.
+  if (!flags.services) {
+    return {
+      title: 'We’ve Reorganized | Kitchen Kraft Equipments',
+      description: 'Our services pages are no longer available. Browse our commercial kitchen equipment instead.',
+      robots: { index: false, follow: true },
+      alternates: { canonical: `${SITE_CONFIG.url}/products` },
+    };
+  }
+
+  return seoManager.generatePageMetadata({
+    title: 'Professional Commercial Kitchen Services',
+    description: 'Comprehensive commercial kitchen services including design, manufacturing, installation, and maintenance. Expert solutions for restaurants, hotels, and food businesses in Pune.',
+    keywords: [
+      'commercial kitchen services',
+      'kitchen design services',
+      'equipment manufacturing',
+      'kitchen installation',
+      'maintenance services',
+      'pune commercial kitchen'
+    ],
+    path: '/services'
+  });
+}
 
 const breadcrumbItems = [
   { name: 'Home', href: '/' },
@@ -35,6 +53,15 @@ const COLOR_GRADIENTS: Record<string, string> = {
 };
 
 export default async function ServicesPage() {
+  const flags = await getPublicFlags();
+
+  // Services disabled by a super admin. 'redirect' sends visitors straight to
+  // products; 'moved' shows a friendly placeholder with links onward.
+  if (!flags.services) {
+    if (flags.servicesDisabledMode === 'redirect') redirect('/products');
+    return <SectionMoved />;
+  }
+
   let services: Awaited<ReturnType<typeof api.getServices>> = [];
   try {
     services = await api.getServices();

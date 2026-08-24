@@ -5,6 +5,8 @@
 
 import { Metadata } from 'next';
 import { SEOGenre, SEOProduct } from './api';
+import { getSaleInfo } from './sale';
+import { categoryPath } from './productSections';
 
 // Base site configuration
 export const SITE_CONFIG = {
@@ -100,7 +102,9 @@ export class SEOManager {
   generateCategoryMetadata(category: SEOGenre): Metadata {
     const title = `${category.name} - Commercial Kitchen Equipment | Kitchen Kraft`;
     const description = `Professional ${category.name.toLowerCase()} for commercial kitchens in Pune. Browse our range of ${category.name.toLowerCase()} from Kitchen Kraft Equipments.`;
-    const url = `${this.baseURL}/products/${category.slug}`;
+    // Canonical follows the genre's section (/manufacturing vs /products);
+    // hardcoding /products pointed manufacturing pages at a URL that 301s away.
+    const url = `${this.baseURL}${categoryPath(category)}`;
 
     return {
       title,
@@ -141,10 +145,11 @@ export class SEOManager {
   /**
    * Generate metadata for individual product pages
    */
-  generateProductMetadata(product: SEOProduct): Metadata {
+  generateProductMetadata(product: SEOProduct, basePath: string = '/products'): Metadata {
     const title = `${product.name} - Commercial Kitchen Equipment | Kitchen Kraft`;
     const description = `${product.description || product.name} - Professional commercial kitchen equipment from Kitchen Kraft Equipments, Pune. Get quote for ${product.name.toLowerCase()}.`;
-    const url = `${this.baseURL}/products/${product.categorySlug}/${product.slug}`;
+    // basePath is the section this product is served from — see productSections.
+    const url = `${this.baseURL}${basePath}/${product.categorySlug}/${product.slug}`;
 
     return {
       title,
@@ -372,9 +377,13 @@ export class StructuredDataManager {
       }
     };
 
-    // Add price if available
-    if (product.price) {
-      schema.offers.price = product.price;
+    // Add price if available. schema.org requires a bare numeric value (no ₹,
+    // no thousands separators) and INR is set above via priceCurrency. When the
+    // product is on sale, advertise the sale price so search results match the page.
+    const sale = getSaleInfo(product);
+    const numericPrice = sale.onSale ? sale.sale : sale.original;
+    if (numericPrice != null) {
+      schema.offers.price = String(numericPrice);
     }
 
     return schema;

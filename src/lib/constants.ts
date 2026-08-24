@@ -28,58 +28,9 @@ export const SITE_CONFIG = {
 };
 
 export const NAVIGATION = {
-  main: [
-    { name: "Home", href: "/" },
-    {
-      name: "Services",
-      href: "/services",
-      children: [
-        {
-          name: "Commercial Kitchen Design",
-          href: "/services/commercial-kitchen-design",
-          description: "Custom kitchen layouts optimized for efficiency"
-        },
-        {
-          name: "Equipment Manufacturing",
-          href: "/services/equipment-manufacturing",
-          description: "Custom stainless steel equipment manufacturing"
-        },
-        {
-          name: "Installation & Maintenance",
-          href: "/services/installation-maintenance",
-          description: "Professional installation and ongoing support"
-        },
-        {
-          name: "Expert Consultation",
-          href: "/services/consultation",
-          description: "Professional advice and planning services"
-        }
-      ]
-    },
-    {
-      name: "Products",
-      href: "/products",
-      children: [
-        {
-          name: "All Products",
-          href: "/products",
-          description: "Browse our complete product catalog"
-        },
-        {
-          name: "Custom Manufacturing",
-          href: "/products?type=manufacture",
-          description: "Custom-built equipment solutions"
-        },
-        {
-          name: "Premium Brands",
-          href: "/products?type=resell",
-          description: "Top-quality branded equipment"
-        }
-      ]
-    },
-    { name: "About Us", href: "/about" },
-    { name: "Contact", href: "/contact" }
-  ],
+  // Main nav lives in lib/navigation.ts — it is derived from the public
+  // visibility flags so disabled sections leave no link behind. This object now
+  // only carries the footer column definitions.
   footer: {
     products: [
       { name: "Commercial Refrigeration", href: "/products/refrigeration" },
@@ -87,15 +38,13 @@ export const NAVIGATION = {
       { name: "Food Preparation", href: "/products/preparation" },
       { name: "Storage Solutions", href: "/products/storage" },
       { name: "Dishwashing Systems", href: "/products/dishwashing" },
-      { name: "Custom Manufacturing", href: "/products?type=manufacture" }
+      { name: "Custom Manufacturing", href: "/manufacturing" }
     ],
     services: [
       { name: "Kitchen Design", href: "/services/commercial-kitchen-design" },
       { name: "Equipment Manufacturing", href: "/services/equipment-manufacturing" },
       { name: "Installation Services", href: "/services/installation-maintenance" },
-      { name: "Maintenance Support", href: "/services/maintenance" },
-      { name: "Consultation", href: "/services/consultation" },
-      { name: "Project Management", href: "/services/project-management" }
+      { name: "Consultation", href: "/services/consultation" }
     ],
     company: [
       { name: "About Us", href: "/about" },

@@ -5,14 +5,21 @@ import Link from 'next/link';
 import { SEOProduct } from '@/lib/types';
 import MobileProductBrowser from '@/components/ui/MobileProductBrowser';
 import { getDisplayImageUrl } from '@/lib/imageUtils';
+import { getSaleInfo, formatINR } from '@/lib/sale';
 
 interface ProductGridProps {
+  /**
+   * Section this grid is rendered inside — '/manufacturing' or '/products'.
+   * Product links are built from it so a card never navigates out of its
+   * section. Defaults to '/products' for callers that show resell stock.
+   */
+  basePath?: string;
   products: SEOProduct[];
   categorySlug?: string;
   className?: string;
 }
 
-export default function ProductGrid({ products, categorySlug, className = '' }: ProductGridProps) {
+export default function ProductGrid({ products, categorySlug, basePath = '/products', className = '' }: ProductGridProps) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -58,7 +65,7 @@ export default function ProductGrid({ products, categorySlug, className = '' }: 
         <div className="hidden md:block">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {products.map((product) => (
-              <div key={product.id} className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+              <div key={product.id} className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
                 <div className="aspect-square bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse"></div>
                 <div className="p-6">
                   <div className="h-6 bg-gray-200 rounded-lg mb-3 animate-pulse"></div>
@@ -69,8 +76,8 @@ export default function ProductGrid({ products, categorySlug, className = '' }: 
                     <div className="h-6 bg-gray-200 rounded-full w-18 animate-pulse"></div>
                   </div>
                   <div className="space-y-3">
-                    <div className="h-12 bg-gray-200 rounded-xl animate-pulse"></div>
-                    <div className="h-12 bg-gray-200 rounded-xl animate-pulse"></div>
+                    <div className="h-12 bg-gray-200 rounded-lg animate-pulse"></div>
+                    <div className="h-12 bg-gray-200 rounded-lg animate-pulse"></div>
                   </div>
                 </div>
               </div>
@@ -88,6 +95,7 @@ export default function ProductGrid({ products, categorySlug, className = '' }: 
         <MobileProductBrowser
           products={products}
           currentCategory={categorySlug}
+          basePath={basePath}
           className={className}
         />
       </div>
@@ -101,16 +109,19 @@ export default function ProductGrid({ products, categorySlug, className = '' }: 
             return (
               <div
                 key={product.id}
-                className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-1"
+                className="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-blue-200 transform hover:-translate-y-1"
               >
                 {/* Product Image - Fixed like CategoryCard */}
-                <div className="w-full h-48 bg-white overflow-hidden relative p-2 flex items-center justify-center">
+                <div className="w-full h-56 md:h-64 bg-white overflow-hidden relative p-3 flex items-center justify-center">
                   {imageUrl ? (
                     <img
                       src={imageUrl}
                       alt={product.image_alt || product.name}
                       className="w-full h-full object-contain hover:scale-105 transition-transform duration-500"
+                      width={400}
+                      height={320}
                       loading="lazy"
+                      decoding="async"
                       onLoad={() => {
                         // Image loaded successfully
                       }}
@@ -132,12 +143,25 @@ export default function ProductGrid({ products, categorySlug, className = '' }: 
                     </div>
                   )}
 
-                  {/* Price Badge */}
-                  {product.price && (
-                    <div className="absolute top-3 right-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm bg-opacity-95">
-                      ₹{parseFloat(product.price).toLocaleString('en-IN')}
-                    </div>
-                  )}
+                  {/* Price Badge (shows sale price + % off when on sale) */}
+                  {product.price && (() => {
+                    const s = getSaleInfo(product);
+                    return s.onSale ? (
+                      <div className="absolute top-3 right-3 flex flex-col items-end gap-1">
+                        <div className="bg-gradient-to-r from-red-600 to-red-700 text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-lg">
+                          {formatINR(s.sale!)}
+                        </div>
+                        <div className="flex items-center gap-1.5 bg-white/90 backdrop-blur-sm rounded-full px-2 py-0.5 shadow-sm">
+                          <span className="text-gray-400 line-through text-xs">{formatINR(s.original!)}</span>
+                          <span className="text-red-600 font-bold text-xs">{s.percent}% OFF</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="absolute top-3 right-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm bg-opacity-95">
+                        {formatINR(parseFloat(product.price))}
+                      </div>
+                    );
+                  })()}
 
                   {/* Category Badge */}
                   <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-700 text-xs font-medium px-2 py-1 rounded-full shadow-sm border border-gray-100">
@@ -159,24 +183,38 @@ export default function ProductGrid({ products, categorySlug, className = '' }: 
                     )}
                   </div>
 
-                  {/* Features/Specs Preview */}
-                  <div className="mb-4 flex flex-wrap gap-1">
-                    <span className="inline-block bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded-full font-medium">
-                      Stainless Steel
-                    </span>
-                    <span className="inline-block bg-green-50 text-green-700 text-xs px-2 py-1 rounded-full font-medium">
-                      Food Grade
-                    </span>
-                    <span className="inline-block bg-purple-50 text-purple-700 text-xs px-2 py-1 rounded-full font-medium">
-                      Commercial
-                    </span>
-                  </div>
+                  {/* Spec line.
+                      This replaced three hardcoded chips ("Stainless Steel",
+                      "Food Grade", "Commercial") that were identical on every
+                      product and duplicated the "Commercial Grade" badge on the
+                      image, so they carried no information. Real per-product
+                      highlights are shown when the admin has entered them;
+                      otherwise a single quiet material line stands in. */}
+                  {product.highlights && product.highlights.length > 0 ? (
+                    <ul className="mb-4 space-y-1.5">
+                      {product.highlights.slice(0, 2).map((h, i) => (
+                        <li key={i} className="flex items-start gap-2 text-xs text-gray-600">
+                          <svg className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M4.5 12.75l6 6 9-13.5" />
+                          </svg>
+                          <span className="line-clamp-1">{h}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="mb-4 flex items-center gap-2 text-xs text-gray-500">
+                      <svg className="w-3.5 h-3.5 flex-shrink-0 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>Food-grade stainless steel</span>
+                    </div>
+                  )}
 
                   {/* Enhanced Action Buttons */}
                   <div className="flex flex-col gap-3">
                     <Link
-                      href={`/products/${product.categorySlug || categorySlug}/${product.slug}`}
-                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-center shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center group"
+                      href={`${basePath}/${product.categorySlug || categorySlug}/${product.slug}`}
+                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 text-center shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center group"
                     >
                       <span>View Details</span>
                       <svg className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -188,7 +226,7 @@ export default function ProductGrid({ products, categorySlug, className = '' }: 
                       onClick={() => {
                         window.location.href = `/quote?product=${encodeURIComponent(product.name)}`;
                       }}
-                      className="w-full bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center group"
+                      className="w-full bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center group"
                     >
                       <svg className="mr-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
